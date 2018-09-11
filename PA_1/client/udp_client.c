@@ -64,7 +64,7 @@ void get(uint8_t* file_name, int sock, struct sockaddr_in remote)
 	}
 	else
 	{
-		send_data = sendto(sock, size_buf, strlen(size_buf), 0, (struct 
+		send_data = sendto(sock, size_buf, strlen(size_buf), 0, (struct
 		
 		
 	
