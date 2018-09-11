@@ -21,6 +21,40 @@ typedef struct
 	uint8_t pack_size[BUFSIZE];
 }Packet_details;
 
+void encryptdata(int buf_size, uint8_t* buffer, uint8_t* encrypteddata)
+{
+	uint8_t encryptedkey[8] = {'A','B','C','D','1', '2', '3', '4'};
+	int key_index=0;
+	for(int i=0;i<buf_size;i++)
+	{
+		encrypteddata[i] = buffer[i] + encryptedkey[key_index];
+		key_index++;
+		if(key_index==8)
+		{
+			key_index=0;
+		}
+	}
+}
+
+void decryptdata(char *buffer, int datasize, char *decryptbuff){
+	char encryptedkey[14] = {'A','B','C','D','E','F','G','H','I','1','2','3','4','5'};
+	int j=0;
+	for(int i=0;i<datasize;i++){
+		decryptbuff[i] = buffer[i] - encryptedkey[j] ;
+		j++;
+		if(j==13){
+			j=0;
+		}
+	}
+}
+
+
+void get(uint8_t* file_name, int sock, struct sockaddr_in remote)
+{
+	int file_receive_check = 0;
+	uint8_t message[BUFSIZE] = " ";
+	file_receive_check = recvfrom(sock, message, sizeof(message), 0 , NULL, NULL);
+	
 /* 
  * error - wrapper for perror
  */
