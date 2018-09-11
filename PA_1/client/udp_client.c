@@ -10,8 +10,16 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h> 
+#include <stdint.h>
 
 #define BUFSIZE 1024
+
+typedef struct
+{
+	uint16_t index_packet;
+	uint16_t length;
+	uint8_t pack_size[BUFSIZE];
+}Packet_details;
 
 /* 
  * error - wrapper for perror
@@ -20,7 +28,6 @@ void error(char *msg) {
     perror(msg);
     exit(0);
 }
-
 int main(int argc, char **argv) {
     int sockfd, portno, n;
     int serverlen;
