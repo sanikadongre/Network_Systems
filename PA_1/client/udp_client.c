@@ -53,9 +53,21 @@ void decryptdata(int buf_size, uint8_t* buffer, uint8_t* decrypteddata){
 
 void get(uint8_t* file_name, int sock, struct sockaddr_in remote)
 {
-	int file_receive_check = 0;
-	uint8_t message[BUFSIZE] = " ";
+	int file_receive_check = 0, send_data;
+	uint8_t message[BUFSIZE] = " ", size_buf[BUFSIZE] = " ";
+	bzero(message, sizeof(message));
 	file_receive_check = recvfrom(sock, message, sizeof(message), 0 , NULL, NULL);
+	bzero(size_buf, sizeof(size_buf));
+	if(strcmp(message, "File found") != 0)
+	{
+		printf("The file is not found\n");
+	}
+	else
+	{
+		send_data = sendto(sock, size_buf, strlen(size_buf), 0, (struct 
+		
+		
+	
 	
 /* 
  * error - wrapper for perror
