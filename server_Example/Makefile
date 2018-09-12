@@ -1,20 +1,27 @@
-INCLUDES=	-I/usr/local/opencv/include
+INCLUDE_DIRS = 
+LIB_DIRS = 
+CC=gcc
 
-CC=	g++
+CDEFS=
+CFLAGS= -O0 -g $(INCLUDE_DIRS) $(CDEFS)
+LIBS= 
 
-CFLAGS=	-O0	-g	-std=c++11	
+HFILES= 
+CFILES= client.c
 
-CPPLIBS= -L/usr/lib -lopencv_core -lopencv_flann -lopencv_video -lpthread -lrt 
- 
-CPPFILES= version15.cpp
+SRCS= ${HFILES} ${CFILES}
+OBJS= ${CFILES:.c=.o}
 
-CPPOBJS= ${CPPFILES:.cpp=.o}
-
-build:	version15
+all:	client
 
 clean:
-	-rm -f *.o *.d *.jpg *.ppm
-	-rm -f version15
+	-rm -f *.o *.d
+	-rm -f client
 
-version15:	version15.o	
-	$(CC)	$(LDFLAGS)	$(INCLUDES)	$(CFLAGS)	-o	version15	version15.o	`pkg-config --libs opencv`	$(CPPLIBS)
+feasibility_tests: client.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lm
+
+depend:
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
