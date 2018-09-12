@@ -10,8 +10,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h> 
+#include <errno.h>
+#include <arpa/inet.h>
+#include <sys/time.h>
+#include <memory.h>
 
 #define BUFSIZE 1024
+
 ypedef struct
 {
 	uint16_t index_packet;
