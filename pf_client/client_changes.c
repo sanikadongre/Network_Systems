@@ -12,7 +12,60 @@
 #include <netdb.h> 
 
 #define BUFSIZE 1024
+ypedef struct
+{
+	uint16_t index_packet;
+	uint16_t length;
+	uint8_t pack_size[BUFSIZE];
+}Packet_details;
 
+void encryptdata(int buf_size, uint8_t* buffer, uint8_t* encrypteddata)
+{
+	uint8_t encryptedkey[8] = {'A','B','C','D','1', '2', '3', '4'};
+	int key_index=0;
+	for(int i=0;i<buf_size;i++)
+	{
+		encrypteddata[i] = buffer[i] + encryptedkey[key_index];
+		key_index++;
+		if(key_index==8)
+		{
+			key_index=0;
+		}
+	}
+}
+
+void decryptdata(int buf_size, uint8_t* buffer, uint8_t* decrypteddata){
+	uint8_t encryptedkey[8] = {'A','B','C','D','1','2','3', '4'};
+	int key_index=0;
+	for(int i=0;i<datasize;i++)
+	{
+		decryptedbuff[i] = buffer[i] - encryptedkey[key_index] ;
+		key_index++;
+		if(key_index==8)
+		{
+			key_index=0;
+		}
+	}
+}
+
+
+void get(uint8_t* file_name, int sock, struct sockaddr_in remote)
+{
+	int file_receive_check = 0, send_data;
+	uint8_t message[BUFSIZE] = " ", size_buf[BUFSIZE] = " ";
+	bzero(message, sizeof(message));
+	file_receive_check = recvfrom(sock, message, sizeof(message), 0 , NULL, NULL);
+	bzero(size_buf, sizeof(size_buf));
+	if(strcmp(message, "File found") != 0)
+	{
+		printf("The file is not found\n");
+	}
+	else
+	{
+		send_data = sendto(sock, size_buf, strlen(size_buf), 0, (struct
+		
+		
+	
 /* 
  * error - wrapper for perror
  */
