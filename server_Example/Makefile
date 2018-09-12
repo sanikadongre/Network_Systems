@@ -7,18 +7,18 @@ CFLAGS= -O0 -g $(INCLUDE_DIRS) $(CDEFS)
 LIBS= 
 
 HFILES= 
-CFILES= client.c
+CFILES= server.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-all:	client
+all:	server
 
 clean:
 	-rm -f *.o *.d
-	-rm -f client
+	-rm -f	server
 
-feasibility_tests: client.o
+feasibility_tests:	server.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lm
 
 depend:
