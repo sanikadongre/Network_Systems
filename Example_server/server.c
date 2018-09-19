@@ -85,9 +85,9 @@ void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr,
 		char key = 10;
 		
 		/* Setting the timeout for recvfrom function */
-		tv.tv_sec = 0;
-		tv.tv_usec = 100000;
-		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
+		time_vals.tv_sec = 0;
+		time_vals.tv_usec = 100000;
+		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals)) < 0) {
 		    perror("Error");
 		}
 	
@@ -317,9 +317,9 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 		char key = 10;
 	
 		/* Setting the timeout for recvfrom function */
-		tv_2.tv_sec = 0;
-		tv_2.tv_usec = 100000;
-		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&tv_2,sizeof(tv_2)) < 0) {
+		time_val2.tv_sec = 0;
+		time_val2.tv_usec = 100000;
+		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_val2,sizeof(time_val2)) < 0) {
 		    perror("Error");
 		}
 		
@@ -414,7 +414,7 @@ int main(int argc, char *argv[])
 	uint8_t* name_cmd;
 	uint8_t cmd_out_exit, val[BUFSIZE] = "The server is exiting", cmd[70];                       
 	struct sockaddr_in sin, remote_opt;     
-	unint32_t remote_length; 
+	uint32_t remote_length; 
 	bzero(&sin,sizeof(sin));  
 	bzero(cmd, sizeof(cmd));
 	bzero(val, sizeof(val));
@@ -445,10 +445,8 @@ int main(int argc, char *argv[])
 		/* Initialising the timeout to be infinite for 'recvfrom' function */
 		time_val1.tv_sec = 0;
 		time_val1.tv_usec = 0;
-		if (setsockopt(udp_sock, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0) 
-		{
-		    perror("Error");
-		}
+		(setsockopt(udp_sock, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0); 
+	
 		bytestot = recvfrom(udp_sock, cmd, strlen(cmd), 0, (struct sockaddr*)&remote_opt, &remote_length);
 		printf("The command received from the client is : %s\n", cmd);
 		name_cmd = strdup(cmd);
@@ -526,4 +524,4 @@ int main(int argc, char *argv[])
 
 	}
 
-	
+}	
