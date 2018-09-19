@@ -1,4 +1,3 @@
-
 /* Headers section */
 #include <sys/time.h>
 #include <stdlib.h>
@@ -122,6 +121,8 @@ void put_file(int socket_id, char *name_file, struct sockaddr_in remote)
 	uint8_t present_file[BUFSIZE],key[4] = {'A', 'B', '5', '9'};
 	bzero(present_file,sizeof(present_file));
 	/* Creating a file pointer to the file to be sent to server */
+	time_vals.tv_sec = 0;
+	time_vals.tv_usec = 100000;
 	FILE *fptr;
 	fptr = fopen(file_name,"rb");
 		if(fptr == NULL)
@@ -143,8 +144,6 @@ void put_file(int socket_id, char *name_file, struct sockaddr_in remote)
 			rewind(fptr);
 			fs = sendto(socket_id, &file_encrypted, sizeof(file_encrypted), 0, (struct sockaddr*)&remote, sizeof(remote));
 			printf("The size of the file is: %ld\n",size_file);
-			time_vals.tv_sec = 0;
-			time_vals.tv_usec = 100000;
 			setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals));
 				while(conff_size < size_file)
 				{
@@ -293,17 +292,13 @@ int main (int argc, char * argv[])
 {
  
 	/* Creating socket name */                          
-	int sockfd;
+	int sockfd, bytestot;
 	/* Creating internet socket address structure */  
 	struct sockaddr_in serveraddr; 
 	uint8_t hash_buf[100];   
 	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));          
 	uint8_t* fname;
-	int bytestot; 
-	uint8_t cmd[70];
-	uint8_t cmd_out_exit;
-	uint8_t val[BUFSIZE];
-        uint8_t* name_cmd;
+	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70];
 	bzero(cmd,sizeof(cmd));
 	bzero(val, sizeof(val));
 	/* Check for input paramaters during execution */
@@ -330,10 +325,6 @@ int main (int argc, char * argv[])
 	{
 		printf("unable to create socket\n");
 	}
-
-	
-	
-
 	/* Loop for getting input from the user for different operation */
 	while(1)
 	{

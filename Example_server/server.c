@@ -15,32 +15,23 @@
 #include <string.h>
 #include <dirent.h>
 #include <time.h>
+#include <stdint.h>
 
+#define BUFSIZE 100
 
+struct timeval time_vals,time_val1,time_val2,time_done;
 
-/* GLobal variables */
-#define MAXBUFSIZE 1000
-
-/* Structure for defining the time-out */
-struct timeval tv,tv_1,tv_2,end;
-
-/* Structure for the packet */
-struct Datagram 
+typedef struct
 {
+	uint32_t packet_index;
+	uint8_t packet_descp[BUFSIZE];
+	uint32_t packet_len;
 
-	unsigned int datagram_id;
-	char datagram_message[MAXBUFSIZE];
-	unsigned int datagram_length;
-};
+}Packet_Details;
 
-/* Definition of 'server_get_file' function */
-void server_get_file(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
-{
-	printf("In server_get_file case\n");
-
-	/* A buffer to store our command received */    
-	char command_buffer[MAXBUFSIZE],size_buffer[MAXBUFSIZE]; 
-	/* A buffer to store the file content to be sent */           
+void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr, uint32_t len_data)
+{  
+	char command_buffer[BUFSIZE],size_buffer[BUFSIZE];            
 	char *file_buffer;
 	int temp_bytes;
 	int file_exist_confirmation = 0;
@@ -77,7 +68,7 @@ void server_get_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 		printf("File exist confiramtion : %s\n",command_buffer);
 	
 		bzero(size_buffer,sizeof(size_buffer));
-		recvfrom( socket_id, size_buffer, MAXBUFSIZE, 0, (struct sockaddr*)&remote_addr, &remote_len);
+		recvfrom( socket_id, size_buffer, BUFSIZE, 0, (struct sockaddr*)&remote_addr, &remote_len);
 		printf("The client says : %s\n", command_buffer);
 
 		printf("Sending the size of the file\n");
@@ -108,7 +99,7 @@ void server_get_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 			if(temp != NULL)
 			{
 				temp->datagram_id = actual_sequence_count;
-				bytes_read = fread(temp->datagram_message,sizeof(char),MAXBUFSIZE,fp);
+				bytes_read = fread(temp->datagram_message,sizeof(char),BUFSIZE,fp);
 
 				/* Encrypting the message */
 				for(long int i=0;i<bytes_read;i++)
@@ -158,7 +149,7 @@ void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 {	
 	printf("In server_put_file case\n");	
 
-	char file_exist_buffer[MAXBUFSIZE];
+	char file_exist_buffer[BUFSIZE];
 	int bytes_received = 0;
 	int file_exist_bytes = 0;
 	ssize_t fileSize=0;
@@ -169,11 +160,7 @@ void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 	int sent_bytes = 0;
 	int file_size_bytes = 0;
 	bzero(file_exist_buffer,sizeof(file_exist_buffer));
-	
-	/* Receiving the file existance confirmation from the client */
 	file_exist_bytes = recvfrom( socket_id, file_exist_buffer, sizeof(file_exist_buffer), 0, (struct sockaddr*)&remote_addr, &remote_len);
-	
-	/* Check for file existance */
 	if(strcmp(file_exist_buffer,"File exist") == 0)
 	{
 
@@ -183,7 +170,7 @@ void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 		printf("File size received : %ld\n",encodedFileSize);
 	
 		/* A buffer to store the file content received */                               
-		char new_file[MAXBUFSIZE];
+		char new_file[BUFSIZE];
 		strcpy(new_file,file_name);
 		FILE *fp;
 		fp = fopen(new_file,"w+");
@@ -252,12 +239,12 @@ void server_delete_file(int socket_id, char *file_name, struct sockaddr_in remot
 	printf("In server_delete_file case\n");
 
 	/* A buffer to store our command received */    
-	char command_buffer[MAXBUFSIZE]; 
+	char command_buffer[BUFSIZE]; 
 	int temp_bytes;
 	int ret = 0;
 	/* Receiving file name to be deleted from the client */
 	bzero(command_buffer,sizeof(command_buffer));
-	temp_bytes = recvfrom( socket_id, command_buffer, MAXBUFSIZE, 0, (struct sockaddr*)&remote_addr, &remote_len);
+	temp_bytes = recvfrom( socket_id, command_buffer, BUFSIZE, 0, (struct sockaddr*)&remote_addr, &remote_len);
 	printf("The client requires the file '%s' to be removed\n", command_buffer);
 	
 	/* Creating a file pointer to the requested file from the client */
@@ -343,7 +330,7 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 			if(temp != NULL)
 			{
 				temp->datagram_id = actual_sequence_count;
-				bytes_read = fread(temp->datagram_message,sizeof(char),MAXBUFSIZE,fp);
+				bytes_read = fread(temp->datagram_message,sizeof(char),BUFSIZE,fp);
 
 				/* Encrypting the message */
 				for(long int i=0;i<bytes_read;i++)
@@ -394,7 +381,7 @@ void server_exit_server(int socket_id, struct sockaddr_in remote_addr, unsigned 
 {
 	printf("In server_exit_server case\n");
 	
-	char exit_buffer[MAXBUFSIZE];
+	char exit_buffer[BUFSIZE];
 	int exit_confirmation = 0;
 
 	/* Sending server exit confirmation to client */
@@ -409,7 +396,7 @@ void server_exit_server(int socket_id, struct sockaddr_in remote_addr, unsigned 
 void server_hash_value(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
 {
 	printf("In server_hash_value case with file name : %s\n",file_name);
-	char system_buffer[MAXBUFSIZE];	
+	char system_buffer[BUFSIZE];	
 	strcpy(system_buffer,"md5sum ");
 	strncat(system_buffer,file_name,strlen(file_name));
 	printf("**********************************************************************\n");
@@ -422,7 +409,7 @@ void server_hash_value(int socket_id, char *file_name, struct sockaddr_in remote
 int main(int argc, char *argv[])
 {
 	/* Creating socket name */
-	int udp_socket,client_socket; 
+	int udp_sock,client_socket; 
 	/* Creating internet socket address structure */                          
 	struct sockaddr_in sin, remote;     
 	/* Length of the sockaddr_in structure */
@@ -450,14 +437,14 @@ int main(int argc, char *argv[])
 
 
 	/* Creating a generic socket of type UDP (datagram) */
-	if ((udp_socket =socket(PF_INET,SOCK_DGRAM,0)) < 0)
+	if ((udp_sock =socket(PF_INET,SOCK_DGRAM,0)) < 0)
 	{
 		printf("unable to create socket\n");
 	}
 
 
 	/* Binding the socket created to local address and port supplied in the sockaddr_in struct */
-	if (bind(udp_socket, (struct sockaddr *)&sin, sizeof(sin)) < 0)
+	if (bind(udp_sock, (struct sockaddr *)&sin, sizeof(sin)) < 0)
 	{
 		printf("unable to bind socket\n");
 	}
@@ -465,30 +452,22 @@ int main(int argc, char *argv[])
 	/* Finding length of the socket address */
 	remote_length = sizeof(remote);
 
-	/* Variables for parsing the command rececived from the client */
-	int count = 0,final_count =0;
-	char *delimiter = " "; 
-	char *words,*temp;
-	char *final_words,*final_temp;	
-	char operation[MAXBUFSIZE];
-	char temp_operation[MAXBUFSIZE];
-	bzero(operation,sizeof(operation));
-	bzero(temp_operation,sizeof(temp_operation));
+	
 
 	/* Loop for different operations received from the client */
 	while(1)
 	{
 		/* Initialising the timeout to be infinite for 'recvfrom' function */
-		tv_1.tv_sec = 0;
-		tv_1.tv_usec = 0;
-		if (setsockopt(udp_socket, SOL_SOCKET, SO_RCVTIMEO,&tv_1,sizeof(tv_1)) < 0) 
+		time_val1.tv_sec = 0;
+		time_val1.tv_usec = 0;
+		if (setsockopt(udp_sock, SOL_SOCKET, SO_RCVTIMEO,&tv_1,sizeof(tv_1)) < 0) 
 		{
 		    perror("Error");
 		}
 
 		/* Waits for an incoming message */
 		printf("\nFirst receiving the entire operation from the client\n");
-		nbytes = recvfrom( udp_socket, operation, MAXBUFSIZE, 0, (struct sockaddr*)&remote, &remote_length);
+		nbytes = recvfrom( udp_sock, operation, BUFSIZE, 0, (struct sockaddr*)&remote, &remote_length);
 		printf("Operation received from the client : %s\n", operation);
 
 		/* Parsing the received operation */
@@ -517,7 +496,7 @@ int main(int argc, char *argv[])
 			if(count == 2)
 			{
 				printf("%s\n",temp_operation);
-				char first_word[MAXBUFSIZE]="",second_word[MAXBUFSIZE]="";
+				char first_word[BUFSIZE]="",second_word[BUFSIZE]="";
 				final_temp = temp_operation;
 				final_words = strtok(final_temp,delimiter);
 
@@ -542,19 +521,19 @@ int main(int argc, char *argv[])
 				/* Calling required functions depending on the command received */
 				if(strcmp(first_word,"get")==0)
 				{
-					server_get_file(udp_socket, second_word, remote,remote_length);
+					server_get_file(udp_sock, second_word, remote,remote_length);
 				}
 				else if(strcmp(first_word,"put")==0)
 				{
-					server_put_file(udp_socket, second_word, remote,remote_length);
+					server_put_file(udp_sock, second_word, remote,remote_length);
 				}
 				else if(strcmp(first_word,"delete")==0)
 				{
-					server_delete_file(udp_socket, second_word, remote,remote_length);
+					server_delete_file(udp_sock, second_word, remote,remote_length);
 				}
 				else if(strcmp(first_word,"md5sum")==0)
 				{
-					server_hash_value(udp_socket, second_word, remote,remote_length);
+					server_hash_value(udp_sock, second_word, remote,remote_length);
 				}
 				else
 				{
@@ -572,7 +551,7 @@ int main(int argc, char *argv[])
 				}
 				else if(strcmp(temp_operation,"exit")==0)
 				{
-					server_exit_server(udp_socket, remote,remote_length);
+					server_exit_server(udp_sock, remote,remote_length);
 				}
 				else
 				{
