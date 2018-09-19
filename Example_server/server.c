@@ -477,7 +477,7 @@ int main(int argc, char *argv[])
 		else if(strcmp("delete", name_cmd) == 0)
 		{	
 			FILE *f;
-			bytestot = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, sizeof(remote_opt));
+			bytestot = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, &(remote_length));
 			f = fopen(recv_buf,"r");			
 			if(f != NULL)
 			{
