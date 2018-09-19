@@ -373,7 +373,6 @@ int main (int argc, char * argv[])
 	 		printf("Exiting the server\n");
 			bytestot = recvfrom(sockfd, val, strlen(val), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 			printf("%s\n", val);
-			‌
         	 }
 		else if(strcmp("md5sum", name_cmd) == 0)
 		{
