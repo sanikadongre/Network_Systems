@@ -298,6 +298,7 @@ int main (int argc, char * argv[])
 	uint8_t hash_buf[100];   
 	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));          
 	uint8_t* fname;
+	uint8_t* name_cmd;
 	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70];
 	bzero(cmd,sizeof(cmd));
 	bzero(val, sizeof(val));
