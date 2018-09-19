@@ -293,8 +293,9 @@ int main (int argc, char * argv[])
 	uint8_t hash_buf[100];        
 	uint8_t* fname;
 	uint8_t* name_cmd;
-	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70];
+	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70], fname1[70];
 	bzero(cmd,sizeof(cmd));
+	bzero(fname1, sizeof(fname1));
 	bzero(val, sizeof(val));
 	uint32_t serverlen;
 	/* Check for input paramaters during execution */
@@ -335,13 +336,15 @@ int main (int argc, char * argv[])
 		
 		printf("Enter the command to be performed and type it:get [filename],put [filename],delete [filename],md5sum, ls,exit\n");
 		scanf("%s", cmd);
+		scanf("%s", fname1);
 		printf("First sending the entire command to the server : %s\n",cmd);
 		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		printf("Number of bytes for the operation sent : %d\n",bytestot);
 		name_cmd = strdup(cmd);
+		fname = strdup(fname1);
 		strtok(name_cmd, " ");
 		printf("The name of the command is: %s\n", name_cmd);
-		fname = strtok(NULL, " ");
+		fname = strtok(fname, " ");
 		printf("The file name is %s\n", fname);
 		if(strcmp("get", name_cmd) == 0)
 		{
