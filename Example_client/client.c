@@ -296,6 +296,7 @@ int main (int argc, char * argv[])
 	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70];
 	bzero(cmd,sizeof(cmd));
 	bzero(val, sizeof(val));
+	uint32_t serverlen;
 	/* Check for input paramaters during execution */
 	if (argc < 3)
 	{
@@ -321,6 +322,7 @@ int main (int argc, char * argv[])
 		printf("unable to create socket\n");
 	}
 	/* Loop for getting input from the user for different operation */
+	serverlen = sizeof(serveraddr);
 	while(1)
 	{
 		/* Initialising the timeout to be infinite for 'recvfrom' function */
@@ -371,7 +373,7 @@ int main (int argc, char * argv[])
 		else if(strcmp("exit", name_cmd) == 0)
 		{
 	 		printf("Exiting the server\n");
-			bytestot = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+			bytestot = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, &(serverlen));
 			printf("%s\n", val);
         	 }
 		else if(strcmp("md5sum", name_cmd) == 0)
