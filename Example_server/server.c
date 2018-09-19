@@ -408,7 +408,7 @@ typedef struct
 /* Main Function definition */
 int main(int argc, char *argv[])
 {
-	int udp_sock,client_socket, bytestot = 0, file_del, exit_recv; 
+	int udp_sock,client_socket, bytestot = 0, file_del, exit_recv, bytestot1 = 0; 
 	uint8_t hash_buf[100], recv_buf[BUFSIZE];
 	uint8_t* fname;
 	uint8_t* name_cmd;
@@ -449,6 +449,7 @@ int main(int argc, char *argv[])
 		(setsockopt(udp_sock, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0); 
 	
 		bytestot = recvfrom(udp_sock, cmd, strlen(cmd), 0, (struct sockaddr*)&remote_opt, &remote_length);
+		bytestot1 = recvfrom(udp_sock, fname1, strlen(fname1), 0, (struct sockaddr*)&remote_opt, &remote_length);
 		printf("The command received from the client is : %s\n", cmd);
 		name_cmd = strdup(cmd);
 		fname= strdup(fname1);
@@ -480,6 +481,7 @@ int main(int argc, char *argv[])
 		{	
 			FILE *f;
 			bytestot = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, &(remote_length));
+			bytestot1 = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, &(remote_length));
 			f = fopen(recv_buf,"r");			
 			if(f != NULL)
 			{
