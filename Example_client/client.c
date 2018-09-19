@@ -203,7 +203,7 @@ void put_file(int socket_id, char *name_file, struct sockaddr_in remote)
 			fclose(fptr);
 }
 
-/*void list_files(struct sockaddr_in remote_addr,int socket_id)
+void list_files(struct sockaddr_in remote_addr,int socket_id)
 {
 	printf("In client_list_directory case\n");
 	ssize_t fileSize,encodedFileSize,size_check=0;
@@ -280,7 +280,7 @@ void put_file(int socket_id, char *name_file, struct sockaddr_in remote)
 		printf("\nDone\n");
 		fclose(fp);
 	}
-}*/
+}
 
 /* Main Function definition */
 int main (int argc, char * argv[])
@@ -333,7 +333,7 @@ int main (int argc, char * argv[])
 		
 		printf("Enter the command to be performed and type it:get [filename],put [filename],delete [filename],md5sum, ls,exit\n");
 		scanf("%s", cmd);
-		printf("First sending the entire command to the server : %s\n",cmd);
+		/*printf("First sending the entire command to the server : %s\n",cmd);
 		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		printf("Number of bytes for the operation sent : %d\n",bytestot);
 		name_cmd = strdup(cmd);
@@ -357,7 +357,7 @@ int main (int argc, char * argv[])
 		 else if(strcmp("ls", name_cmd) == 0)
 		{
 			printf("\nTo list all the files in the directory%s\n", fname);
-			ls_display(sockfd, fname, serveraddr);
+			list_files(sockfd, fname, serveraddr);
 			printf("\nThe dircetories and files are listed\n");
 		}
 					
@@ -373,6 +373,7 @@ int main (int argc, char * argv[])
 	 		printf("Exiting the server\n");
 			bytestot = recvfrom(sockfd, val, strlen(val), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 			printf("%s\n", val);
+			‌
         	 }
 		else if(strcmp("md5sum", name_cmd) == 0)
 		{
