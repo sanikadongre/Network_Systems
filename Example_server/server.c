@@ -412,11 +412,12 @@ int main(int argc, char *argv[])
 	uint8_t hash_buf[100], recv_buf[BUFSIZE];
 	uint8_t* fname;
 	uint8_t* name_cmd;
-	uint8_t cmd_out_exit, val[BUFSIZE] = "The server is exiting", cmd[70];                       
+	uint8_t cmd_out_exit, val[BUFSIZE] = "The server is exiting", cmd[70], fname1[70];                       
 	struct sockaddr_in sin, remote_opt;     
 	uint32_t remote_length; 
 	bzero(&sin,sizeof(sin));  
 	bzero(cmd, sizeof(cmd));
+	bzero(fname1, sizeof(fname1));
 	bzero(val, sizeof(val));
 		
 	/* Check for input paramaters during execution */
@@ -450,9 +451,10 @@ int main(int argc, char *argv[])
 		bytestot = recvfrom(udp_sock, cmd, strlen(cmd), 0, (struct sockaddr*)&remote_opt, &remote_length);
 		printf("The command received from the client is : %s\n", cmd);
 		name_cmd = strdup(cmd);
+		fname= strdup(fname1);
 		strtok(name_cmd, " ");
 		printf("The name of the command is: %s\n", name_cmd);
-		fname = strtok(NULL, " ");
+		fname = strtok(fname, " ");
 		printf("The file name is %s\n", fname);
 		if(strcmp("get", name_cmd) == 0)
 		{
@@ -476,11 +478,11 @@ int main(int argc, char *argv[])
 					
 		else if(strcmp("delete", name_cmd) == 0)
 		{	
-			//FILE *f;
+			FILE *f;
 			bytestot = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, &(remote_length));
-			//f = fopen(recv_buf,"r");			
-			//if(f != NULL)
-			//{
+			f = fopen(recv_buf,"r");			
+			if(f != NULL)
+			{
 				file_del = remove(recv_buf);
 				if(file_del != 0)
 				{
@@ -491,12 +493,12 @@ int main(int argc, char *argv[])
 				{
 					printf("The file is deleted\n");
 				}
-			//}
-			//if(f == NULL)
-			//{
-			  	//perror("Error");
-				//printf("The file is not found and can't be deleted\n");
-			//}
+			}
+			if(f == NULL)
+			{
+			  	perror("Error");
+				printf("The file is not found and can't be deleted\n");
+			}
 		}
 		else if(strcmp("md5sum", name_cmd) == 0)
 		{
@@ -521,6 +523,7 @@ int main(int argc, char *argv[])
 
 	  	}
 		bzero(cmd,sizeof(cmd));
+		bzero(fname1, sizeof(fname1));
 		bzero(val,sizeof(val));
 
 	}
