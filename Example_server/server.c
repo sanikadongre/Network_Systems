@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>
-#include <dirent.h>
+
 #include <time.h>
 #include <stdint.h>
 
