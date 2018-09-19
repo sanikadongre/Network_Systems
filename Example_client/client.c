@@ -1,263 +1,207 @@
 
-
 /* Headers section */
+#include <sys/time.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
-#include <signal.h>
 #include <stdio.h>
-#include <fcntl.h>
 #include <errno.h>
-#include <sys/time.h>
-#include <stdlib.h>
 #include <memory.h>
 #include <errno.h>
 #include <time.h>
-
+#include <stdint.h>
 
 /* Global variables */
-#define MAXBUFSIZE 1000
-
-
-/* Structure for defining the time-out */
-struct timeval tv,tv_1,tv_2,end;
+#define BUFSIZE 100
 
 /* Structure for the packet */
-struct Datagram
+typedef struct 
 {
-
-	unsigned int datagram_id;
-	char datagram_message[MAXBUFSIZE];
-	unsigned int datagram_length;
-};
-
-/* Definition of 'client_get_file' function */
-void client_get_file(int socket_id, char *file_name, struct sockaddr_in remote_addr)
-{
-	printf("In client_get_file case with file name : %s\n",file_name);
-
-	/* Buffers for storing the file confirmation message and size of the file */
-	char file_confirmation_message[MAXBUFSIZE]="";
-	char request_size[MAXBUFSIZE]="";
-	bzero(file_confirmation_message,sizeof(file_confirmation_message));
-	bzero(request_size,sizeof(request_size));
-
-	int file_confirmation_received = 0;
-	int sent_bytes = 0;
-	ssize_t fileSize = 0;
-	ssize_t encodedFileSize;
-	ssize_t size_check=0;
-	int bytes_received = 0;
-	int file_size_bytes = 0;
-	int received_sequence_count = 0;
-	int encoded_id =0;
-
-	/* Receiving the required file confiramtion */
-	file_confirmation_received = recvfrom( socket_id, file_confirmation_message, sizeof(file_confirmation_message), 0, NULL,NULL);
-	printf("File confirmation received as : %s\n",file_confirmation_message);
-
-	/* Check for file existance */
-	if(strcmp(file_confirmation_message,"File exist") == 0)
-	{
-		printf("File exists on server\n");
-
-		/* Requesting size of the file from the server */
-		strncpy(request_size,"Requesting Size",strlen("Requesting Size"));
-		sent_bytes = sendto( socket_id, request_size, strlen(request_size), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
-
-		/* Receiving the size of the required file */
-		file_size_bytes = recvfrom( socket_id, &fileSize, sizeof(fileSize), 0, NULL,NULL);
-		encodedFileSize = ntohl(fileSize);
-		printf("File size received : %ld\n",encodedFileSize);
-
-		/* Create new file where the data to be stored */
-		char new_file[MAXBUFSIZE];
-		strcpy(new_file,file_name);
-		FILE *fp;
-		fp = fopen(new_file,"w");
-
-		/* Key for decrypting message */
-		char key = 10;
+        uint8_t packet_descp[BUFSIZE];
+	uint32_t packet_len;
+	uint32_t packet_index;
 	
-		
-		if(NULL == fp)
-		{
-			printf("Error opening the file\n");
-			exit(0);
-		}
-		else
-		{
-			/* Loop till the entire file is received */
-			while(size_check < encodedFileSize)
-			{
-				/* Structure for storing the packet received */
-				struct Datagram *temp = malloc(sizeof(struct Datagram));
-				if(temp != NULL)
-				{
-					bytes_received = recvfrom( socket_id, temp, sizeof(*temp), 0, NULL,NULL);
-					/* Check for acknowlegement */
-					if(received_sequence_count == temp->datagram_id)
-					{
-						/* Loop for decrypting the message */
-						for(long int i=0;i<temp->datagram_length;i++)
-						{
+}Packet_Details;
 
-							temp->datagram_message[i] ^= key;
-						}
-						
-						fwrite(temp->datagram_message,1,temp->datagram_length,fp);
-						printf("\nsize_check : %ld, encodedFileSize : %ld, bytes_received : %d\n",size_check,encodedFileSize,bytes_received);
-						printf("ACK sent %d\n",temp->datagram_id);
-						/* Sending ACK */
-						encoded_id = ntohl(temp->datagram_id);
-						sent_bytes = sendto( socket_id, &encoded_id, sizeof(encoded_id), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
-		
-						/* Incrementing the sequence id and the local variable for size of the file */
-						received_sequence_count++;
-						size_check += sizeof(temp->datagram_message);
-					}
-					else
+struct timeval time_vals, time_val1, time_val2, time_done;
+void condition(int sock, uint8_t* name_of_file, struct sockaddr_in remote_addr)
+{
+	int info_send = 0, encrypted_msg = 0;
+	printf("Acknowledgement sent %d\n",buf_pckt->packet_index);
+	encrypted_msg = ntohl(buf_pckt->packet_index);
+	info_send = sendto(sock, &encrypted_msg, sizeof(encrypted_msg), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
+}
+
+void file_trans(int udp_sock, uint8_t* nm_file, struct sockaddr_in rem_add)
+{
+	int bytes_received =0, bytes_file_received = 0, values=0, val2=0;
+	ssize_t encrypted_size, conff_size = 0;
+	uint8_t temp_file[BUFSIZE],key[4] = {'A', 'B', '5', '9'};
+	FILE *fptr;
+	fptr = fopen(temp_file,"w");
+		if(fptr != NULL)
+		{
+			printf("File open successful\n");
+			while(conff_size < encrypted_size)
+			{
+				if(NULL != buf_pckt)
+				{
+					bytes_file_received = recvfrom(udp_sock, buf_pckt, sizeof(*buf_pckt), 0, NULL,NULL);
+				        if(bytes_received == buf_pckt->packet_index)
+
 					{
-						printf("\nsize_check : %ld, encodedFileSize : %ld, bytes_received : %d\n",size_check,encodedFileSize,bytes_received);
-						printf("ACK sent %d\n",temp->datagram_id);
-						/* Sending ACK */
-						encoded_id = ntohl(temp->datagram_id);
-						sent_bytes = sendto( socket_id, &encoded_id, sizeof(encoded_id), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
+						for(values=0; values<buf_pckt->packet_len; values++)
+						{
+							buf_pckt->packet_descp[values] = nbuf[values] - key[val2];
+							val2++;
+							if(val2 == 3)
+							{
+								val2 = 0;
+							}
+
+						   }
 						
+						fwrite(buf_pckt->packet_descp,1,buf_pckt->packet_len,fptr);
+						printf("\nsize_check : %ld, encryptes_size : %ld, received bytes : %d\n",conff_size,encrypted_size,bytes_file_received);
+						condition(udp_sock,nm_file,rem_addr);
+						bytes_received++;
+						conff_size = conff_size + sizeof(buf_pckt->packet_descp);
 					}
-					free(temp);
+
+					if(bytes_received != buf_pckt->packet_index)
+					{
+					 	condition(udp_sock,nm_file,rem_add);
+					}
+					memset(buf_pckt, 0, sizeof(Packet_Details);
 				}
 			}
-			printf("Done\n");
-			fclose(fp);
-		}
+			fclose(fptr);
+		}				
+}
+/* Definition of 'client_get_file' function */
+void get_file(int socket_id, char *name_file, struct sockaddr_in remote)
+{
+
+	uint8_t msg_conf[BUFSIZE]="", conf_recvd, sizef[BUFSIZE]; 
+	bzero(msg_conf,sizeof(msg_conf));
+	bzero(sizef, sizeof(sizef));
+	int info_send = 0, file_encrypted = 0, bytes_file_recvd = 0,  get_msg = 0, length, encrypted_msg = 0;
+	ssize_t size_file = 0;
+	long int limit =0;
+	conf_recvd = recvfrom(socket_id, msg_conf, sizeof(msg_conf), 0, NULL,NULL);
+	printf("The file is received confirmation %s\n", msg_conf);
+
+	
+	if(strcmp(msg_conf,"File present") == 0)
+	{
+		printf("\n File found\n");
+		strncpy(sizef, "The size of file", strlen("The size of file"));
+		info_send = sendto(socket_id, sizef, strlen(sizef), 0, (struct sockaddr*)&remote, sizeof(remote));
+		bytes_file_recvd = recvfrom(socket_id, &size_file, sizeof(size_file), 0, NULL,NULL);
+		file_encrypted = ntohl(size_file);
+		printf("File  of size received is : %ld\n",file_encrypted);
+		strcpy(temp_file,name_file);
+		file_trans(socket_id, name_file, remote);
 	}
 	else
 	{
-		printf("File does not exists on server\n");
+		printf(" File is not present\n");
+		printf("Enter an appropriate name of the file\n");
 	}
+	
 }
 
 /* Definition of 'client_put_file' function */
-void client_put_file(int socket_id, char *file_name, struct sockaddr_in remote_addr)
+void put_file(int socket_id, char *name_file, struct sockaddr_in remote)
 {
-	printf("In client_put_file case with file name : %s\n",file_name);
-
-	int file_exist_confirmation = 0;
-	int bytes_read = 0;
-	int bytes_sent = 0;
-	int actual_sequence_count = 0;
-	int received_sequence_count = 0;
-	int decoded_sequence_count = 0;
-	ssize_t fileSize,encodedFileSize,size_check;
-	char file_exist_buffer[MAXBUFSIZE];
-
+	int msg_conf = 0, obt_bytes = 0, info_send = 0, seq = 0, seq_get = 0, seq_dec = 0, seq_htonl =0, seq_check= 0, fs, values = 0, val2 = 0;
+	ssize_t size_file,file_encrypted,conff_size = 0;
+	uint8_t present_file[BUFSIZE],key[4] = {'A', 'B', '5', '9'};
+	bzero(present_file,sizeof(present_file));
 	/* Creating a file pointer to the file to be sent to server */
-	FILE *fp;
-	fp = fopen(file_name,"r");
-	if(fp == NULL)
-	{
-		printf("File does not exist, sending file doesn't exist information to server\n");
-		
-		bzero(file_exist_buffer,sizeof(file_exist_buffer));
-		strcpy(file_exist_buffer,"File does not exist");
-		file_exist_confirmation = sendto(socket_id, file_exist_buffer, strlen(file_exist_buffer), 0, (struct sockaddr*)&remote_addr,  sizeof(remote_addr));
-		printf("File exist confirmation message : %s\n",file_exist_buffer);
-	}
-	else
-	{
-		printf("File exists, sending file exists information to server\n ");
-
-		bzero(file_exist_buffer,sizeof(file_exist_buffer));
-		strcpy(file_exist_buffer,"File exist");
-		file_exist_confirmation = sendto(socket_id, file_exist_buffer, strlen(file_exist_buffer), 0, (struct sockaddr*)&remote_addr,  sizeof(remote_addr));
-		printf("File exist confiramtion message: %s\n",file_exist_buffer);
-		
-		printf("Sending the size of the file to server\n");
-		fseek(fp, 0, SEEK_END);
-   		fileSize = ftell(fp);
-  		encodedFileSize = htonl(fileSize);
-		rewind(fp);
-	
-		int file_size = sendto(socket_id, &encodedFileSize, sizeof(encodedFileSize), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
-		printf("File size: %ld\n",fileSize);
-		size_check = 0;
-
-		/* Setting the timeout for recvfrom function */
-		tv.tv_sec = 0;
-		tv.tv_usec = 100000;
-		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
-		    perror("Error");
-		}
-
-		/* Key for encrypting message */
-		char key = 10;
-
-		/* Loop till the entire file is sent */
-		while(size_check < fileSize)
+	FILE *fptr;
+	fptr = fopen(file_name,"rb");
+		if(fptr == NULL)
 		{
-			/* Structure for storing the packet to be sent */
-			struct Datagram *temp = malloc(sizeof(struct Datagram));
-			if(temp != NULL)
-			{
-				temp->datagram_id = actual_sequence_count;
-				bytes_read = fread(temp->datagram_message,sizeof(char),MAXBUFSIZE,fp);
-			
-				/* Encrypting the message */
-				for(long int i=0;i<bytes_read;i++)
-				{
-					temp->datagram_message[i] ^= key;
-				}
-				
-				temp->datagram_length = bytes_read;
-				printf("\nSequence count : %d\n",temp->datagram_id);
-			
-				bytes_sent = sendto(socket_id, temp, (sizeof(*temp)), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
-				
-				/* Check for the acknowledgement from server */
-				if(recvfrom( socket_id, &received_sequence_count, sizeof(received_sequence_count),0, NULL,NULL)>0)
-				{
-					printf("Received ACK %d\n", htonl(received_sequence_count));
-					decoded_sequence_count = htonl(received_sequence_count);
-					if(decoded_sequence_count == actual_sequence_count)
-					{
-						/* Incrementing the sequence count and local file size variable */
-						actual_sequence_count++;
-						size_check = size_check + bytes_read;
-						printf("size_check : %ld\n",size_check);
-					}
-					else
-					{
-						printf("Sending the same sequence '%d' again\n",actual_sequence_count);
-						fseek(fp, size_check, SEEK_SET);	
-					}
-				}
-				else
-				{
-					printf("Sending the same sequence '%d' again\n",actual_sequence_count);
-					fseek(fp, size_check, SEEK_SET);
-				}
-				free(temp);
-			}
+		
+			strcpy(present_file,"File is not present\n");
+			msg_conf = sendto(socket_id, present_file, strlen(present_file), 0, (struct sockaddr*)&remote,  sizeof(remote));
+			printf("File exist confirmation message : %s\n",present_file);
+			printf("Please enter an appropriate file name\n");
 		}
-		printf("Done\n");
-		fclose(fp);
-	}
-}
+		else
+		{
+			strcpy(present_file,"File is present");
+			msg_conf = sendto(socket_id, present_file, strlen(present_file), 0, (struct sockaddr*)&remote,  sizeof(remote));
+			printf("The message obtained is: %s\n",present_file);
+			fseek(fptr, 0, SEEK_END);
+   			size_file = ftell(fptr);
+  			file_encrypted = htonl(size_file);
+			rewind(fptr);
+			fs = sendto(socket_id, &file_encrypted, sizeof(file_encrypted), 0, (struct sockaddr*)&remote, sizeof(remote));
+			printf("The size of the file is: %ld\n",size_file);
+			time_vals.tv_sec = 0;
+			time_vals.tv_usec = 100000;
+			setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals));
+				while(conff_size < size_file)
+				{
+				if(buf_pckt != NULL)
+				{
+					buf_pckt->packet_index = seq;
+					printf("\nThe packet : %d\n",buf_pckt->packet_index);
+					obt_bytes = fread(buf_pckt->packet_descp,sizeof(char),BUFSIZE,fptr);
+					buf_pckt->packet_len = obt_bytes;
+					for(values=0; values<buf_pckt->packet_len; values++)
+					{
+						buf_pckt->packet_descp[values] = nbuf[values] + key[val2];
+						val2++;
+						if(val2 == 3)
+						{
+							val2 = 0;
+						 }
 
-/* Definition of 'client_delete_file' function */
-void client_delete_file(int socket_id, char *file_name, struct sockaddr_in remote_addr)
-{
-	printf("In client_delete_file case with file name : %s\n",file_name);
-	
-	/* Sending information of the required file */
-	int sent_bytes = sendto( socket_id, file_name, strlen(file_name), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
+				          }
+					
+					
+					info_send = sendto(socket_id, buf_pckt, (sizeof(*buf_pckt)), 0, (struct sockaddr*)&remote, sizeof(remote));
+					seq_check = recvfrom(socket_id, &seq_get, sizeof(seq_get), 0, NULL, NULL);
+					if(seq_check<0)
+					{
+						printf("Same sequence has to be sent again %d\n",seq);
+						fseek(fptr, conff_size, SEEK_SET);
+					}
+					if(seq_check>0)
+					{
+						seq_dec = htonl(seq_get);
+						printf("The received acknowledgment is %d\n", seq_dec);
+						
+						if(seq_dec != seq)
+						{
+							printf("The same sequence has to be sent again%d\n",seq);
+							fseek(fptr, conff_size, SEEK_SET);	
+							
+						}
+
+						else if(seq_dec == seq)
+						{
+							seq++;
+							conff_size = conff_size + obt_bytes;
+						
+						}
+					   }
+				memset(buf_pckt, 0, sizeof(Packet_Details);
+				}
+				}
+		
+			}
+			fclose(fptr);
 }
 
 /* Definition of 'client_list_directory' function */
-void client_list_directory(int socket_id, struct sockaddr_in remote_addr)
+void list_files(struct sockaddr_in remote_addr,int socket_id)
 {
 	printf("In client_list_directory case\n");
 
@@ -332,7 +276,7 @@ void client_list_directory(int socket_id, struct sockaddr_in remote_addr)
 		printf("Contents of the Server:\n");
 		printf("**********************************************************************\n");
 		rewind(fp);
-		char print_buffer[MAXBUFSIZE]="";
+		char print_buffer[BUFSIZE]="";
 		bzero(print_buffer,sizeof(print_buffer));
 		while (fgets(print_buffer, sizeof(print_buffer), fp)) {
 			printf("%s", print_buffer); 
@@ -344,54 +288,24 @@ void client_list_directory(int socket_id, struct sockaddr_in remote_addr)
 	}
 }
 
-/* Definition of 'client_exit_server' function */
-void client_exit_server(int socket_id, struct sockaddr_in remote_addr)
-{
-	printf("In client_exit_server case\n");
-
-	/* Buffer for storing the exit confirmation message */
-	char exit_confirmation_message[MAXBUFSIZE]="";
-	bzero(exit_confirmation_message,sizeof(exit_confirmation_message));
-
-	int exit_confirmation_received = recvfrom( socket_id, exit_confirmation_message, sizeof(exit_confirmation_message), 0, NULL,NULL);
-	printf("Exit confirmation received as : %s\n",exit_confirmation_message);
-
-	/* Check for server exit */
-	if(strcmp(exit_confirmation_message,"Exit") == 0)
-	{
-		printf("Server exited successfully\n");
-	}
-	else
-	{
-		printf("Error in exiting the server\n");
-	}
-	/* Exiting the client after exiting the server */
-	exit(0);
-	
-}
-
-/* Definition of 'client_hash_value' function */
-void client_hash_value(int socket_id, char *file_name, struct sockaddr_in remote_addr)
-{
-	printf("In client_hash_value case with file name : %s\n",file_name);
-	char system_buffer[MAXBUFSIZE];	
-	strcpy(system_buffer,"md5sum ");
-	strncat(system_buffer,file_name,strlen(file_name));
-	printf("**********************************************************************\n");
-	system(system_buffer);
-	printf("**********************************************************************\n");
-
-}
-
 /* Main Function definition */
 int main (int argc, char * argv[])
 {
  
 	/* Creating socket name */                          
-	int udp_socket;
+	int sockfd;
 	/* Creating internet socket address structure */  
-	struct sockaddr_in remote;              
-	
+	struct sockaddr_in serveraddr; 
+	uint8_t hash_buf[100];   
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));          
+	uint8_t* fname;
+	int bytestot; 
+	uint8_t cmd[70];
+	uint8_t cmd_out_exit;
+	uint8_t val[BUFSIZE];
+        uint8_t* name_cmd;
+	bzero(cmd,sizeof(cmd));
+	bzero(val, sizeof(val));
 	/* Check for input paramaters during execution */
 	if (argc < 3)
 	{
@@ -402,162 +316,97 @@ int main (int argc, char * argv[])
 	 
 	/* Populating the sockaddr_in struct with information of server */
 	/* Clearing the struct */	
-	bzero(&remote,sizeof(remote));               
+	bzero(&serveraddr,sizeof(serveraddr)); 
+                      
 	/* Creating the address family */	
-	remote.sin_family = AF_INET;                 
+	serveraddr.sin_family = AF_INET;                 
 	/* Sets port number to network byte order */	
-	remote.sin_port = htons(atoi(argv[2]));      
+	serveraddr.sin_port = htons(atoi(argv[2]));      
 	/* Sets remote IP address */	
-	remote.sin_addr.s_addr = inet_addr(argv[1]); 
+	serveraddr.sin_addr.s_addr = inet_addr(argv[1]); 
 
 	/* Creating a generic socket of type UDP (datagram) */
-	if ((udp_socket = socket(PF_INET,SOCK_DGRAM,0)) < 0)
+	if ((sockfd = socket(PF_INET,SOCK_DGRAM,0)) < 0)
 	{
 		printf("unable to create socket\n");
 	}
 
-	/* Number of bytes sent in the message */
-	int bytes_sent; 
-	/* Local variables for parsing the input given by user */
-	char operation[MAXBUFSIZE];
-	char temp_operation[MAXBUFSIZE];
-	bzero(operation,sizeof(operation));
-	bzero(temp_operation,sizeof(temp_operation));
-	int count = 0,final_count =0;
-	char *delimiter = " "; 
-	char *words,*temp;
-	char *final_words,*final_temp;	
+	
+	
 
 	/* Loop for getting input from the user for different operation */
 	while(1)
 	{
 		/* Initialising the timeout to be infinite for 'recvfrom' function */
-		tv_1.tv_sec = 0;
-		tv_1.tv_usec = 0;
-		if (setsockopt(udp_socket, SOL_SOCKET, SO_RCVTIMEO,&tv_1,sizeof(tv_1)) < 0) 
+		time_val1.tv_sec = 0;
+		time_val1.tv_usec = 0;
+		if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0) 
 		{
 		    perror("Error\n");
 		}		
 		
-		/* Menu for the user */
-		printf("\n/********************************************************************/\n");
-		printf("You can perform the following operations using this client:\n");
-		printf("1) Get File from the server.               [Eg: get 'file_name']\n");
-		printf("2) Put File in the server.                 [Eg: put 'file_name']\n");
-		printf("3) Delete File in the server.              [Eg: delete 'file_name']\n");
-		printf("4) Get server contents by 'ls' command.    [Eg: ls]\n");
-		printf("5) Get hash value of the file.             [Eg: md5sum 'file_name']\n");
-		printf("6) Exit the server.                        [Eg: exit]\n");
-		printf("/********************************************************************/\n");
-	
-		/* Getting input from the user */
-		printf("\nPlease enter the operation you want to perform:\n");
-		scanf(" %[^\n]s",operation);
-		printf("\noperation:%s\n",operation);
-
-		/* Sending the entire operation to the server */
-		printf("First sending the entire operation to the server : %s\n",operation);
-		bytes_sent = sendto( udp_socket, operation, strlen(operation), 0, (struct sockaddr*)&remote, sizeof(remote));
-		printf("Number of bytes of the operation sent : %d\n",bytes_sent);
-
-		/* Parsing the received operation */
-		strcpy(temp_operation,operation);
-		temp = operation;
-		words = strtok(temp,delimiter);
-		while(words != NULL)
+		printf("Enter the command to be performed and type it:get [filename],put [filename],delete [filename],md5sum, ls,exit\n"
+		gets(cmd);
+		/*printf("First sending the entire command to the server : %s\n",cmd);
+		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+		printf("Number of bytes for the operation sent : %d\n",bytestot);
+		name_cmd = strdup(cmd);
+		strtok(name_cmd, " ");
+		printf("The name of the command is: %s\n", name_cmd);
+		fname = strtok(NULL, " ");
+		printf("The file name is %s\n", fname);
+		if(strcmp("get", name_cmd) == 0)
 		{
-			if(strlen(words) > 0)
-			{			
-				count++;
-			}		
-			words = strtok(NULL,delimiter);
+			printf("\nTo obtain the name of the file from the server %s\n", fname);
+			get_file(sockfd, fname, serveraddr);
+			printf("\nThe file get is done\n");
 		}
-		/* Checking the number ofo words in the input string */
-		if(count > 2)
-		{
-			printf("In error case\n");
-			printf("Error in the input string\n");
-		}
-		else
-		{
-			printf("In success case\n");
-			if(count == 2)
-			{
-				printf("%s\n",temp_operation);
-				char first_word[MAXBUFSIZE]="",second_word[MAXBUFSIZE]="";
-				final_temp = temp_operation;
-				final_words = strtok(final_temp,delimiter);
-				
-				while(final_words != NULL)
-				{
-					if(final_count == 0)
-					{
-						strcpy(first_word,final_words);
-					}
-					if(final_count == 1)
-					{
-						strcpy(second_word,final_words);
-					}				
-					if(strlen(final_words) > 0)
-					{			
-						final_count++;
-					}		
-					final_words = strtok(NULL,delimiter);
-				}
-			
-				
-				/* Calling required functions depending on the command received */
-				if(strcmp(first_word,"get")==0)
-				{
-					client_get_file(udp_socket, second_word, remote);
-				}
-				else if(strcmp(first_word,"put")==0)
-				{
-					client_put_file(udp_socket, second_word, remote);
-				}
-				else if(strcmp(first_word,"delete")==0)
-				{
-					client_delete_file(udp_socket, second_word, remote);
-				}
-				else if(strcmp(first_word,"md5sum")==0)
-				{
-					client_hash_value(udp_socket, second_word, remote);
-				}
-				else
-				{
-					printf("Error in the input message given by user\n");
-				}
-			}
-			else if(count == 1)
-			{
 
-				/* Calling required functions depending on the command received */
-				if(strcmp(temp_operation,"ls")==0)
-				{
-					client_list_directory(udp_socket, remote);
-				}
-				else if(strcmp(temp_operation,"exit")==0)
-				{
-					client_exit_server(udp_socket, remote);
-				}
-				else
-				{
-					printf("Error in the input message given by user\n");
-				}
-			}
-			else
-			{
-				printf("Error in the input message given by user\n");
-			}
+		else if(strcmp("put", name_cmd) == 0)
+		{
+			printf("\nTo put the file by the client %s\n", fname);
+			put_file(sockfd, fname, serveraddr);
+			printf("\nThe file put is done\n");
+		 }
+		 else if(strcmp("ls", name_cmd) == 0)
+		{
+			printf("\nTo list all the files in the directory%s\n", fname);
+			ls_display(sockfd, fname, serveraddr);
+			printf("\nThe dircetories and files are listed\n");
 		}
-		
+					
+		else if(strcmp("delete", name_cmd) == 0)
+		{	
+       			printf("Deleting the file with name: %s\n",fname);
+			/* Sending information of the required file */
+			bytestot = sendto(sockfd, fname, strlen(fname), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+		}
+		else if(strcmp("md5sum", name_cmd) == 0)
+		{
+			strcpy(hash_buf, "md5sum");
+			printf("To get the hash value of the file: %s\n", fname);
+			strncat(hash_buf,fname,strlen(fname));
+			printf("**************************\n");
+			system(hash_buf);
+			printf("***************************\n");
+		}
+		else if(strcmp("exit", name_cmd) == 0)
+		{
+	 		printf("Exiting the server\n");
+			bytestot = recvfrom(sockfd, val, strlen(val), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+			printf("%s\n", val);
+			‌
+        	 }
+	 	else
+		{
+			printf("The entered command isn't appropriate\n");
+
+	  	}
+
 		/* Resetting the local variables */
- 		bzero(operation,sizeof(operation));
-		bzero(temp_operation,sizeof(temp_operation));
-		count = 0;
-		final_count =0;
-	}
+ 		bzero(cmd,sizeof(cmd));
+		bzero(val, sizeof(val));
 
 	/* Closing the socket */
-	close(udp_socket);
+	close(sockfd);
 }
