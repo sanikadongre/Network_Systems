@@ -287,7 +287,7 @@ int main (int argc, char * argv[])
 {
  
 	/* Creating socket name */                          
-	int sockfd, bytestot;
+	int sockfd, bytestot, bytestot1;
 	/* Creating internet socket address structure */  
 	struct sockaddr_in serveraddr; 
 	uint8_t hash_buf[100];        
@@ -339,7 +339,9 @@ int main (int argc, char * argv[])
 		scanf("%s", fname1);
 		printf("First sending the entire command to the server : %s\n",cmd);
 		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+		bytestot1 = sendto(sockfd, fname1, strlen(fname1), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		printf("Number of bytes for the operation sent : %d\n",bytestot);
+		printf("Number of bytes for the operation sent : %d\n",bytestot1);
 		name_cmd = strdup(cmd);
 		fname = strdup(fname1);
 		strtok(name_cmd, " ");
