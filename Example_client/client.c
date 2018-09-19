@@ -357,7 +357,7 @@ int main (int argc, char * argv[])
 		 else if(strcmp("ls", name_cmd) == 0)
 		{
 			printf("\nTo list all the files in the directory%s\n", fname);
-			list_files(sockfd, fname, serveraddr);
+			//list_files(sockfd, fname, serveraddr);
 			printf("\nThe dircetories and files are listed\n");
 		}
 					
@@ -371,7 +371,7 @@ int main (int argc, char * argv[])
 		else if(strcmp("exit", name_cmd) == 0)
 		{
 	 		printf("Exiting the server\n");
-			bytestot = recvfrom(sockfd, val, strlen(val), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+			bytestot = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 			printf("%s\n", val);
         	 }
 		else if(strcmp("md5sum", name_cmd) == 0)
