@@ -29,7 +29,7 @@ typedef struct
 
 }Packet_Details;
 
-void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr, uint32_t len_data)
+/*void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr, uint32_t len_data)
 {  
 	char command_buffer[BUFSIZE],size_buffer[BUFSIZE];            
 	char *file_buffer;
@@ -48,7 +48,7 @@ void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr,
 	printf("The client requires the file : %s\n", file_name);
 
 	/* Creating a file pointer to the requested file from the client */
-	FILE *fp;
+	/*FILE *fp;
 	fp = fopen(file_name,"r");
 	if(fp == NULL)
 	{
@@ -82,27 +82,27 @@ void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr,
 		size_check = 0;
 
 		/* Key for encrypting message */
-		char key = 10;
+		/*char key = 10;
 		
 		/* Setting the timeout for recvfrom function */
-		time_vals.tv_sec = 0;
+		/*time_vals.tv_sec = 0;
 		time_vals.tv_usec = 100000;
 		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals)) < 0) {
 		    perror("Error");
 		}
 	
 		/* Loop till the entire file is sent */
-		while(size_check < fileSize)
+		/*while(size_check < fileSize)
 		{
 			/* Structure for storing the packet to be sent */
-			struct Datagram *temp = malloc(sizeof(struct Datagram));
+			/*struct Datagram *temp = malloc(sizeof(struct Datagram));
 			if(temp != NULL)
 			{
 				temp->datagram_id = actual_sequence_count;
 				bytes_read = fread(temp->datagram_message,sizeof(char),BUFSIZE,fp);
 
 				/* Encrypting the message */
-				for(long int i=0;i<bytes_read;i++)
+				/*for(long int i=0;i<bytes_read;i++)
 				{
 
 					temp->datagram_message[i] ^= key;
@@ -114,14 +114,14 @@ void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr,
 				bytes_sent = sendto(socket_id, temp, (sizeof(*temp)), 0, (struct sockaddr*)&remote_addr, remote_len);
 				
 				/* Check for the acknowledgement from client */
-				if(recvfrom( socket_id, &received_sequence_count, sizeof(received_sequence_count), 0, (struct sockaddr*)&remote_addr, &remote_len)>0)
+				/*if(recvfrom( socket_id, &received_sequence_count, sizeof(received_sequence_count), 0, (struct sockaddr*)&remote_addr, &remote_len)>0)
 				{	
 					printf("ACK received %d\n", htonl(received_sequence_count));
 					decoded_sequence_count = htonl(received_sequence_count);
 					if(decoded_sequence_count == actual_sequence_count)
 					{
 						/* Incrementing the sequence count and local file size variable */
-						actual_sequence_count++;
+						/*actual_sequence_count++;
 						size_check = size_check + bytes_read;
 						printf("size_check : %ld\n",size_check);
 					}
@@ -145,7 +145,7 @@ void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr,
 }
 
 /* Definition of 'server_put_file' function */
-void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
+/*void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
 {	
 	printf("In server_put_file case\n");	
 
@@ -165,18 +165,18 @@ void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 	{
 
 		/* Receiving the file size from the client */
-		file_size_bytes = recvfrom( socket_id, &fileSize, sizeof(fileSize), 0, (struct sockaddr*)&remote_addr, &remote_len);
+		/*file_size_bytes = recvfrom( socket_id, &fileSize, sizeof(fileSize), 0, (struct sockaddr*)&remote_addr, &remote_len);
 		encodedFileSize = ntohl(fileSize);
 		printf("File size received : %ld\n",encodedFileSize);
 	
 		/* A buffer to store the file content received */                               
-		char new_file[BUFSIZE];
+		/*char new_file[BUFSIZE];
 		strcpy(new_file,file_name);
 		FILE *fp;
 		fp = fopen(new_file,"w+");
 
 		/* Key for decrypting message */
-		char key = 10;
+		/*char key = 10;
 
 		
 		if(NULL == fp)
@@ -187,18 +187,18 @@ void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 		else
 		{
 			/* Loop till the entire file is received */
-			while(size_check < encodedFileSize)
+			/*while(size_check < encodedFileSize)
 			{
 				/* Structure for storing the packet received */
-				struct Datagram *temp = malloc(sizeof(struct Datagram));
+				/*struct Datagram *temp = malloc(sizeof(struct Datagram));
 				if(temp != NULL)
 				{
 					bytes_received = recvfrom( socket_id, temp, sizeof(*temp), 0, (struct sockaddr*)&remote_addr, &remote_len);
 					/* Check for acknowlegement */					
-					if(received_sequence_count == temp->datagram_id)
+					/*if(received_sequence_count == temp->datagram_id)
 					{
 						/* Loop for decrypting the message */
-						for(long int i=0; i<temp->datagram_length; i++)
+						/*for(long int i=0; i<temp->datagram_length; i++)
 						{
 							temp->datagram_message[i] ^= key;
 						}
@@ -212,7 +212,7 @@ void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 						sent_bytes = sendto( socket_id, &encoded_id, sizeof(encoded_id), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
 						
 						/* Incrementing the sequence id and the local variable for size of the file */						
-						received_sequence_count++;
+						/*received_sequence_count++;
 						size_check += sizeof(temp->datagram_message);
 					}
 					else
@@ -231,24 +231,24 @@ void server_put_file(int socket_id, char *file_name, struct sockaddr_in remote_a
 	{
 		printf("Requested file does not exist on server\n");
 	}
-}
+}*/
 
 /* Definition of 'server_delete_file' function */
-void server_delete_file(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
+/*void server_delete_file(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
 {
 	printf("In server_delete_file case\n");
 
 	/* A buffer to store our command received */    
-	char command_buffer[BUFSIZE]; 
+	/*char command_buffer[BUFSIZE]; 
 	int temp_bytes;
 	int ret = 0;
 	/* Receiving file name to be deleted from the client */
-	bzero(command_buffer,sizeof(command_buffer));
+	/*bzero(command_buffer,sizeof(command_buffer));
 	temp_bytes = recvfrom( socket_id, command_buffer, BUFSIZE, 0, (struct sockaddr*)&remote_addr, &remote_len);
 	printf("The client requires the file '%s' to be removed\n", command_buffer);
 	
 	/* Creating a file pointer to the requested file from the client */
-	FILE *fp;
+	/*FILE *fp;
 	fp = fopen(command_buffer,"r");
 	if(fp == NULL)
 	{
@@ -270,7 +270,7 @@ void server_delete_file(int socket_id, char *file_name, struct sockaddr_in remot
 }
 
 /* Definition of 'server_list_directory' function */
-void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsigned int remote_len)
+/*void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsigned int remote_len)
 {
 	printf("In server_list_directory case\n");
 
@@ -284,7 +284,7 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 	int decoded_sequence_count;
 
 	/* Opening the file */
-	fp = fopen(new_file,"w+");
+	/*fp = fopen(new_file,"w+");
 	if(NULL == fp)
 	{
 		printf("Error opening the list file\n");
@@ -306,7 +306,7 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 			closedir(d);
 		}
 		/* Sending file size to the client */
-		fileSize = ftell(fp);
+		/*fileSize = ftell(fp);
 		encodedFileSize = ntohl(fileSize);
 		rewind(fp);
 		file_size = sendto(socket_id, &encodedFileSize, sizeof(encodedFileSize), 0, (struct sockaddr*)&remote_addr, remote_len);
@@ -314,17 +314,17 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 		size_check = 0;
 		
 		/* Key for encrypting message */
-		char key = 10;
+		/*char key = 10;
 	
 		/* Setting the timeout for recvfrom function */
-		time_val2.tv_sec = 0;
+		/*time_val2.tv_sec = 0;
 		time_val2.tv_usec = 100000;
 		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_val2,sizeof(time_val2)) < 0) {
 		    perror("Error");
 		}
 		
 		/* Loop till the entire file is sent */
-		while(size_check < fileSize)
+		/*while(size_check < fileSize)
 		{
 			struct Datagram *temp = malloc(sizeof(struct Datagram));
 			if(temp != NULL)
@@ -333,7 +333,7 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 				bytes_read = fread(temp->datagram_message,sizeof(char),BUFSIZE,fp);
 
 				/* Encrypting the message */
-				for(long int i=0;i<bytes_read;i++)
+			/*	for(long int i=0;i<bytes_read;i++)
 				{
 
 					temp->datagram_message[i] ^= key;
@@ -346,14 +346,14 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 				bytes_sent = sendto(socket_id,  temp, (sizeof(*temp)), 0, (struct sockaddr*)&remote_addr, remote_len);
 				
 				/* Check for the acknowledgement from server */
-				if(recvfrom( socket_id, &received_sequence_count, sizeof(received_sequence_count), 0, (struct sockaddr*)&remote_addr, &remote_len)>0)
+				/*if(recvfrom( socket_id, &received_sequence_count, sizeof(received_sequence_count), 0, (struct sockaddr*)&remote_addr, &remote_len)>0)
 				{				
 					printf("ACK received : %d\n", htonl(received_sequence_count));
 					decoded_sequence_count = htonl(received_sequence_count);
 					if(decoded_sequence_count == actual_sequence_count)
 					{
 						/* Incrementing the sequence count and local file size variable */
-						actual_sequence_count++;
+					/*	actual_sequence_count++;
 						size_check = size_check + bytes_read;
 						printf("size_check : %ld\n",size_check);
 					}
@@ -374,10 +374,10 @@ void server_list_directory(int socket_id, struct sockaddr_in remote_addr, unsign
 		printf("Done\n");
 		fclose(fp);	
 	}
-}
+}*/
 
 /* Definition of 'server_exit_server' function */
-void server_exit_server(int socket_id, struct sockaddr_in remote_addr, unsigned int remote_len)
+/*void server_exit_server(int socket_id, struct sockaddr_in remote_addr, unsigned int remote_len)
 {
 	printf("In server_exit_server case\n");
 	
@@ -385,7 +385,7 @@ void server_exit_server(int socket_id, struct sockaddr_in remote_addr, unsigned 
 	int exit_confirmation = 0;
 
 	/* Sending server exit confirmation to client */
-	bzero(exit_buffer,sizeof(exit_buffer));
+	/*bzero(exit_buffer,sizeof(exit_buffer));
 	strcat(exit_buffer,"Exit");
 	printf("Exit_buffer : %s\n",exit_buffer);
 	exit_confirmation = sendto(socket_id, exit_buffer, strlen(exit_buffer), 0, (struct sockaddr*)&remote_addr, remote_len);
@@ -393,7 +393,7 @@ void server_exit_server(int socket_id, struct sockaddr_in remote_addr, unsigned 
 }
 
 /* Definition of 'server_hash_value' function */
-void server_hash_value(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
+/*void server_hash_value(int socket_id, char *file_name, struct sockaddr_in remote_addr, unsigned int remote_len)
 {
 	printf("In server_hash_value case with file name : %s\n",file_name);
 	char system_buffer[BUFSIZE];	
@@ -403,7 +403,7 @@ void server_hash_value(int socket_id, char *file_name, struct sockaddr_in remote
 	system(system_buffer);
 	printf("**********************************************************************\n");
 
-}
+}*/
 
 /* Main Function definition */
 int main(int argc, char *argv[])
@@ -418,7 +418,7 @@ int main(int argc, char *argv[])
 	bzero(&sin,sizeof(sin));  
 	bzero(cmd, sizeof(cmd));
 	bzero(val, sizeof(val));
-	bzero(recv_buf, sizeof(recv_buf));	
+		
 	/* Check for input paramaters during execution */
 	if (argc != 2)
 	{
@@ -511,6 +511,7 @@ int main(int argc, char *argv[])
 		{
 	 		strcat(recv_buf, "Exit");
 			printf("The recv_buf message is %s\n", recv_buf);
+			bzero(recv_buf, sizeof(recv_buf));
 			exit_recv = sendto(udp_sock, recv_buf, BUFSIZE, 0, (struct sockaddr*)&remote_opt, sizeof(remote_opt));
 			printf("The exit command sent is %d\n", exit_recv);
         	 }
