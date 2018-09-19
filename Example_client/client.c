@@ -394,6 +394,6 @@ int main (int argc, char * argv[])
  		bzero(cmd,sizeof(cmd));
 		bzero(val, sizeof(val));
 
-	/* Closing the socket */
+	}/* Closing the socket */
 	close(sockfd);
 }
