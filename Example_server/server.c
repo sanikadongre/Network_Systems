@@ -408,22 +408,23 @@ void server_hash_value(int socket_id, char *file_name, struct sockaddr_in remote
 /* Main Function definition */
 int main(int argc, char *argv[])
 {
-	int udp_sock,client_socket, bytestot = 0; 
-	uint8_t hash_buf[100];
+	int udp_sock,client_socket, bytestot = 0, file_del, exit_recv; 
+	uint8_t hash_buf[100], recv_buf[BUFSIZE];
 	uint8_t* fname;
-	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70];                       
-	struct sockaddr_in sin, remote;     
+	uint8_t* name_cmd;
+	uint8_t cmd_out_exit, val[BUFSIZE] = "The server is exiting", cmd[70];                       
+	struct sockaddr_in sin, remote_opt;     
 	unint32_t remote_length; 
 	bzero(&sin,sizeof(sin));  
 	bzero(cmd, sizeof(cmd));
 	bzero(val, sizeof(val));
+	bzero(recv_buf, sizeof(recv_buf));	
 	/* Check for input paramaters during execution */
 	if (argc != 2)
 	{
 		printf ("USAGE:  <port>\n");
 		exit(1);
 	}
-
 	/* Assingn the address family */
 	sin.sin_family = AF_INET;                  
 	/* Set the input port number to network byte order using htons() function */	
@@ -438,7 +439,7 @@ int main(int argc, char *argv[])
 	{
 		printf("unable to bind socket\n");
 	}
-	remote_length = sizeof(remote);
+	remote_length = sizeof(remote_opt);
 	while(1)
 	{
 		/* Initialising the timeout to be infinite for 'recvfrom' function */
@@ -448,13 +449,81 @@ int main(int argc, char *argv[])
 		{
 		    perror("Error");
 		}
-		bytestot = recvfrom( udp_sock, cmd, strlen(cmd), 0, (struct sockaddr*)&remote, &remote_length);
+		bytestot = recvfrom(udp_sock, cmd, strlen(cmd), 0, (struct sockaddr*)&remote_opt, &remote_length);
 		printf("The command received from the client is : %s\n", cmd);
-		bzero(operation,sizeof(operation));
-		bzero(temp_operation,sizeof(temp_operation));
+		name_cmd = strdup(cmd);
+		strtok(name_cmd, " ");
+		printf("The name of the command is: %s\n", name_cmd);
+		fname = strtok(NULL, " ");
+		printf("The file name is %s\n", fname);
+		if(strcmp("get", name_cmd) == 0)
+		{
+			//printf("\nTo obtain the name of the file from the server %s\n", fname);
+			//get_file(udp_sock, fname, serveraddr);
+			//printf("\nThe file get is done\n");
+		}
+
+		else if(strcmp("put", name_cmd) == 0)
+		{
+			//printf("\nTo put the file by the client %s\n", fname);
+			//put_file(udp_sock, fname, serveraddr);
+			//printf("\nThe file put is done\n");
+		 }
+		 else if(strcmp("ls", name_cmd) == 0)
+		{
+			//printf("\nTo list all the files in the directory%s\n", fname);
+			//ls_display(udp_sock, fname, serveraddr);
+			//printf("\nThe dircetories and files are listed\n");
+		}
+					
+		else if(strcmp("delete", name_cmd) == 0)
+		{	
+			FILE *f;
+			bytestot = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, sizeof(remote_opt));
+			f = fopen(recv_buf,"r");			
+			if(f != NULL)
+			{
+				file_del = remove(recv_buf);
+				if(file_del != 0)
+				{
+					perror("Error");
+					printf("Enter a valid file name\n");
+				}
+				if(file_del == 0)
+				{
+					printf("The file is deleted\n");
+				}
+			}
+			if(f == NULL)
+			{
+			  	perror("Error");
+				printf("The file is not found and can't be deleted\n");
+			}
+		}
+		else if(strcmp("md5sum", name_cmd) == 0)
+		{
+			strcpy(hash_buf, "md5sum");
+			printf("To get the hash value of the file: %s\n", fname);
+			strncat(hash_buf,fname,strlen(fname));
+			printf("**************************\n");
+			system(hash_buf);
+			printf("***************************\n");
+		}
+		else if(strcmp("exit", name_cmd) == 0)
+		{
+	 		strcat(recv_buf, "Exit");
+			printf("The recv_buf message is %s\n", recv_buf);
+			exit_recv = sendto(udp_sock, recv_buf, BUFSIZE, 0, (struct sockaddr*)&remote_opt, sizeof(remote_opt));
+			printf("The exit command sent is %d\n", exit_recv);
+        	 }
+	 	else
+		{
+			printf("The entered command isn't appropriate\n");
+
+	  	}
+		bzero(cmd,sizeof(cmd));
+		bzero(val,sizeof(val));
 
 	}
 
-	/* Closing the socket */
-	close(udp_socket);
-}
+	

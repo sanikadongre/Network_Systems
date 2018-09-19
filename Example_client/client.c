@@ -173,7 +173,7 @@ void put_file(int socket_id, char *name_file, struct sockaddr_in remote)
 						printf("Same sequence has to be sent again %d\n",seq);
 						fseek(fptr, conff_size, SEEK_SET);
 					}
-					if(seq_check>0)
+					else if(seq_check>0)
 					{
 						seq_dec = htonl(seq_get);
 						printf("The received acknowledgment is %d\n", seq_dec);
