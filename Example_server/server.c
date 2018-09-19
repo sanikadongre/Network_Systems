@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>
-
+#include <server.h>
 #include <time.h>
 #include <stdint.h>
 
@@ -476,11 +476,11 @@ int main(int argc, char *argv[])
 					
 		else if(strcmp("delete", name_cmd) == 0)
 		{	
-			FILE *f;
+			//FILE *f;
 			bytestot = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, &(remote_length));
-			f = fopen(recv_buf,"r");			
-			if(f != NULL)
-			{
+			//f = fopen(recv_buf,"r");			
+			//if(f != NULL)
+			//{
 				file_del = remove(recv_buf);
 				if(file_del != 0)
 				{
@@ -491,12 +491,12 @@ int main(int argc, char *argv[])
 				{
 					printf("The file is deleted\n");
 				}
-			}
-			if(f == NULL)
-			{
-			  	perror("Error");
-				printf("The file is not found and can't be deleted\n");
-			}
+			//}
+			//if(f == NULL)
+			//{
+			  	//perror("Error");
+				//printf("The file is not found and can't be deleted\n");
+			//}
 		}
 		else if(strcmp("md5sum", name_cmd) == 0)
 		{
