@@ -333,7 +333,7 @@ int main (int argc, char * argv[])
 		
 		printf("Enter the command to be performed and type it:get [filename],put [filename],delete [filename],md5sum, ls,exit\n");
 		scanf("%s", cmd);
-		/*printf("First sending the entire command to the server : %s\n",cmd);
+		printf("First sending the entire command to the server : %s\n",cmd);
 		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		printf("Number of bytes for the operation sent : %d\n",bytestot);
 		name_cmd = strdup(cmd);
