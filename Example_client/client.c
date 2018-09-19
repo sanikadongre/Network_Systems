@@ -11,6 +11,7 @@
 #include <memory.h>
 #include <errno.h>
 #include <time.h>
+#include <string.h>
 #include <stdint.h>
 
 /* Global variables */

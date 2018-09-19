@@ -408,16 +408,15 @@ void server_hash_value(int socket_id, char *file_name, struct sockaddr_in remote
 /* Main Function definition */
 int main(int argc, char *argv[])
 {
-	/* Creating socket name */
-	int udp_sock,client_socket; 
-	/* Creating internet socket address structure */                          
+	int udp_sock,client_socket, bytestot = 0; 
+	uint8_t hash_buf[100];
+	uint8_t* fname;
+	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70];                       
 	struct sockaddr_in sin, remote;     
-	/* Length of the sockaddr_in structure */
-	unsigned int remote_length;        
-	/* Number of bytes received in the message */ 
-	int nbytes = 0;                    
-	  
-
+	unint32_t remote_length; 
+	bzero(&sin,sizeof(sin));  
+	bzero(cmd, sizeof(cmd));
+	bzero(val, sizeof(val));
 	/* Check for input paramaters during execution */
 	if (argc != 2)
 	{
@@ -425,149 +424,34 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	/* Creating sockaddr_in struct with the information about our socket */
-	/* Zero the struct */
-	bzero(&sin,sizeof(sin));                   
 	/* Assingn the address family */
 	sin.sin_family = AF_INET;                  
 	/* Set the input port number to network byte order using htons() function */	
 	sin.sin_port = htons(atoi(argv[1]));        
 	/* Supplies the IP address of the local machine */
 	sin.sin_addr.s_addr = INADDR_ANY;          
-
-
-	/* Creating a generic socket of type UDP (datagram) */
 	if ((udp_sock =socket(PF_INET,SOCK_DGRAM,0)) < 0)
 	{
 		printf("unable to create socket\n");
 	}
-
-
-	/* Binding the socket created to local address and port supplied in the sockaddr_in struct */
 	if (bind(udp_sock, (struct sockaddr *)&sin, sizeof(sin)) < 0)
 	{
 		printf("unable to bind socket\n");
 	}
-
-	/* Finding length of the socket address */
 	remote_length = sizeof(remote);
-
-	
-
-	/* Loop for different operations received from the client */
 	while(1)
 	{
 		/* Initialising the timeout to be infinite for 'recvfrom' function */
 		time_val1.tv_sec = 0;
 		time_val1.tv_usec = 0;
-		if (setsockopt(udp_sock, SOL_SOCKET, SO_RCVTIMEO,&tv_1,sizeof(tv_1)) < 0) 
+		if (setsockopt(udp_sock, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0) 
 		{
 		    perror("Error");
 		}
-
-		/* Waits for an incoming message */
-		printf("\nFirst receiving the entire operation from the client\n");
-		nbytes = recvfrom( udp_sock, operation, BUFSIZE, 0, (struct sockaddr*)&remote, &remote_length);
-		printf("Operation received from the client : %s\n", operation);
-
-		/* Parsing the received operation */
-		strcpy(temp_operation,operation);
-		temp = operation;
-		words = strtok(temp,delimiter);
-		while(words != NULL)
-		{
-			printf("words: %s\n",words);
-			if(strlen(words) > 0)
-			{			
-				count++;
-			}		
-			words = strtok(NULL,delimiter);
-		}
-
-		
-		if(count > 2)
-		{
-			printf("In error case\n");
-			printf("Error in the received operation\n");
-		}
-		else
-		{
-			printf("In success case\n");
-			if(count == 2)
-			{
-				printf("%s\n",temp_operation);
-				char first_word[BUFSIZE]="",second_word[BUFSIZE]="";
-				final_temp = temp_operation;
-				final_words = strtok(final_temp,delimiter);
-
-				while(final_words != NULL)
-				{
-					if(final_count == 0)
-					{
-						strcpy(first_word,final_words);
-					}
-					if(final_count == 1)
-					{
-						strcpy(second_word,final_words);
-					}				
-					if(strlen(final_words) > 0)
-					{			
-						final_count++;
-					}		
-					final_words = strtok(NULL,delimiter);
-				}
-			
-				
-				/* Calling required functions depending on the command received */
-				if(strcmp(first_word,"get")==0)
-				{
-					server_get_file(udp_sock, second_word, remote,remote_length);
-				}
-				else if(strcmp(first_word,"put")==0)
-				{
-					server_put_file(udp_sock, second_word, remote,remote_length);
-				}
-				else if(strcmp(first_word,"delete")==0)
-				{
-					server_delete_file(udp_sock, second_word, remote,remote_length);
-				}
-				else if(strcmp(first_word,"md5sum")==0)
-				{
-					server_hash_value(udp_sock, second_word, remote,remote_length);
-				}
-				else
-				{
-					printf("Error in the input message received from the client\n");
-				}
-			}
-			else if(count == 1)
-			{
-				printf("operation: %s\n",temp_operation);
-
-				/* Calling required functions depending on the command received */
-				if(strcmp(temp_operation,"ls")==0)
-				{
-					server_list_directory(udp_socket, remote,remote_length);
-				}
-				else if(strcmp(temp_operation,"exit")==0)
-				{
-					server_exit_server(udp_sock, remote,remote_length);
-				}
-				else
-				{
-					printf("Error in the input message received from the client\n");
-				}
-			}
-			else
-			{
-				printf("Error in the input message received from the client\n");
-			}
-		}
-		/* Resetting the local variables */
+		bytestot = recvfrom( udp_sock, cmd, strlen(cmd), 0, (struct sockaddr*)&remote, &remote_length);
+		printf("The command received from the client is : %s\n", cmd);
 		bzero(operation,sizeof(operation));
 		bzero(temp_operation,sizeof(temp_operation));
-		count = 0;
-		final_count =0;	
 
 	}
 
