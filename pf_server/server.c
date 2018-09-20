@@ -49,7 +49,7 @@ void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, 
 	ssize_t size_file = 0;
 	ssize_t file_encrypted = 0;
 	ssize_t conff_size;
-	int obt_bytes = 0;
+	int obt_bytes = 0, value2 = 0;
 	int info_send = 0;
 	int bytes_received = 0;
 	int seq_get = 0, seq = 0, seq_check = 0, seq_dec = 0;
