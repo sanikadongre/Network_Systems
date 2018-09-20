@@ -90,20 +90,83 @@ int main(int argc, char **argv) {
 		   {
 			perror("Error\n");
 		    }
-		    printf("Please enter msg: ");
-		    fgets(buf, BUFSIZE, stdin);
+		    printf("Enter the command to be performed and type it:get [filename],put [filename],delete [filename],md5sum, ls,exit\n");
+		scanf("%s", cmd);
+		scanf("%s", fname1);
+		printf("First sending the entire command to the server : %s\n",cmd);
+		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+		bytestot1 = sendto(sockfd, fname1, strlen(fname1), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+		printf("Number of bytes for the operation sent : %d\n",bytestot);
+		printf("Number of bytes for the operation sent : %d\n",bytestot1);
+		name_cmd = strdup(cmd);
+		fname = strdup(fname1);
+		strtok(name_cmd, " ");
+		printf("The name of the command is: %s\n", name_cmd);
+		fname = strtok(fname, " ");
+		printf("The file name is %s\n", fname);
+		if(strcmp("get", name_cmd) == 0)
+		{
+			printf("\nTo obtain the name of the file from the server %s\n", fname);
+			get_file(sockfd, fname, serveraddr);
+			printf("\nThe file get is done\n");
+		}
+
+		else if(strcmp("put", name_cmd) == 0)
+		{
+			printf("\nTo put the file by the client %s\n", fname);
+			put_file(sockfd, fname, serveraddr);
+			printf("\nThe file put is done\n");
+		 }
+		 else if(strcmp("ls", name_cmd) == 0)
+		{
+			printf("\nTo list all the files in the directory%s\n", fname);
+			//list_files(sockfd, fname, serveraddr);
+			printf("\nThe dircetories and files are listed\n");
+		}
+					
+		else if(strcmp("delete", name_cmd) == 0)
+		{	
+       			printf("Deleting the file with name: %s\n",fname);
+			/* Sending information of the required file */
+			bytestot = sendto(sockfd, fname, strlen(fname), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+		}
 		
+		else if(strcmp("exit", name_cmd) == 0)
+		{
+	 		printf("Exiting the server\n");
+			bytestot = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, &(serverlen));
+			printf("%s\n", val);
+        	 }
+		else if(strcmp("md5sum", name_cmd) == 0)
+		{
+			strcpy(hash_buf, "md5sum");
+			printf("To get the hash value of the file: %s\n", fname);
+			strncat(hash_buf,fname,strlen(fname));
+			printf("**************************\n");
+			system(hash_buf);
+			printf("***************************\n");
+		}
+	 	else
+		{
+			printf("The entered command isn't appropriate\n");
+
+	  	}
+
+		/* Resetting the local variables */
+ 		bzero(cmd,sizeof(cmd));
+		bzero(val, sizeof(val));
+		bzero(fname1, sizeof(fname1));
 		    /* send the message to the server */
 		    serverlen = sizeof(serveraddr);
-		    n = sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, serverlen);
+		    n = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, serverlen);
 		    if (n < 0) 
 		      error("ERROR in sendto");
 		    
 		    /* print the server's reply */
-		    n = recvfrom(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, &serverlen);
+		    n = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, &serverlen);
 		    if (n < 0) 
 		      error("ERROR in recvfrom");
-	    printf("Echo from server: %s", buf);
+	    printf("Echo from server: %s", cmd);
 	}
     	    return 0;
 }
