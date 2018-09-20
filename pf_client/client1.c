@@ -31,7 +31,7 @@ typedef struct
 
 void file_trans(int udp_sock, uint8_t* nm_file, struct sockaddr_in rem_addr)
 {
-	int bytes_received =0, bytes_file_received = 0, values=0, val2=0;
+	int bytes_received =0, bytes_file_received = 0, values=0, val2=0, info_send = 0, encrypted_msg = 0;
 	ssize_t encrypted_size, conff_size = 0;
 	uint8_t temp_file[BUFSIZE],key[4] = {'A', 'B', '5', '9'}, nbuf[BUFSIZE];
 	FILE *fptr;
