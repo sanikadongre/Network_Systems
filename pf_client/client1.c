@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <string.h>
+#include <fcntl.h>
 
 #define BUFSIZE 1024
 
@@ -107,14 +108,14 @@ int main(int argc, char **argv) {
 		if(strcmp("get", name_cmd) == 0)
 		{
 			printf("\nTo obtain the name of the file from the server %s\n", fname);
-			get_file(sockfd, fname, serveraddr);
+			//get_file(sockfd, fname, serveraddr);
 			printf("\nThe file get is done\n");
 		}
 
 		else if(strcmp("put", name_cmd) == 0)
 		{
 			printf("\nTo put the file by the client %s\n", fname);
-			put_file(sockfd, fname, serveraddr);
+			//put_file(sockfd, fname, serveraddr);
 			printf("\nThe file put is done\n");
 		 }
 		 else if(strcmp("ls", name_cmd) == 0)
