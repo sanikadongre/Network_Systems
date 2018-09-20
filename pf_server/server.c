@@ -52,7 +52,7 @@ void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, 
 	int obt_bytes = 0;
 	int info_send = 0;
 	int bytes_received = 0;
-	int seq_get = 0, seq = 0, seq_check = 0;
+	int seq_get = 0, seq = 0, seq_check = 0, seq_dec = 0;
 	int fs = 0;
         FILE *fptr;
 	uint8_t nbuf[BUFSIZE], key[4] = {'A', 'B', '5' , '9'};
@@ -106,31 +106,32 @@ void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, 
 				seq_check = recvfrom(socket_id, &seq_get, sizeof(seq_get), 0, (struct sockaddr*)&remote_add, &remote_len)
 				if(seq_check < 0)
 				{	
-					printf("ACK received %d\n", htonl(received_sequence_count));
-					decoded_sequence_count = htonl(received_sequence_count);
-					if(decoded_sequence_count == )
-					{
-						/* Incrementing the sequence count and local file size variable */
-						actual_sequence_count++;
-						size_check = size_check + bytes_read;
-						printf("size_check : %ld\n",size_check);
-					}
-					else
-					{
-						printf("Sending the same sequence inside receive from %d again",actual_sequence_count);
-						fseek(fp, size_check, SEEK_SET);	
-					}
+					
+					printf("Sending the same sequence inside receive from %d again\n", seq);
+					fseek(fptr, size_check, SEEK_SET);
 				}
-				else
+				else if(seq_check > 0)
 				{
-					printf("Sending the same sequence %d again", bytes_received);
-					fseek(fp, size_check, SEEK_SET);
+					seq_dec = htonl(seq_get);
+					printf("The received acknowledgment is %d\n", seq_dec);
+					if(seq_dec != seq)
+					{
+						printf("The same sequence has to be sent again%d\n", seq_dec);
+						fseek(fptr, conff_size, SEEK_SET);
+					}
+					else if(seq_dec == seq)
+					{
+						seq++;
+						conff_size = conff_size + obt_bytes;
+						printf("The size is : %ld\n", conff_Size);
+					}
+	
 				}
-				free(temp);
+			  free(buf_pkt);
+			}
 			}
 		}
-		printf("Done\n");
-		fclose(fp);	
+		fclose(fptr);	
 	}
 		
 	else
