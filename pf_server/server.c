@@ -92,23 +92,21 @@ void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, 
 				for(int values =0; values<buf_pkt->packet_len; values++)
 				{
 
-					{
 						buf_pkt->packet_descp[values] = nbuf[values] - key[value2];
 						val2++;
 						if(val2 == 3)
 						{
 							val2 = 0;
 						}
-					}
 				}
 				printf("\nSequence count : %d\n", buf_pkt->packet_index);
 				info_send = sendto(socket_id, buf_pkt, (sizeof(*buf_pkt)), 0, (struct sockaddr*)&remote_add, remote_len);
-				seq_check = recvfrom(socket_id, &seq_get, sizeof(seq_get), 0, (struct sockaddr*)&remote_add, &remote_len)
+				seq_check = recvfrom(socket_id, &seq_get, sizeof(seq_get), 0, (struct sockaddr*)&remote_add, &remote_len);
 				if(seq_check < 0)
 				{	
 					
 					printf("Sending the same sequence inside receive from %d again\n", seq);
-					fseek(fptr, size_check, SEEK_SET);
+					fseek(fptr, conff_size, SEEK_SET);
 				}
 				else if(seq_check > 0)
 				{
@@ -123,15 +121,14 @@ void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, 
 					{
 						seq++;
 						conff_size = conff_size + obt_bytes;
-						printf("The size is : %ld\n", conff_Size);
+						printf("The size is : %ld\n", conff_size);
 					}
-	
+					 free(buf_pkt);
 				}
-			  free(buf_pkt);
+			   }
 			}
-			}
-		}
-		fclose(fptr);	
+			fclose(fptr);
+		
 	}
 		
 	else
@@ -231,7 +228,7 @@ int main(int argc, char **argv)
                 } */
 		if(strcmp("get", cmd) == 0)
 		{
-			get_file(sockfd, fname, clientaddr);
+			get_file(sockfd, fname, clientaddr, clientlen);
 		}
 
 		else if(strcmp("put", cmd) == 0)
