@@ -31,11 +31,7 @@ typedef struct
 void condition(int sock, uint8_t* name_of_file, struct sockaddr_in remote_addr)
 {	
 	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));     
-	int info_send = 0, encrypted_msg = 0;
-	printf("Acknowledgement sent %d\n",buf_pkt->packet_index);
-	encrypted_msg = ntohl(buf_pkt->packet_index);
-	info_send = sendto(sock, &encrypted_msg, sizeof(encrypted_msg), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
-}
+	
 
 void file_trans(int udp_sock, uint8_t* nm_file, struct sockaddr_in rem_addr)
 {
@@ -44,12 +40,13 @@ void file_trans(int udp_sock, uint8_t* nm_file, struct sockaddr_in rem_addr)
 	uint8_t temp_file[BUFSIZE],key[4] = {'A', 'B', '5', '9'}, nbuf[BUFSIZE];
 	FILE *fptr;
 	fptr = fopen(temp_file,"w");
-	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));     
+	   
 		if(fptr != NULL)
 		{
 			printf("File open successful\n");
 			while(conff_size < encrypted_size)
 			{
+				Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));  
 				if(NULL != buf_pkt)
 				{
 					bytes_file_received = recvfrom(udp_sock, buf_pkt, sizeof(*buf_pkt), 0, NULL,NULL);
@@ -69,16 +66,23 @@ void file_trans(int udp_sock, uint8_t* nm_file, struct sockaddr_in rem_addr)
 						
 						fwrite(buf_pkt->packet_descp,1,buf_pkt->packet_len,fptr);
 						printf("\nsize_check : %ld, encryptes_size : %ld, received bytes : %d\n",conff_size,encrypted_size,bytes_file_received);
-						condition(udp_sock,nm_file,rem_addr);
+						int info_send = 0, encrypted_msg = 0;
+						printf("Acknowledgement sent %d\n",buf_pkt->packet_index);
+						encrypted_msg = ntohl(buf_pkt->packet_index);
+						info_send = sendto(sock, &encrypted_msg, sizeof(encrypted_msg), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
 						bytes_received++;
 						conff_size = conff_size + sizeof(buf_pkt->packet_descp);
 					}
 
 					if(bytes_received != buf_pkt->packet_index)
 					{
-					 	condition(udp_sock,nm_file,rem_addr);
+					 	int info_send = 0, encrypted_msg = 0;
+						printf("Acknowledgement sent %d\n",buf_pkt->packet_index);
+						encrypted_msg = ntohl(buf_pkt->packet_index);
+						info_send = sendto(sock, &encrypted_msg, sizeof(encrypted_msg), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
+
 					}
-					memset(buf_pkt, 0, sizeof(Packet_Details));
+					free(buf_pkt);
 				}
 			}
 			fclose(fptr);
