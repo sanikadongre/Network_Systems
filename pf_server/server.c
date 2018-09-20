@@ -53,7 +53,7 @@ void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, 
 	int info_send = 0;
 	int bytes_received = 0;
 	int seq_get = 0, seq = 0, seq_check = 0, seq_dec = 0;
-	int fs = 0;
+	int fs = 0, val2 = 0;
         FILE *fptr;
 	uint8_t nbuf[BUFSIZE], key[4] = {'A', 'B', '5' , '9'};
 	int remote_len = sizeof(remote_add);
