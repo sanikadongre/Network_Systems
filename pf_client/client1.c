@@ -28,10 +28,6 @@ typedef struct
 	uint32_t packet_len;
 	uint32_t packet_index;
 }Packet_Details;
-void condition(int sock, uint8_t* name_of_file, struct sockaddr_in remote_addr)
-{	
-	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));     
-	
 
 void file_trans(int udp_sock, uint8_t* nm_file, struct sockaddr_in rem_addr)
 {
