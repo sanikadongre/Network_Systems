@@ -40,7 +40,120 @@ void error(char *msg) {
   perror(msg);
   exit(1);
 }
+void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr, uint32_t len_data)
+{  
+	char command_buffer[BUFSIZE],size_buffer[BUFSIZE];            
+	char *file_buffer;
+	int temp_bytes;
+	int file_exist_confirmation = 0;
+	ssize_t fileSize;
+	ssize_t encodedFileSize;
+	ssize_t size_check;
+	int bytes_read = 0;
+	int bytes_sent = 0;
+	int actual_sequence_count = 0;
+	int received_sequence_count = 0;
+	int decoded_sequence_count = 0;
+	int file_size = 0;
 
+	printf("The client requires the file : %s\n", file_name);
+
+	/*Creating a file pointer to the requested file from the client */
+         FILE *fp;
+	fp = fopen(file_name,"r");
+	if(fp == NULL)
+	{
+		printf("Sending File does not exist confirmation to client\n");
+
+		bzero(command_buffer,sizeof(command_buffer));
+		strcat(command_buffer,"File does not exist");
+		file_exist_confirmation = sendto(socket_id, command_buffer, strlen(command_buffer), 0, (struct sockaddr*)&remote_addr, remote_len);
+	}
+	else
+	{		
+		printf("Sending File exist confirmation to client\n");
+
+		bzero(command_buffer,sizeof(command_buffer));
+		strcpy(command_buffer,"File exist");
+		file_exist_confirmation = sendto(socket_id, command_buffer, strlen(command_buffer), 0, (struct sockaddr*)&remote_addr, remote_len);
+		printf("File exist confiramtion : %s\n",command_buffer);
+	
+		bzero(size_buffer,sizeof(size_buffer));
+		recvfrom( socket_id, size_buffer, BUFSIZE, 0, (struct sockaddr*)&remote_addr, &remote_len);
+		printf("The client says : %s\n", command_buffer);
+
+		printf("Sending the size of the file\n");
+		fseek(fp, 0, SEEK_END);
+   		fileSize = ftell(fp);
+  		encodedFileSize = htonl(fileSize);
+		rewind(fp);
+
+		file_size = sendto(socket_id, &encodedFileSize, sizeof(encodedFileSize), 0, (struct sockaddr*)&remote_addr, remote_len);
+		printf("File size : %ld\n",fileSize);
+		size_check = 0;
+
+		/* Key for encrypting message */
+		char key = 10;
+		
+		/* Setting the timeout for recvfrom function */
+		time_vals.tv_sec = 0;
+		time_vals.tv_usec = 100000;
+		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals)) < 0) {
+		    perror("Error");
+		}
+	
+		/* Loop till the entire file is sent */
+		while(size_check < fileSize)
+		{
+			/* Structure for storing the packet to be sent */
+			struct Datagram *temp = malloc(sizeof(struct Datagram));
+			if(temp != NULL)
+			{
+				temp->datagram_id = actual_sequence_count;
+				bytes_read = fread(temp->datagram_message,sizeof(char),BUFSIZE,fp);
+
+				/* Encrypting the message */
+				for(long int i=0;i<bytes_read;i++)
+				{
+
+					temp->datagram_message[i] ^= key;
+				}
+
+				temp->datagram_length = bytes_read;
+				printf("\nSequence count : %d\n",temp->datagram_id);
+
+				bytes_sent = sendto(socket_id, temp, (sizeof(*temp)), 0, (struct sockaddr*)&remote_addr, remote_len);
+				
+				/* Check for the acknowledgement from client */
+				if(recvfrom( socket_id, &received_sequence_count, sizeof(received_sequence_count), 0, (struct sockaddr*)&remote_addr, &remote_len)>0)
+				{	
+					printf("ACK received %d\n", htonl(received_sequence_count));
+					decoded_sequence_count = htonl(received_sequence_count);
+					if(decoded_sequence_count == actual_sequence_count)
+					{
+						/* Incrementing the sequence count and local file size variable */
+						actual_sequence_count++;
+						size_check = size_check + bytes_read;
+						printf("size_check : %ld\n",size_check);
+					}
+					else
+					{
+						printf("Sending the same sequence inside receive from %d again",actual_sequence_count);
+						fseek(fp, size_check, SEEK_SET);	
+					}
+				}
+				else
+				{
+					printf("Sending the same sequence %d again",actual_sequence_count);
+					fseek(fp, size_check, SEEK_SET);
+				}
+				free(temp);
+			}
+		}
+		printf("Done\n");
+		fclose(fp);	
+	}
+}
 int main(int argc, char **argv)
  {
   int sockfd, portno, clientlen, optval, n, client_socket, bytestot = 0, file_del, exit_recv, bytestot1 = 0; /* socket */
@@ -131,6 +244,7 @@ int main(int argc, char **argv)
                 } */
 		if(strcmp("get", cmd) == 0)
 		{
+			get_file(sockfd, fname, clientaddr);
 		}
 
 		else if(strcmp("put", cmd) == 0)
