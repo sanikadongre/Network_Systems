@@ -28,6 +28,95 @@ typedef struct
 	uint32_t packet_len;
 	uint32_t packet_index;
 }Packet_Details;
+void condition(int sock, uint8_t* name_of_file, struct sockaddr_in remote_addr)
+{	
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));     
+	int info_send = 0, encrypted_msg = 0;
+	printf("Acknowledgement sent %d\n",buf_pkt->packet_index);
+	encrypted_msg = ntohl(buf_pkt->packet_index);
+	info_send = sendto(sock, &encrypted_msg, sizeof(encrypted_msg), 0, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
+}
+
+void file_trans(int udp_sock, uint8_t* nm_file, struct sockaddr_in rem_addr)
+{
+	int bytes_received =0, bytes_file_received = 0, values=0, val2=0;
+	ssize_t encrypted_size, conff_size = 0;
+	uint8_t temp_file[BUFSIZE],key[4] = {'A', 'B', '5', '9'}, nbuf[BUFSIZE];
+	FILE *fptr;
+	fptr = fopen(temp_file,"w");
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));     
+		if(fptr != NULL)
+		{
+			printf("File open successful\n");
+			while(conff_size < encrypted_size)
+			{
+				if(NULL != buf_pkt)
+				{
+					bytes_file_received = recvfrom(udp_sock, buf_pkt, sizeof(*buf_pkt), 0, NULL,NULL);
+				        if(bytes_received == buf_pkt->packet_index)
+
+					{
+						for(values=0; values<buf_pkt->packet_len; values++)
+						{
+							buf_pkt->packet_descp[values] = nbuf[values] - key[val2];
+							val2++;
+							if(val2 == 3)
+							{
+								val2 = 0;
+							}
+
+						   }
+						
+						fwrite(buf_pkt->packet_descp,1,buf_pkt->packet_len,fptr);
+						printf("\nsize_check : %ld, encryptes_size : %ld, received bytes : %d\n",conff_size,encrypted_size,bytes_file_received);
+						condition(udp_sock,nm_file,rem_addr);
+						bytes_received++;
+						conff_size = conff_size + sizeof(buf_pkt->packet_descp);
+					}
+
+					if(bytes_received != buf_pkt->packet_index)
+					{
+					 	condition(udp_sock,nm_file,rem_addr);
+					}
+					memset(buf_pkt, 0, sizeof(Packet_Details));
+				}
+			}
+			fclose(fptr);
+		}				
+}
+/* Definition of 'client_get_file' function */
+void get_file(int socket_id, char *name_file, struct sockaddr_in remote)
+{
+
+	uint8_t msg_conf[BUFSIZE]="", conf_recvd, sizef[BUFSIZE], temp_file[BUFSIZE]; 
+	bzero(msg_conf,sizeof(msg_conf));
+	bzero(sizef, sizeof(sizef));
+	int info_send = 0, file_encrypted = 0, bytes_file_recvd = 0,  get_msg = 0, length, encrypted_msg = 0;
+	ssize_t size_file = 0;
+	long int limit =0;
+	conf_recvd = recvfrom(socket_id, msg_conf, sizeof(msg_conf), 0, NULL,NULL);
+	printf("The file is received confirmation %s\n", msg_conf);
+
+	
+	if(strcmp(msg_conf,"File present") == 0)
+	{
+		printf("\n File found\n");
+		strncpy(sizef, "The size of file", strlen("The size of file"));
+		info_send = sendto(socket_id, sizef, strlen(sizef), 0, (struct sockaddr*)&remote, sizeof(remote));
+		bytes_file_recvd = recvfrom(socket_id, &size_file, sizeof(size_file), 0, NULL,NULL);
+		file_encrypted = ntohl(size_file);
+		printf("File  of size received is : %ld\n",file_encrypted);
+		strcpy(temp_file,name_file);
+		file_trans(socket_id, name_file, remote);
+	}
+	else
+	{
+		printf(" File is not present\n");
+		printf("Enter an appropriate name of the file\n");
+	}
+	
+}
+
 
 struct timeval time_vals, time_val1, time_val2, time_done;
 /* cmd_get
@@ -115,7 +204,7 @@ int main(int argc, char **argv) {
 		if(strcmp("get", name_cmd) == 0)
 		{
 			printf("\nTo obtain the name of the file from the server %s\n", fname);
-			//get_file(sockfd, fname, serveraddr);
+			get_file(sockfd, fname, serveraddr);
 			printf("\nThe file get is done\n");
 		}
 
