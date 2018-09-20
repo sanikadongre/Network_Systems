@@ -19,12 +19,11 @@
 #include <time.h>
 #include <memory.h>
 #include <string.h>
-#include <server.h>
 #include <stdint.h>
 #include <sys/time.h>
 
 
-#define BUFSIZE 1024
+#define BUFSIZE (1024)
 struct timeval time_vals, time_val1, time_val2, time_done;
 
 typedef struct
@@ -47,13 +46,11 @@ int main(int argc, char **argv)
   int sockfd, portno, clientlen, optval, n, client_socket, bytestot = 0, file_del, exit_recv, bytestot1 = 0; /* socket */
   struct sockaddr_in serveraddr, clientaddr; /* server's addr */
   struct hostent *hostp; /* client host info */
-  char buf[BUFSIZE]; /* message buf */
+  char buf[BUFSIZE], hash_buf[BUFSIZE], recv_buf[BUFSIZE]; /* message buf */
   char *hostaddrp; /* dotted decimal host addr string */
-  uint8_t* fname;
-  uint8_t* name_cmd;
-  uint8_t cmd_out_exit, val[BUFSIZE] = "The server is exiting", cmd[70], fname1[70], check = 1;
+  uint8_t cmd_out_exit, val[BUFSIZE] = "The server is exiting", cmd[70], fname[70], check = 1;
   bzero(cmd, sizeof(cmd));
-  bzero(fname1, sizeof(fname1));
+  bzero(fname, sizeof(fname));
   bzero(val, sizeof(val));
   /* 
    * check command line arguments 
@@ -107,7 +104,7 @@ int main(int argc, char **argv)
      * recvfrom: receive a UDP datagram from a client
      */
     bzero(buf, BUFSIZE);
-    n = recvfrom(sockfd, buf, BUFSIZE, 0,
+    n = recvfrom(sockfd, cmd, BUFSIZE, 0,
 		 (struct sockaddr *) &clientaddr, &clientlen);
     if (n < 0)
       error("ERROR in recvfrom");
@@ -124,42 +121,36 @@ int main(int argc, char **argv)
       error("ERROR on inet_ntoa\n");
     printf("server received datagram from %s (%s)\n", 
 	   hostp->h_name, hostaddrp);
-    printf("server received %d/%d bytes: %s\n", strlen(buf), n, buf);
-	  time_val1.tv_sec = 0;
+    printf("server received %d/%d bytes: %s\n", strlen(cmd), n, cmd);
+	  	time_val1.tv_sec = 0;
 		time_val1.tv_usec = 0;
-		(setsockopt(udp_sock, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0); 
-	
-		bytestot = recvfrom(udp_sock, cmd, strlen(cmd), 0, (struct sockaddr*)&remote_opt, &remote_length);
-		bytestot1 = recvfrom(udp_sock, fname1, strlen(fname1), 0, (struct sockaddr*)&remote_opt, &remote_length);
-		printf("The command received from the client is : %s\n", cmd);
-		name_cmd = strdup(cmd);
-		fname= strdup(fname1);
-		strtok(name_cmd, " ");
-		printf("The name of the command is: %s\n", name_cmd);
-		fname = strtok(fname, " ");
-		printf("The file name is %s\n", fname);
-		if(strcmp("get", name_cmd) == 0)
+		/*if(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0);
+		{
+			perror("Error\n");
+
+                } */
+		if(strcmp("get", cmd) == 0)
 		{
 		}
 
-		else if(strcmp("put", name_cmd) == 0)
+		else if(strcmp("put", cmd) == 0)
 		{
 
 		 }
-		 else if(strcmp("ls", name_cmd) == 0)
+		 else if(strcmp("ls", cmd) == 0)
 		{
 			
 		}
 					
-		else if(strcmp("delete", name_cmd) == 0)
+		else if(strcmp("delete", cmd) == 0)
 		{	
 			FILE *f;
-			bytestot = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, &(remote_length));
-			bytestot1 = recvfrom(udp_sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr*)&remote_opt, &(remote_length));
-			f = fopen(recv_buf,"r");			
+			bytestot = recvfrom(sockfd, fname, (BUFSIZE), 0, (struct sockaddr*)&clientaddr, &(clientlen));
+			printf("The file name is %s\n", fname);
+			f = fopen(fname,"r");			
 			if(f != NULL)
 			{
-				file_del = remove(recv_buf);
+				file_del = remove(fname);
 				if(file_del != 0)
 				{
 					perror("Error");
@@ -176,7 +167,7 @@ int main(int argc, char **argv)
 				printf("The file is not found and can't be deleted\n");
 			}
 		}
-		else if(strcmp("md5sum", name_cmd) == 0)
+		else if(strcmp("md5sum", cmd) == 0)
 		{
 			strcpy(hash_buf, "md5sum");
 			printf("To get the hash value of the file: %s\n", fname);
@@ -185,30 +176,25 @@ int main(int argc, char **argv)
 			system(hash_buf);
 			printf("***************************\n");
 		}
-		else if(strcmp("exit", name_cmd) == 0)
+		else if(strcmp("exit", cmd) == 0)
 		{
 	 		strcat(recv_buf, "Exit");
 			printf("The recv_buf message is %s\n", recv_buf);
 			//bzero(recv_buf, sizeof(recv_buf));
-			exit_recv = sendto(udp_sock, recv_buf, BUFSIZE, 0, (struct sockaddr*)&remote_opt, sizeof(remote_opt));
+			exit_recv = sendto(sockfd, recv_buf, BUFSIZE, 0, (struct sockaddr*)&clientaddr, sizeof(clientlen));
 			printf("The exit command sent is %d\n", exit_recv);
 			check = 0;
 
         	 }
-	 	else
-		{
-			printf("The entered command isn't appropriate\n");
-
-	  	}
 		bzero(cmd,sizeof(cmd));
-		bzero(fname1, sizeof(fname1));
+		bzero(fname, sizeof(fname));
 		bzero(val,sizeof(val));
 
     
     /* 
      * sendto: echo the input back to the client 
      */
-	   n = sendto(sockfd, buf, strlen(buf), 0, 
+	   n = sendto(sockfd, cmd, strlen(cmd), 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
     n = sendto(sockfd, cmd, strlen(cmd), 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);

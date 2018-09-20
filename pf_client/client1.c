@@ -98,12 +98,7 @@ int main(int argc, char **argv) {
 		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		bytestot1 = sendto(sockfd, fname1, strlen(fname1), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		printf("Number of bytes for the operation sent : %d\n",bytestot);
-		printf("Number of bytes for the operation sent : %d\n",bytestot1);
-		name_cmd = strdup(cmd);
-		fname = strdup(fname1);
-		strtok(name_cmd, " ");
 		printf("The name of the command is: %s\n", name_cmd);
-		fname = strtok(fname, " ");
 		printf("The file name is %s\n", fname);
 		if(strcmp("get", name_cmd) == 0)
 		{
@@ -164,6 +159,10 @@ int main(int argc, char **argv) {
 		      error("ERROR in sendto");
 		    
 		    /* print the server's reply */
+		 n = recvfrom(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, &serverlen);
+		    if (n < 0) 
+		      error("ERROR in recvfrom");
+	    printf("Echo from server: %s", buf);
 		    n = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, &serverlen);
 		    if (n < 0) 
 		      error("ERROR in recvfrom");
