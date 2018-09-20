@@ -40,96 +40,75 @@ void error(char *msg) {
   perror(msg);
   exit(1);
 }
-void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr, uint32_t len_data)
+void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, uint32_t len_data)
 {  
-	char command_buffer[BUFSIZE],size_buffer[BUFSIZE];            
-	char *file_buffer;
-	int temp_bytes;
-	int file_exist_confirmation = 0;
-	ssize_t fileSize;
-	ssize_t encodedFileSize;
-	ssize_t size_check;
-	int bytes_read = 0;
-	int bytes_sent = 0;
-	int actual_sequence_count = 0;
-	int received_sequence_count = 0;
-	int decoded_sequence_count = 0;
-	int file_size = 0;
-
-	printf("The client requires the file : %s\n", file_name);
-
-	/*Creating a file pointer to the requested file from the client */
-         FILE *fp;
-	fp = fopen(file_name,"r");
-	if(fp == NULL)
-	{
-		printf("Sending File does not exist confirmation to client\n");
-
-		bzero(command_buffer,sizeof(command_buffer));
-		strcat(command_buffer,"File does not exist");
-		file_exist_confirmation = sendto(socket_id, command_buffer, strlen(command_buffer), 0, (struct sockaddr*)&remote_addr, remote_len);
-	}
-	else
-	{		
-		printf("Sending File exist confirmation to client\n");
-
-		bzero(command_buffer,sizeof(command_buffer));
-		strcpy(command_buffer,"File exist");
-		file_exist_confirmation = sendto(socket_id, command_buffer, strlen(command_buffer), 0, (struct sockaddr*)&remote_addr, remote_len);
-		printf("File exist confiramtion : %s\n",command_buffer);
 	
-		bzero(size_buffer,sizeof(size_buffer));
-		recvfrom( socket_id, size_buffer, BUFSIZE, 0, (struct sockaddr*)&remote_addr, &remote_len);
-		printf("The client says : %s\n", command_buffer);
-
+	char  msg_conf[BUFSIZE]=" ", sizef[BUFSIZE], temp_file[BUFSIZE];          
+	int temp_bytes;
+	int exist_conf = 0;
+	ssize_t size_file = 0;
+	ssize_t file_encrypted = 0;
+	ssize_t conff_size;
+	int obt_bytes = 0;
+	int info_send = 0;
+	int bytes_received = 0;
+	int seq_get = 0, seq = 0, seq_check = 0;
+	int fs = 0;
+        FILE *fptr;
+	uint8_t nbuf[BUFSIZE], key[4] = {'A', 'B', '5' , '9'};
+	int remote_len = sizeof(remote_add);
+	fptr = fopen(name_file,"r");
+	if(fptr != NULL)
+	{
+		bzero(msg_conf,sizeof(msg_conf));
+		strcpy(msg_conf,"File present");
+		exist_conf = sendto(socket_id, msg_conf, strlen(msg_conf), 0, (struct sockaddr*)&remote_add, remote_len);
+		printf("The file present is: %s\n", msg_conf);
+	        bzero(sizef,sizeof(sizef));
+		recvfrom(socket_id, sizef, BUFSIZE, 0, (struct sockaddr*)&remote_add, &remote_len);
+		printf("The client says : %s\n", msg_conf);
 		printf("Sending the size of the file\n");
-		fseek(fp, 0, SEEK_END);
-   		fileSize = ftell(fp);
-  		encodedFileSize = htonl(fileSize);
-		rewind(fp);
-
-		file_size = sendto(socket_id, &encodedFileSize, sizeof(encodedFileSize), 0, (struct sockaddr*)&remote_addr, remote_len);
-		printf("File size : %ld\n",fileSize);
-		size_check = 0;
-
-		/* Key for encrypting message */
-		char key = 10;
-		
-		/* Setting the timeout for recvfrom function */
+		fseek(fptr, 0, SEEK_END);
+   		size_file = ftell(fptr);
+  		file_encrypted = htonl(size_file);
+		rewind(fptr);
+		fs = sendto(socket_id, &file_encrypted, sizeof(file_encrypted), 0, (struct sockaddr*)&remote_add, remote_len);
+		printf("The size of the file is: %ld\n", size_file);
+		conff_size = 0;
 		time_vals.tv_sec = 0;
 		time_vals.tv_usec = 100000;
-		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals)) < 0) {
+		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals)) < 0) 
+		{
 		    perror("Error");
 		}
-	
-		/* Loop till the entire file is sent */
-		while(size_check < fileSize)
+		while(conff_size < size_file)
 		{
-			/* Structure for storing the packet to be sent */
-			struct Datagram *temp = malloc(sizeof(struct Datagram));
-			if(temp != NULL)
+			Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));  
+			if(buf_pkt != NULL)
 			{
-				temp->datagram_id = actual_sequence_count;
-				bytes_read = fread(temp->datagram_message,sizeof(char),BUFSIZE,fp);
-
-				/* Encrypting the message */
-				for(long int i=0;i<bytes_read;i++)
+				buf_pkt->packet_index = seq;
+				obt_bytes = fread(buf_pkt->packet_descp,sizeof(uint8_t),BUFSIZE,fptr);
+				buf_pkt->packet_len = obt_bytes;
+				for(int values =0; values<buf_pkt->packet_len; values++)
 				{
 
-					temp->datagram_message[i] ^= key;
+					{
+						buf_pkt->packet_descp[values] = nbuf[values] - key[value2];
+						val2++;
+						if(val2 == 3)
+						{
+							val2 = 0;
+						}
+					}
 				}
-
-				temp->datagram_length = bytes_read;
-				printf("\nSequence count : %d\n",temp->datagram_id);
-
-				bytes_sent = sendto(socket_id, temp, (sizeof(*temp)), 0, (struct sockaddr*)&remote_addr, remote_len);
-				
-				/* Check for the acknowledgement from client */
-				if(recvfrom( socket_id, &received_sequence_count, sizeof(received_sequence_count), 0, (struct sockaddr*)&remote_addr, &remote_len)>0)
+				printf("\nSequence count : %d\n", buf_pkt->packet_index);
+				info_send = sendto(socket_id, buf_pkt, (sizeof(*buf_pkt)), 0, (struct sockaddr*)&remote_add, remote_len);
+				seq_check = recvfrom(socket_id, &seq_get, sizeof(seq_get), 0, (struct sockaddr*)&remote_add, &remote_len)
+				if(seq_check < 0)
 				{	
 					printf("ACK received %d\n", htonl(received_sequence_count));
 					decoded_sequence_count = htonl(received_sequence_count);
-					if(decoded_sequence_count == actual_sequence_count)
+					if(decoded_sequence_count == )
 					{
 						/* Incrementing the sequence count and local file size variable */
 						actual_sequence_count++;
@@ -144,7 +123,7 @@ void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr,
 				}
 				else
 				{
-					printf("Sending the same sequence %d again",actual_sequence_count);
+					printf("Sending the same sequence %d again", bytes_received);
 					fseek(fp, size_check, SEEK_SET);
 				}
 				free(temp);
@@ -153,6 +132,13 @@ void get_file(int socket_id, uint8_t *file_name, struct sockaddr_in remote_addr,
 		printf("Done\n");
 		fclose(fp);	
 	}
+		
+	else
+	{		
+		printf("File is not present\n");
+		printf("Enter an appropiate name of the file\n");
+	}
+		
 }
 int main(int argc, char **argv)
  {
