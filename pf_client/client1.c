@@ -30,7 +30,7 @@ typedef struct
 }Packet_Details;
 
 struct timeval time_vals, time_val1, time_val2, time_done;
-/* 
+/* cmd_get
  * error - wrapper for perror
  */
 void error(char *msg) {
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     int sockfd, portno, bytestot, bytestot1, n;
     int serverlen;
     struct sockaddr_in serveraddr;
-    uint8_t hash_buf[100], val[BUFSIZE], cmd[70], fname1[70], cmd_out_exit;
+    uint8_t hash_buf[100], val[BUFSIZE], cmd[70], fname1[70];
     uint8_t* fname;
     uint8_t* name_cmd;
     struct hostent *server;
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
     bzero((char *) &serveraddr, sizeof(serveraddr));
     serveraddr.sin_family = AF_INET;
     bcopy((char *)server->h_addr, 
-	  (char *)&serveraddr.sin_addr.s_addr, server->h_length);
+    (char *)&serveraddr.sin_addr.s_addr, server->h_length);
     serveraddr.sin_port = htons(portno);
 
     /* get a message from the user */
@@ -91,15 +91,27 @@ int main(int argc, char **argv) {
 		   {
 			perror("Error\n");
 		    }
-		    printf("Enter the command to be performed and type it:get [filename],put [filename],delete [filename],md5sum, ls,exit\n");
+		printf("Enter the command to be performed and type it:get [filename],put [filename],delete [filename],md5sum, ls,exit\n");
 		scanf("%s", cmd);
-		scanf("%s", fname1);
-		printf("First sending the entire command to the server : %s\n",cmd);
+		if(strcmp("get", cmd) == 0)
+		{	
+			scanf("%s", fname1);
+		}
+		if(strcmp("put", cmd) == 0)
+		{
+			scanf("%s", fname1);
+		}
+		if(strcmp("delete", cmd) == 0)
+		{
+			scanf("%s", fname1);
+		}
+
+		printf("First sending the command to the server : %s\n",cmd);
 		bytestot = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		bytestot1 = sendto(sockfd, fname1, strlen(fname1), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		printf("Number of bytes for the operation sent : %d\n",bytestot);
-		printf("The name of the command is: %s\n", name_cmd);
-		printf("The file name is %s\n", fname);
+		//printf("The name of the command is: %s\n", name_cmd);
+		//printf("The file name is %s\n", fname);
 		if(strcmp("get", name_cmd) == 0)
 		{
 			printf("\nTo obtain the name of the file from the server %s\n", fname);
@@ -130,9 +142,18 @@ int main(int argc, char **argv) {
 		else if(strcmp("exit", name_cmd) == 0)
 		{
 	 		printf("Exiting the server\n");
-			bytestot = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, &(serverlen));
-			printf("%s\n", val);
-        	 }
+			bzero(fname, sizeof(fname));
+			bytestot = recvfrom(sockfd, fname, strlen(fname), 0, (struct sockaddr*)&serveraddr, &(serverlen));
+			printf("%s\n", fname);
+			if(strcmp(fname, "Exit") ==0)
+			{
+				printf("The server has exited successfully\n");
+			}
+			else
+			{
+				printf("There is error in exiting the server\n");
+			}
+		}
 		else if(strcmp("md5sum", name_cmd) == 0)
 		{
 			strcpy(hash_buf, "md5sum");
@@ -142,12 +163,6 @@ int main(int argc, char **argv) {
 			system(hash_buf);
 			printf("***************************\n");
 		}
-	 	else
-		{
-			printf("The entered command isn't appropriate\n");
-
-	  	}
-
 		/* Resetting the local variables */
  		bzero(cmd,sizeof(cmd));
 		bzero(val, sizeof(val));
@@ -162,11 +177,11 @@ int main(int argc, char **argv) {
 		 n = recvfrom(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, &serverlen);
 		    if (n < 0) 
 		      error("ERROR in recvfrom");
-	    printf("Echo from server: %s", buf);
+	    printf("Echo from server: %s\n", buf);
 		    n = recvfrom(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, &serverlen);
 		    if (n < 0) 
 		      error("ERROR in recvfrom");
-	    printf("Echo from server: %s", cmd);
+	    printf("Echo from server: %s\n", cmd);
 	}
     	    return 0;
 }

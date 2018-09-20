@@ -178,12 +178,13 @@ int main(int argc, char **argv)
 		}
 		else if(strcmp("exit", cmd) == 0)
 		{
-	 		strcat(recv_buf, "Exit");
-			printf("The recv_buf message is %s\n", recv_buf);
-			//bzero(recv_buf, sizeof(recv_buf));
-			exit_recv = sendto(sockfd, recv_buf, BUFSIZE, 0, (struct sockaddr*)&clientaddr, sizeof(clientlen));
-			printf("The exit command sent is %d\n", exit_recv);
-			check = 0;
+			
+			
+			bzero(fname, sizeof(fname));
+			strcat(fname, "Exit");
+			printf(" Exit buffer: %s\n", fname);
+			bytestot = sendto(sockfd, fname, BUFSIZE, 0, (struct sockaddr*)&clientaddr, clientlen);
+			exit(0);
 
         	 }
 		bzero(cmd,sizeof(cmd));
