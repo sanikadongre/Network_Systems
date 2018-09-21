@@ -103,7 +103,97 @@ void get_file(int socket_id, uint8_t* name_file, struct sockaddr_in rem)
 		
 	}
 }
+void ack_time_cond(int sock)
+{
+	struct timeval time_vals, time_val1, time_val2, time_done;
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));
+	Packet_Details *pkt_ack = malloc(sizeof(Packet_Details));
+	time_vals.tv_sec = 0;
+	time_vals.tv_usec = 300000;
+	if(setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &time_vals, sizeof(time_vals)) < 0)
+	{
+		perror("Error\n");
+	}
+	buf_pkt->packet_index = seq;
+	pkt_ack->packet_ack = ack_seq;
+}
 
+
+void put_file(int socket_id, uint8_t* name_file, struct sockaddr_in rem)
+{
+	uint8_t msg_conf[BUFSIZE] = " ", nbuf[BUFSIZE], cont[4] = {'A' , 'B', '5', '9'};
+	int info_send = 0, bytes_read = 0, values = 0, val2 = 0;
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));
+	Packet_Details *pkt_ack = malloc(sizeof(Packet_Details));
+	ack_time_cond(socket_id);
+	FILE *fptr;
+	int rem_len = sizeof(rem);
+	fptr = fopen(name_file, "rb");
+	if(fptr != NULL)
+	{
+		strcpy(msg_conf, "File is present");
+		info_send = sendto(socket_id, msg_conf, sizeof(msg_conf), 0,(struct sockaddr*)&rem, rem_len);
+		bzero(buf_pkt->packet_descp, BUFSIZE);
+		while(cond)
+		{
+			buf_pkt->byte = fread(buf_pkt->packet_descp,1,BUFSIZE,fptr);
+			bytes_read = buf_pkt->byte;
+
+			for(values = 0; values < bytes_read; values++)
+			{
+				buf_pkt->packet_descp[values] = nbuf[values] - cont[val2];
+				val2++;
+				if(val2 == 3)
+				{
+					val2 = 0;
+				}
+			}
+			printf("The sequence is %d\n", buf_pkt->packet_index);
+			info_send = sendto(socket_id, (Packet_Details*) buf_pkt, (sizeof(*buf_pkt)), 0, (struct sockaddr*)&rem, rem_len);
+			info_send = recvfrom(socket_id, (Packet_Details*) pkt_ack, (sizeof(*pkt_ack)), 0, (struct sockaddr*)&rem, &rem_len);
+			if(info_send > 0)
+			{
+				printf("The size of the packet is %d\n", info_send);
+			}
+			if(info_send < 0)
+			{
+				printf("Sending the same sequence again %d\n", buf_pkt->packet_index);
+				fseek(fptr,(-1)*bytes_read, SEEK_CUR);
+			
+			}
+			printf("The acknowledgment of packets is %d\n", pkt_ack->packet_ack);
+			seq_sent = buf_pkt->packet_index;
+			seq_dec = pkt_ack->packet_ack;
+
+			if(seq_sent != seq_dec)
+			{
+				printf("Sending the same sequence again %d\n", seq_sent);
+				fseek(fptr, (-1)*bytes_read, SEEK_CUR);
+			}
+		
+			if(bytes_read != BUFSIZE)
+			{
+				break;
+			}
+		
+			if(seq_sent == seq_dec)
+			{
+				seq_sent++;
+			}
+		}
+		free(buf_pkt);
+		free(pkt_ack);
+	}
+	else 
+	{
+		if(fptr == NULL)
+		{	
+			strcpy(msg_conf, "File is not found");
+			info_send = sendto(socket_id, msg_conf, sizeof(msg_conf), 0, (struct sockaddr*)&rem, rem_len);
+		}
+	}
+	
+}
 
 
 
@@ -191,7 +281,7 @@ int main(int argc, char **argv) {
 		else if(strcmp("put", name_cmd) == 0)
 		{
 			printf("\nTo put the file by the client %s\n", fname);
-			//put_file(sockfd, fname, serveraddr);
+			put_file(sockfd, fname1, serveraddr);
 			printf("\nThe file put is done\n");
 		 }
 		else if(strcmp("ls", name_cmd) == 0)
