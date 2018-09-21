@@ -43,7 +43,7 @@ void error(char *msg) {
     exit(0);
 }
 
-void get_file(int socket_id, uint8_t name_file, struct sockaddr_in rem)
+void get_file(int socket_id, uint8_t* name_file, struct sockaddr_in rem)
 {
 	int info_send = 0, bytes_read = 0, values = 0, val2 = 0, rem_length = sizeof(rem);;
 	FILE *fptr;
@@ -85,7 +85,7 @@ void get_file(int socket_id, uint8_t name_file, struct sockaddr_in rem)
 				info_send = sendto(socket_id, (Packet_Details*)pkt_ack, sizeof(*pkt_ack), 0, (struct sockaddr*)&rem, sizeof(rem));
 				seq_dec++;
 			}
-			else if(bytes_read != BUFSIZE)
+			if(bytes_read != BUFSIZE)
 			{
 				break;
 			}
@@ -93,9 +93,14 @@ void get_file(int socket_id, uint8_t name_file, struct sockaddr_in rem)
 		free(buf_pkt);
 		free(pkt_ack);
 	}
-	else if(strcmp(msg_conf, "File is not found")
+	else 
 	{
-		printf("File is absent\n");
+		
+		if(strcmp(msg_conf, "File is not found"))
+		{
+			printf("File is absent\n");
+		}
+		
 	}
 }
 
