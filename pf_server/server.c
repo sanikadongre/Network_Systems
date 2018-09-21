@@ -132,6 +132,66 @@ void get_file(int socket_id, uint8_t* name_file, struct sockaddr_in remote_add, 
 	
 }
 
+void put_file(int socket_id, uint8_t* name_file, struct sockaddr_in remote_add, unsigned int rem_len)
+{	
+	int info_send = 0, bytes_read = 0, values = 0, val2 = 0;
+	FILE *fptr;
+	uint8_t msg_conf[BUFSIZE] = " ", nbuf[BUFSIZE], cont[4] = {'A', 'B', '5', '9'};
+	info_send = recvfrom(socket_id, msg_conf, BUFSIZE, 0, (struct sockaddr*)&remote_add, &(rem_len));
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));
+	Packet_Details *pkt_ack = malloc(sizeof(Packet_Details));
+	bzero(buf_pkt->packet_descp, BUFSIZE);
+	
+	if(strcmp(msg_conf, "File is present"))
+	{
+		printf("The file has been found\n");
+		while(cond)
+		{
+			info_send = recvfrom(socket_id, (Packet_Details*) buf_pkt, sizeof(*buf_pkt), 0, (struct sockaddr*)&remote_add, &(rem_len)); 
+			bytes_read = buf_pkt->byte;
+			for(values = 0; values < bytes_read; values++)
+			{
+				buf_pkt->packet_descp[values] = nbuf[values] + cont[val2];
+				val2++;
+				if(val2 == 3)
+				{
+					val2 = 0;
+				}
+			}
+			seq_sent = buf_pkt->packet_index;
+			if(seq_sent != seq_dec)
+			{
+				printf("Sending the data again\n");
+				info_send = sendto(socket_id, (Packet_Details*)pkt_ack, sizeof(*pkt_ack), 0, (struct sockaddr*)&remote_add, sizeof(remote_add));
+			}
+			else if(seq_sent == seq_dec)
+			{
+				fptr = fopen(name_file, "ab");
+				fwrite(buf_pkt->packet_descp, buf_pkt->byte, 1, fptr);
+				bzero(pkt_ack->packet_descp, BUFSIZE);
+				fclose(fptr);
+				pkt_ack->packet_ack = seq_dec;
+				info_send = sendto(socket_id, (Packet_Details*)pkt_ack, sizeof(*pkt_ack), 0, (struct sockaddr*)&remote_add, sizeof(remote_add));
+				seq_dec++;
+			}
+			if(bytes_read != BUFSIZE)
+			{
+				break;
+			}
+		}
+		free(buf_pkt);
+		free(pkt_ack);
+	}
+	else 
+	{
+		
+		if(strcmp(msg_conf, "File is not found"))
+		{
+			printf("File is absent\n");
+		}
+		
+	}
+}
 	
 
 int main(int argc, char **argv)
@@ -230,6 +290,7 @@ int main(int argc, char **argv)
 
 		else if(strcmp("put", cmd) == 0)
 		{
+			put_file(sockfd, fname, clientaddr, clientlen);
 
 		 }
 		 else if(strcmp("ls", cmd) == 0)
