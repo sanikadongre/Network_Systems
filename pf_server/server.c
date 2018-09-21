@@ -60,7 +60,7 @@ void ack_time_cond(int sock)
 	pkt_ack->packet_ack = ack_seq;
 }
 
-void get_file(int socket_id, uint8_t name_file, struct sockaddr_in remote_add, unsigned int rem_len)
+void get_file(int socket_id, uint8_t* name_file, struct sockaddr_in remote_add, unsigned int rem_len)
 {
 	uint8_t msg_conf[BUFSIZE] = " ", nbuf[BUFSIZE], cont[4] = {'A' , 'B', '5', '9'};
 	int info_send = 0, bytes_read = 0, values = 0, val2 = 0;
@@ -90,7 +90,7 @@ void get_file(int socket_id, uint8_t name_file, struct sockaddr_in remote_add, u
 			}
 			printf("The sequence is %d\n", buf_pkt->packet_index);
 			info_send = sendto(socket_id, (Packet_Details*) buf_pkt, (sizeof(*buf_pkt)), 0, (struct sockaddr*)&remote_add, rem_len);
-			info_send = recvfrom(socket_id, (Packet_Details*) pkt_ack, (sizeof(*pkt_ack)), 0, (struct sockaddr*)&remote_add, rem_len);
+			info_send = recvfrom(socket_id, (Packet_Details*) pkt_ack, (sizeof(*pkt_ack)), 0, (struct sockaddr*)&remote_add, &rem_len);
 			if(info_send > 0)
 			{
 				printf("The size of the packet is %d\n", info_send);
