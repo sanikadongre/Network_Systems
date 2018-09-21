@@ -24,14 +24,18 @@
 
 
 #define BUFSIZE (1024)
-struct timeval time_vals, time_val1, time_val2, time_done;
 
 typedef struct
 {
 	uint32_t packet_index;
 	uint8_t packet_descp[BUFSIZE];
 	uint32_t packet_len;
+	int byte;
+	uint32_t packet_ack;
 }Packet_Details;
+
+uint32_t struct_len = sizeof(Packet_Details), seq = 1, ack_seq = 0, seq_sent = 0, seq_dec = 0;
+int cond = 1;
 
 /*
  * error - wrapper for perror
@@ -40,104 +44,96 @@ void error(char *msg) {
   perror(msg);
   exit(1);
 }
-void get_file(int socket_id, uint8_t *name_file, struct sockaddr_in remote_add, uint32_t len_data)
-{  
-	
-	char  msg_conf[BUFSIZE]=" ", sizef[BUFSIZE], temp_file[BUFSIZE];          
-	int temp_bytes;
-	int exist_conf = 0;
-	ssize_t size_file = 0;
-	ssize_t file_encrypted = 0;
-	ssize_t conff_size;
-	int obt_bytes = 0, value2 = 0;
-	int info_send = 0;
-	int bytes_received = 0;
-	int seq_get = 0, seq = 0, seq_check = 0, seq_dec = 0;
-	int fs = 0, val2 = 0;
-        FILE *fptr;
-	uint8_t nbuf[BUFSIZE], key[4] = {'A', 'B', '5' , '9'};
-	int remote_len = sizeof(remote_add);
-	fptr = fopen(name_file,"r");
+
+void ack_time_cond(int sock)
+{
+	struct timeval time_vals, time_val1, time_val2, time_done;
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));
+	Packet_Details *pkt_ack = malloc(sizeof(Packet_Details));
+	time_vals.tv_sec = 0;
+	time_vals.tv_usec = 300000;
+	if(setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &time_vals, sizeof(time_vals)) < 0)
+	{
+		perror("Error\n");
+	}
+	buf_pkt->packet_index = seq;
+	pkt_ack->packet_ack = ack_seq;
+}
+
+void get_file(int socket_id, uint8_t name_file, struct sockaddr_in remote_add, unsigned int rem_len)
+{
+	uint8_t msg_conf[BUFSIZE] = " ", nbuf[BUFSIZE], cont[4] = {'A' , 'B', '5', '9'};
+	int info_send = 0, bytes_read = 0, values = 0, val2 = 0;
+	Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));
+	Packet_Details *pkt_ack = malloc(sizeof(Packet_Details));
+	ack_time_cond(socket_id);
+	FILE *fptr;
+	fptr = fopen(name_file, "rb");
 	if(fptr != NULL)
 	{
-		bzero(msg_conf,sizeof(msg_conf));
-		strcpy(msg_conf,"File present");
-		exist_conf = sendto(socket_id, msg_conf, strlen(msg_conf), 0, (struct sockaddr*)&remote_add, remote_len);
-		printf("The file present is: %s\n", msg_conf);
-	        bzero(sizef,sizeof(sizef));
-		recvfrom(socket_id, sizef, BUFSIZE, 0, (struct sockaddr*)&remote_add, &remote_len);
-		printf("The client says : %s\n", msg_conf);
-		printf("Sending the size of the file\n");
-		fseek(fptr, 0, SEEK_END);
-   		size_file = ftell(fptr);
-  		file_encrypted = htonl(size_file);
-		rewind(fptr);
-		fs = sendto(socket_id, &file_encrypted, sizeof(file_encrypted), 0, (struct sockaddr*)&remote_add, remote_len);
-		printf("The size of the file is: %ld\n", size_file);
-		conff_size = 0;
-		time_vals.tv_sec = 0;
-		time_vals.tv_usec = 100000;
-		if (setsockopt(socket_id, SOL_SOCKET, SO_RCVTIMEO,&time_vals,sizeof(time_vals)) < 0) 
+		strcpy(msg_conf, "File is present");
+		info_send = sendto(socket_id, msg_conf, sizeof(msg_conf), 0,(struct sockaddr*)&remote_add, rem_len);
+		bzero(buf_pkt->packet_descp, BUFSIZE);
+		while(cond)
 		{
-		    perror("Error");
-		}
-		while(conff_size < size_file)
-		{
-			Packet_Details *buf_pkt = malloc(sizeof(Packet_Details));  
-			if(buf_pkt != NULL)
-			{
-				buf_pkt->packet_index = seq;
-				obt_bytes = fread(buf_pkt->packet_descp,sizeof(uint8_t),BUFSIZE,fptr);
-				buf_pkt->packet_len = obt_bytes;
-				for(int values =0; values<buf_pkt->packet_len; values++)
-				{
+			buf_pkt->byte = fread(buf_pkt->packet_descp,1,BUFSIZE,fptr);
+			bytes_read = buf_pkt->byte;
 
-						buf_pkt->packet_descp[values] = nbuf[values] - key[value2];
-						val2++;
-						if(val2 == 3)
-						{
-							val2 = 0;
-						}
-				}
-				printf("\nSequence count : %d\n", buf_pkt->packet_index);
-				info_send = sendto(socket_id, buf_pkt, (sizeof(*buf_pkt)), 0, (struct sockaddr*)&remote_add, remote_len);
-				seq_check = recvfrom(socket_id, &seq_get, sizeof(seq_get), 0, (struct sockaddr*)&remote_add, &remote_len);
-				if(seq_check < 0)
-				{	
-					
-					printf("Sending the same sequence inside receive from %d again\n", seq);
-					fseek(fptr, conff_size, SEEK_SET);
-				}
-				else if(seq_check > 0)
+			for(values = 0; values < bytes_read; values++)
+			{
+				buf_pkt->packet_descp[values] = nbuf[values] - cont[val2];
+				val2++;
+				if(val2 == 3)
 				{
-					seq_dec = htonl(seq_get);
-					printf("The received acknowledgment is %d\n", seq_dec);
-					if(seq_dec != seq)
-					{
-						printf("The same sequence has to be sent again%d\n", seq_dec);
-						fseek(fptr, conff_size, SEEK_SET);
-					}
-					else if(seq_dec == seq)
-					{
-						seq++;
-						conff_size = conff_size + obt_bytes;
-						printf("The size is : %ld\n", conff_size);
-					}
-					 free(buf_pkt);
+					val2 = 0;
 				}
-			   }
 			}
-			fclose(fptr);
+			printf("The sequence is %d\n", buf_pkt->packet_index);
+			info_send = sendto(socket_id, (Packet_Details*) buf_pkt, (sizeof(*buf_pkt)), 0, (struct sockaddr*)&remote_add, rem_len);
+			info_send = recvfrom(socket_id, (Packet_Details*) pkt_ack, (sizeof(*pkt_ack)), 0, (struct sockaddr*)&remote_add, rem_len);
+			if(info_send > 0)
+			{
+				printf("The size of the packet is %d\n", info_send);
+			}
+			if(info_send < 0)
+			{
+				printf("Sending the same sequence again %d\n", buf_pkt->packet_index);
+				fseek(fptr,(-1)*bytes_read, SEEK_CUR);
+			
+			}
+			printf("The acknowledgment of packets is %d\n", pkt_ack->packet_ack);
+			seq_sent = buf_pkt->packet_index;
+			seq_dec = pkt_ack->packet_ack;
+
+			if(seq_sent != seq_dec)
+			{
+				printf("Sending the same sequence again %d\n", seq_sent);
+				fseek(fptr, (-1)*bytes_read, SEEK_CUR);
+			}
 		
+			if(bytes_read != BUFSIZE)
+			{
+				break;
+			}
+		
+			if(seq_sent == seq_dec)
+			{
+				seq_sent++;
+			}
+		}
+		free(buf_pkt);
+		free(pkt_ack);
 	}
-		
-	else
-	{		
-		printf("File is not present\n");
-		printf("Enter an appropiate name of the file\n");
+	else if(fptr == NULL)
+	{
+		strcpy(msg_conf, "File is not found");
+		info_send = sendto(socket_id, msg_conf, sizeof(msg_conf), 0, (struct sockaddr*)&remote_add, rem_len);
 	}
-		
+	
 }
+
+	
+
 int main(int argc, char **argv)
  {
   int sockfd, portno, clientlen, optval, n, client_socket, bytestot = 0, file_del, exit_recv, bytestot1 = 0; /* socket */
@@ -149,6 +145,7 @@ int main(int argc, char **argv)
   bzero(cmd, sizeof(cmd));
   bzero(fname, sizeof(fname));
   bzero(val, sizeof(val));
+  struct timeval time_vals, time_val1, time_val2, time_done;
   /* 
    * check command line arguments 
    */
@@ -221,11 +218,11 @@ int main(int argc, char **argv)
     printf("server received %d/%d bytes: %s\n", strlen(cmd), n, cmd);
 	  	time_val1.tv_sec = 0;
 		time_val1.tv_usec = 0;
-		/*if(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0);
+		if(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&time_val1,sizeof(time_val1)) < 0)
 		{
 			perror("Error\n");
 
-                } */
+                } 
 		if(strcmp("get", cmd) == 0)
 		{
 			get_file(sockfd, fname, clientaddr, clientlen);
