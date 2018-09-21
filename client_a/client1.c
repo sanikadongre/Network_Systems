@@ -1,10 +1,3 @@
-/******************************************
-# Programming Assignment 1
-# client.c
-# Code Adapted from Professor's example-code
-# Date: September 24, 2017
-#Author: Anirudh Tiwari
-******************************************/
 
 /***** INCLUDES *****/
 #include <sys/socket.h>
