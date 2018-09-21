@@ -155,11 +155,14 @@ int main(int argc, char **argv) {
 				printf("File doesnt exist on server\n");
 				continue;
 			}
-			do{
-				bzero(buf_pkt->packet_descp, sizeof(pkt_ack->packet_descp));
-				read_length = fread(pkt_ack->packet_descp, 1, BUFSIZE, fptr);
-				pkt_ack->byte;
-				data_decrypt(buf_pkt->packet_descp, buf_pkt->byte, key, key1);
+			do{	
+				bzero(buf_pkt->packet_descp, sizeof(buf_pkt->packet_descp));
+				bytestot = recvfrom(sockfd, (Packet_Details*)buf_pkt, sizeof(Packet_Details), 0, (struct sockaddr *) &serveraddr, &serverlen);
+
+				printf("Packet Size from the server: %d \n",bytestot);
+
+				data_decrypt(buf_pkt->packet_descp, buf_pkt->byte, key, key1);// Decrypting the encoded data from server
+
 				if(buf_pkt->packet_index == exp_index)
 				{
 					FILE* fptr;
