@@ -266,7 +266,7 @@ to connect to server *****/
 		at the server *****/
 		else if(!strcmp(cname, "delete")){
 			// Recieving acknowledgement whether the file is deleted.
-			nbytes = recvfrom(sock, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
+			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
 			printf(" %s \n", buffer );
 		}
 
@@ -275,7 +275,7 @@ to connect to server *****/
 		else if(!strcmp(cname, "ls")){
 			printf("\nListing Files from the server.\n");
 			bzero(buffer, sizeof(buffer));
-			nbytes = recvfrom(sock, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
+			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
 			printf("%s\n", buffer ); //Printing data recieved from the buffer
 		}
 
@@ -283,7 +283,7 @@ to connect to server *****/
 		connection *****/
 		else if(!strcmp(cname, "exit")){
 			printf("Request server to release the connection.\n");
-			nbytes = recvfrom(sock, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
+			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
 			printf(" %s \n", buffer );
 		}
 
