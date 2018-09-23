@@ -121,7 +121,7 @@ to connect to server *****/
 		printf("\t1. get <filename> \n" "\t2. put <filename>\n" "\t3. delete <filename>\n"
 		"\t4. ls\n" "\t5. exit \n" );
 		gets(command);	
-		nbytes = sendto(sockfd, command, sizeof(command) , 0, (struct sockaddr *)&serveraddr, serverlen)
+		nbytes = sendto(sockfd, command, sizeof(command) , 0, (struct sockaddr *)&serveraddr, serverlen);
 		cname = strdup(command);
 		strtok(cname, " ");
 		filename = strtok(NULL, " ");
