@@ -55,7 +55,7 @@ int main (int argc, char * argv[])
 	int serverlen;															
 	int sockfd;                              
 	uint8_t cmd[100];											
-	char buffer[BUFSIZE];								
+	uint8_t buffer[BUFSIZE], buf[BUFSIZE], val[BUFSIZE], fname1[70];								
 	struct sockaddr_in serveraddr, remote;     
 	struct hostent *server_hp;							
 	uint8_t *name_cmd;														
@@ -220,28 +220,34 @@ to connect to server *****/
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
-		else if(!strcmp(name_cmd, "delete")){
+		else if(strcmp("ls", name_cmd) == 0)
+		{
 
 			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf(" %s \n", buffer );
 		}
-		else if(!strcmp(name_cmd, "ls")){
+		else if(strcmp("delete", name_cmd) == 0)
+		{
 			printf("\nListing Files from the server.\n");
 			bzero(buffer, sizeof(buffer));
 			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf("%s\n", buffer ); //Printing data recieved from the buffer
 		}
 
-		else if(!strcmp(name_cmd, "exit")){
+		else if(strcmp("exit", name_cmd) == 0)
+		{
 			printf("Request server to release the connection.\n");
 			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf(" %s \n", buffer );
 		}
 
-		else{
-			printf("Unsupported Command\n");
+		else
+		{
+			printf("This command is incorrect\n");
+		        printf("Please Type an appropriate command\n");
 		}
-
-		bzero(buffer,sizeof(buffer)); 
+		bzero(val, sizeof(val));	
+		bzero(buf,sizeof(buf));
+		bzero(cmd, sizeof(cmd));
 	}
 }
