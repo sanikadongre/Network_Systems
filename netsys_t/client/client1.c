@@ -1,4 +1,4 @@
-/***** INCLUDES *****/
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -22,10 +22,10 @@ void data_decryption(char *buffer, int data_len, char key1[], char key2[]);
 
 /***** Packet Structure *****/
 typedef struct{
-	int pckt_index; 						// to store the packet index
-	int pckt_ack;								// to store the packet acknowledgement
-	char data_buff[BUFSIZE];	// to store packet data
-	int len_data;								// to store packet data length
+	int pckt_index; 						
+	int pckt_ack;								
+	char data_buff[BUFSIZE];	
+	int len_data;								
 }struct_pckt;
 
 /***** DATA Encryption Function *****/
