@@ -1,4 +1,4 @@
-/***** INCLUDES *****/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -16,7 +16,6 @@
 #include <dirent.h>
 #define BUFSIZE (1024)
 
-/***** Declaring the data encrption/decrption functions *****/
 void data_encryption(char *buffer, int data_len, char key1[], char key2[]);
 void data_decryption(char *buffer, int data_len, char key1[], char key2[]);
 

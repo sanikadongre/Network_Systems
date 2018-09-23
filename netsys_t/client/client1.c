@@ -14,7 +14,16 @@
 #include <errno.h>
 #include <stdint.h>
 
+
 #define BUFSIZE (1024)
+
+/* cmd_get
+ * error - wrapper for perror
+ */
+void error(char *msg) {
+    perror(msg);
+    exit(0);
+}
 
 void data_encryption(char *buffer, int data_len, char key1[], char key2[]);
 void data_decryption(char *buffer, int data_len, char key1[], char key2[]);
@@ -52,19 +61,19 @@ int main (int argc, char * argv[])
 {
 		 			
 	int sockfd, nbytes, portno, bytestot, bytestot1, n, read_length;                            
-       int serverlen;																								
-       uint8_t buffer[BUFSIZE], buf[BUFSIZE], val[BUFSIZE], fname1[70],  cmd[100];								
-       struct sockaddr_in serveraddr, remote;     
-       struct hostent *server_hp;							
-       uint8_t *name_cmd;														
-       uint8_t *fname;													
-       FILE *fptr;															
-       struct_pckt* c_pckt = malloc(sizeof(struct_pckt)); 				
-       struct_pckt* s_pckt = malloc(sizeof(struct_pckt)); 				
-       struct timeval timeout; 								
-       bzero(cmd, sizeof(cmd));
-       bzero(fname1, sizeof(fname1));
-       bzero(val, sizeof(val));
+       	int serverlen;																								
+       	uint8_t buffer[BUFSIZE], buf[BUFSIZE], val[BUFSIZE], fname1[70],  cmd[100], hash_buf[BUFSIZE];								
+       	struct sockaddr_in serveraddr, remote;     
+      	struct hostent *server_hp;							
+      	uint8_t *name_cmd;														
+      	uint8_t *fname;													
+       	FILE *fptr;															
+       	struct_pckt* c_pckt = malloc(sizeof(struct_pckt)); 				
+       	struct_pckt* s_pckt = malloc(sizeof(struct_pckt)); 				
+        struct timeval timeout; 								
+        bzero(cmd, sizeof(cmd));
+        bzero(fname1, sizeof(fname1));
+        bzero(val, sizeof(val));
 	char key1[39] = "MyMethodOfEncrptingTheDataIIntendToSend";
 	char key2[59] = "ThisIsMySecondKeyForMyMethodOfEncrptingTheDataIIntendToSend";
 
