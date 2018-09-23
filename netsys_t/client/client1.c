@@ -51,36 +51,30 @@ void data_decryption(char *buffer, int data_len, char key1[], char key2[]){
 int main (int argc, char * argv[])
 {
 		 			
-	int nbytes, portno, bytestot, bytestot1, n;                            
-	int serverlen;															
-	int sockfd;                              
-	uint8_t cmd[100];											
-	uint8_t buffer[BUFSIZE], buf[BUFSIZE], val[BUFSIZE], fname1[70];								
-	struct sockaddr_in serveraddr, remote;     
-	struct hostent *server_hp;							
-	uint8_t *name_cmd;														
-	uint8_t *fname;													
-	FILE *fptr;															
-	struct_pckt* c_pckt = malloc(sizeof(struct_pckt)); 				
-	struct_pckt* s_pckt = malloc(sizeof(struct_pckt)); 				
-	struct timeval timeout; 								
-	int read_length;												
+	int sockfd, nbytes, portno, bytestot, bytestot1, n, read_length;                            
+       int serverlen;																								
+       uint8_t buffer[BUFSIZE], buf[BUFSIZE], val[BUFSIZE], fname1[70],  cmd[100];								
+       struct sockaddr_in serveraddr, remote;     
+       struct hostent *server_hp;							
+       uint8_t *name_cmd;														
+       uint8_t *fname;													
+       FILE *fptr;															
+       struct_pckt* c_pckt = malloc(sizeof(struct_pckt)); 				
+       struct_pckt* s_pckt = malloc(sizeof(struct_pckt)); 				
+       struct timeval timeout; 								
+       bzero(cmd, sizeof(cmd));
+       bzero(fname1, sizeof(fname1));
+       bzero(val, sizeof(val));
 	char key1[39] = "MyMethodOfEncrptingTheDataIIntendToSend";
 	char key2[59] = "ThisIsMySecondKeyForMyMethodOfEncrptingTheDataIIntendToSend";
 
-/***** Check for required number of command line arguments
-to connect to server *****/
 	if (argc < 3)
 	{
 		printf("USAGE:  <server_ip> <server_port>\n");
 		exit(1);
 	}
 
-	/******************
-	  Here we populate a sockaddr_in struct with
-	  information regarding where we'd like to send our packet
-	  i.e the Server.
-	 ******************/
+	/* build the server's Internet address */
 	bzero(&serveraddr,sizeof(serveraddr));               //zero the struct
 	serveraddr.sin_family = AF_INET;                 //address family
 	serveraddr.sin_port = htons(atoi(argv[2]));      //sets port to network byte order
@@ -99,11 +93,6 @@ to connect to server *****/
 		printf("unable to create socket");
 	}
 
-	/******************
-	  sendto() sends immediately.
-	  it will report an error if the message fails to leave the computer
-	  however, with UDP, there is no error if the message is lost in the network once it leaves the computer.
-	 ******************/
 	serverlen = sizeof(struct sockaddr_in);
 
 	while(1){
@@ -112,7 +101,7 @@ to connect to server *****/
 		timeout.tv_usec = 0;
 		setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
-		bzero(buffer, sizeof(buffer)); // clear buffer
+		bzero(buffer, sizeof(buffer)); 
 
 		
 		printf("Enter the command to be performed and type it: get [filename], put[filename], delete[filename], ls, exit\n");
@@ -165,7 +154,8 @@ to connect to server *****/
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
 
-		else if(!strcmp(name_cmd, "put")){
+		else if(strcmp("put", name_cmd) == 0)
+		{
 			printf("Put File: \"%s\" on the server.\n", fname);
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
@@ -184,7 +174,8 @@ to connect to server *****/
 				continue;
 			}
 
-			else{
+			else
+			{
 				char msg[] = "Success";
 				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&serveraddr, serverlen);
 			}
@@ -204,14 +195,16 @@ to connect to server *****/
 					fseek(fptr, (-1)*read_length, SEEK_CUR);
 					continue;
 				}
-				else{
+				else
+				{
 					printf("Packet Size from server: %d and ack_index from server: %d \n", nbytes, s_pckt->pckt_ack);
 					if(s_pckt->pckt_ack == c_pckt->pckt_index){
 						c_pckt->pckt_index++;
-					}
-					else{
+				}
+				else{
 						fseek(fptr, (-1)*read_length, SEEK_CUR);
-					}
+					
+				}
 				}
 				if(read_length != BUFSIZE){
 					break;
@@ -223,24 +216,44 @@ to connect to server *****/
 		else if(strcmp("ls", name_cmd) == 0)
 		{
 
-			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
-			printf(" %s \n", buffer );
+			printf("\nTo list all the files in the directory%s\n", val);
+			bzero(val, sizeof(val));
+			bytestot = recvfrom(sockfd, val, strlen(val), 0, (struct sockaddr*)&serveraddr, &(serverlen));
+			printf("\nThe dircetories and files are \n");
+			printf("%s\n", val);
 		}
 		else if(strcmp("delete", name_cmd) == 0)
 		{
-			printf("\nListing Files from the server.\n");
-			bzero(buffer, sizeof(buffer));
-			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
-			printf("%s\n", buffer ); //Printing data recieved from the buffer
+			
+			printf("Deleting the file with name: %s\n",fname);
+			bytestot = sendto(sockfd, fname, strlen(fname), 0, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 		}
 
 		else if(strcmp("exit", name_cmd) == 0)
 		{
-			printf("Request server to release the connection.\n");
-			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
-			printf(" %s \n", buffer );
+			printf("Exiting the server\n");
+			bzero(fname, sizeof(fname));
+			bytestot = recvfrom(sockfd, fname, strlen(fname), 0, (struct sockaddr*)&serveraddr, &(serverlen));
+			printf("%s\n", fname);
+			if(strcmp(fname, "Exit") ==0)
+			{
+				printf("The server has exited successfully\n");
+			}
+			else
+			{
+				printf("There is error in exiting the server\n");
+			}
 		}
-
+		else if(strcmp("md5", name_cmd) == 0)
+		{
+			strcpy(hash_buf, "md5sum");
+			printf("To get the hash value of the file: %s\n", fname);
+			strncat(hash_buf,fname,strlen(fname));
+			printf("**************************\n");
+			system(hash_buf);
+			printf("***************************\n");
+		}
+			
 		else
 		{
 			printf("This command is incorrect\n");
@@ -249,5 +262,14 @@ to connect to server *****/
 		bzero(val, sizeof(val));	
 		bzero(buf,sizeof(buf));
 		bzero(cmd, sizeof(cmd));
+		serverlen = sizeof(serveraddr);
+		    n = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, serverlen);
+		    if (n < 0) 
+		      error("ERROR in sendto");
+		    
+		    /* print the server's reply */
+		 n = recvfrom(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, &serverlen);
+		    if (n < 0) 
+		      error("ERROR in recvfrom");
 	}
 }
