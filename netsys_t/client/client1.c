@@ -16,19 +16,18 @@
 
 #define BUFSIZE (1024)
 
-/***** Declaring the data encryption/decryption functions *****/
 void data_encryption(char *buffer, int data_len, char key1[], char key2[]);
 void data_decryption(char *buffer, int data_len, char key1[], char key2[]);
 
-/***** Packet Structure *****/
+
 typedef struct{
-	int pckt_index; 						// to store the packet index
-	int pckt_ack;								// to store the packet acknowledgement
-	char data_buff[BUFSIZE];	// to store packet data
-	int len_data;								// to store packet data length
+	int pckt_index; 						
+	int pckt_ack;								
+	char data_buff[BUFSIZE];	
+	int len_data;								
 }struct_pckt;
 
-/***** DATA Encryption Function *****/
+
 void data_encryption(char *buffer, int data_len, char key1[], char key2[]){
 	for(int i=0; i<data_len; i++){
 		buffer[i] ^= key1[i%38];
@@ -49,19 +48,18 @@ void data_decryption(char *buffer, int data_len, char key1[], char key2[]){
 }
 
 
-/***** MAIN FUNCTION - ENTRY POINT *****/
 int main (int argc, char * argv[])
 {
 		 			
 	int nbytes, portno, bytestot, bytestot1, n;                            
 	int serverlen;															
 	int sockfd;                              
-	char command[100];											
+	uint8_t cmd[100];											
 	char buffer[BUFSIZE];								
 	struct sockaddr_in serveraddr, remote;     
 	struct hostent *server_hp;							
-	char *cname;														
-	char *filename;													
+	uint8_t *name_cmd;														
+	uint8_t *fname;													
 	FILE *fptr;															
 	struct_pckt* c_pckt = malloc(sizeof(struct_pckt)); 				
 	struct_pckt* s_pckt = malloc(sizeof(struct_pckt)); 				
@@ -120,14 +118,14 @@ to connect to server *****/
 		printf("\n\tEnter Command as under: \n");
 		printf("\t1. get <filename> \n" "\t2. put <filename>\n" "\t3. delete <filename>\n"
 		"\t4. ls\n" "\t5. exit \n" );
-		gets(command);	
-		nbytes = sendto(sockfd, command, sizeof(command) , 0, (struct sockaddr *)&serveraddr, serverlen);
-		cname = strdup(command);
-		strtok(cname, " ");
-		filename = strtok(NULL, " ");
-		printf("Filename: %s\n", filename);
-		if(!strcmp(cname, "get")){
-			printf("Get File: %s from the server.\n", filename);
+		gets(cmd);	
+		nbytes = sendto(sockfd, cmd, sizeof(cmd) , 0, (struct sockaddr *)&serveraddr, serverlen);
+		name_cmd = strdup(cmd);
+		strtok(name_cmd, " ");
+		fname = strtok(NULL, " ");
+		printf("Filename: %s\n", fname);
+		if(!strcmp(name_cmd, "get")){
+			printf("Get File: %s from the server.\n", fname);
 			int exp_index=1; 	
 
 			nbytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote, &serverlen);
@@ -145,7 +143,7 @@ to connect to server *****/
 				if(s_pckt->pckt_index == exp_index){
 					printf("Writing to the file\n" );
 					FILE *fptr;
-					fptr = fopen(filename,"ab");
+					fptr = fopen(fname,"ab");
 					fwrite(s_pckt->data_buff, s_pckt->len_data, 1, fptr);
 					bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
 					fclose(fptr);
@@ -169,8 +167,8 @@ to connect to server *****/
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
 
-		else if(!strcmp(cname, "put")){
-			printf("Put File: \"%s\" on the server.\n", filename);
+		else if(!strcmp(name_cmd, "put")){
+			printf("Put File: \"%s\" on the server.\n", fname);
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
 			c_pckt->pckt_index = 1;
@@ -180,7 +178,7 @@ to connect to server *****/
 			setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
 			FILE *fptr;
-			fptr = fopen(filename, "rb");
+			fptr = fopen(fname, "rb");
 			if(fptr == NULL){
 				perror("File does nor exist or Error opening file\n");
 				char msg[] = "Error";
@@ -224,19 +222,19 @@ to connect to server *****/
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
-		else if(!strcmp(cname, "delete")){
+		else if(!strcmp(name_cmd, "delete")){
 
 			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf(" %s \n", buffer );
 		}
-		else if(!strcmp(cname, "ls")){
+		else if(!strcmp(name_cmd, "ls")){
 			printf("\nListing Files from the server.\n");
 			bzero(buffer, sizeof(buffer));
 			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf("%s\n", buffer ); //Printing data recieved from the buffer
 		}
 
-		else if(!strcmp(cname, "exit")){
+		else if(!strcmp(name_cmd, "exit")){
 			printf("Request server to release the connection.\n");
 			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf(" %s \n", buffer );
