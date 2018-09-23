@@ -45,8 +45,8 @@ int32_t file_send(int socket_id, uint8_t* file_name, struct sockaddr_in remote)
 	int32_t file_closing = 0, send_data =0;
 	uint8_t* data_send = (uint8_t*)malloc(pk_size);
 	FILE *fptr;
-	if(!access(file_name, F_OK)
-	{
+	if(!access(file_name, F_OK))
+	   {
 		fptr = fopen(file_name, "r");
 		while(file_closing! = 1)
 		{
