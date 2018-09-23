@@ -1,4 +1,4 @@
-/***** INCLUDES *****/
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -115,9 +115,7 @@ to connect to server *****/
 		bzero(buffer, sizeof(buffer)); // clear buffer
 
 		
-		printf("\n\tEnter Command as under: \n");
-		printf("\t1. get <filename> \n" "\t2. put <filename>\n" "\t3. delete <filename>\n"
-		"\t4. ls\n" "\t5. exit \n" );
+		printf("Enter the command to be performed and type it: get [filename], put[filename], delete[filename], ls, exit\n");
 		gets(cmd);	
 		nbytes = sendto(sockfd, cmd, sizeof(cmd) , 0, (struct sockaddr *)&serveraddr, serverlen);
 		name_cmd = strdup(cmd);
