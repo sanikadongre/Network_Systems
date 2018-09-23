@@ -1,18 +1,17 @@
 /***** INCLUDES *****/
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <stdio.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <signal.h>
-#include <stdio.h>
+#include <arpa/inet.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/time.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <errno.h>
-#include <stdio.h>
 #include <stdint.h>
 
 #define BUFSIZE (1024)
@@ -55,11 +54,11 @@ int main (int argc, char * argv[])
 {
 		 			
 	int nbytes;                            
-	int length;															
+	int serverlen;															
 	int sockfd;                              
 	char command[100];											
 	char buffer[BUFSIZE];								
-	struct sockaddr_in server, remote;     
+	struct sockaddr_in serveraddr, remote;     
 	struct hostent *server_hp;							
 	char *cname;														
 	char *filename;													
@@ -84,17 +83,17 @@ to connect to server *****/
 	  information regarding where we'd like to send our packet
 	  i.e the Server.
 	 ******************/
-	bzero(&server,sizeof(server));               //zero the struct
-	server.sin_family = AF_INET;                 //address family
-	server.sin_port = htons(atoi(argv[2]));      //sets port to network byte order
-	server.sin_addr.s_addr = inet_addr(argv[1]); //sets remote IP address
+	bzero(&serveraddr,sizeof(serveraddr));               //zero the struct
+	serveraddr.sin_family = AF_INET;                 //address family
+	serveraddr.sin_port = htons(atoi(argv[2]));      //sets port to network byte order
+	serveraddr.sin_addr.s_addr = inet_addr(argv[1]); //sets remote IP address
 
 	server_hp = gethostbyname(argv[1]);					 // Return information about host in argv[1]
 	if(server_hp < 0){
 			perror("Host Unknown");
 	}
 
-	bcopy((char*)server_hp->h_addr, (char*)&server.sin_addr, server_hp->h_length);
+	bcopy((char*)server_hp->h_addr, (char*)&serveraddr.sin_addr, server_hp->h_length);
 
 	/***** Causes the system to create a generic socket of type UDP (datagram) *****/
 	if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
@@ -107,7 +106,7 @@ to connect to server *****/
 	  it will report an error if the message fails to leave the computer
 	  however, with UDP, there is no error if the message is lost in the network once it leaves the computer.
 	 ******************/
-	length = sizeof(struct sockaddr_in);
+	serverlen = sizeof(struct sockaddr_in);
 
 	while(1){
 		
@@ -122,7 +121,7 @@ to connect to server *****/
 		printf("\t1. get <filename> \n" "\t2. put <filename>\n" "\t3. delete <filename>\n"
 		"\t4. ls\n" "\t5. exit \n" );
 		gets(command);	
-		nbytes = sendto(sockfd, command, sizeof(command) , 0, (struct sockaddr *)&server, length)
+		nbytes = sendto(sockfd, command, sizeof(command) , 0, (struct sockaddr *)&serveraddr, serverlen)
 		cname = strdup(command);
 		strtok(cname, " ");
 		filename = strtok(NULL, " ");
@@ -131,14 +130,14 @@ to connect to server *****/
 			printf("Get File: %s from the server.\n", filename);
 			int exp_index=1; 	
 
-			nbytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote, &length);
+			nbytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote, &serverlen);
 			if(!strcmp(buffer, "Error")){
 				printf("File does not exist on the server. \n");
 				continue;
 			}
 			do{
 				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
-				nbytes = recvfrom(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &remote, &length);
+				nbytes = recvfrom(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &remote, &serverlen);
 
 				printf("Packet Size from the server: %d \n",nbytes);
 
@@ -152,13 +151,13 @@ to connect to server *****/
 					fclose(fp);
 
 					c_pckt->pckt_ack=exp_index;
-					nbytes = sendto(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&server, length);
+					nbytes = sendto(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&serveraddr, serverlen);
 					printf("Packet Size being sent to server: %d and ACK sent: %d\n",nbytes, c_pckt->pckt_ack);
 					exp_index++;
 				}
 				else{
 					c_pckt->pckt_ack=s_pckt->pckt_index;
-					nbytes = sendto(sockfd, (struct_pckt*)c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&server, length);
+					nbytes = sendto(sockfd, (struct_pckt*)c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&serveraddr,serverlen);
 					printf("Packet Size being sent to server: %d and ACK sent: %d\n",nbytes, c_pckt->pckt_ack);
 				}
 				if(s_pckt->len_data != BUFSIZE){
@@ -185,13 +184,13 @@ to connect to server *****/
 			if(fp == NULL){
 				perror("File does nor exist or Error opening file\n");
 				char msg[] = "Error";
-				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&server, length);
+				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&serveraddr, serverlen);
 				continue;
 			}
 
 			else{
 				char msg[] = "Success";
-				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&server, length);
+				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&serveraddr, serverlen);
 			}
 			do{
 				bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
@@ -199,11 +198,11 @@ to connect to server *****/
 				c_pckt->len_data = read_length;
 
 				data_encryption(c_pckt->data_buff, c_pckt->len_data, key1, key2); //encrypting data to be sent on the server
-				nbytes = sendto(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&server, length);
+				nbytes = sendto(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&serveraddr, serverlen);
 				printf("Packet Size sent to the server: %d\n",nbytes);
 
 				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
-				nbytes = recvfrom(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&remote, &length);
+				nbytes = recvfrom(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&remote, &serverlen);
 				if(nbytes < 0){
 					printf("---------------------Timeout--------------------------\n");
 					fseek(fp, (-1)*read_length, SEEK_CUR);
@@ -226,20 +225,20 @@ to connect to server *****/
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
 		else if(!strcmp(cname, "delete")){
-			// Recieving acknowledgement whether the file is deleted.
-			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
+
+			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf(" %s \n", buffer );
 		}
 		else if(!strcmp(cname, "ls")){
 			printf("\nListing Files from the server.\n");
 			bzero(buffer, sizeof(buffer));
-			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
+			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf("%s\n", buffer ); //Printing data recieved from the buffer
 		}
 
 		else if(!strcmp(cname, "exit")){
 			printf("Request server to release the connection.\n");
-			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &length);
+			nbytes = recvfrom(sockfd, buffer, BUFSIZE, 0, (struct sockaddr *)&remote, &serverlen);
 			printf(" %s \n", buffer );
 		}
 
