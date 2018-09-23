@@ -1,4 +1,4 @@
-
+/***** INCLUDES *****/
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -22,10 +22,10 @@ void data_decryption(char *buffer, int data_len, char key1[], char key2[]);
 
 /***** Packet Structure *****/
 typedef struct{
-	int pckt_index; 						
-	int pckt_ack;								
-	char data_buff[BUFSIZE];	
-	int len_data;								
+	int pckt_index; 						// to store the packet index
+	int pckt_ack;								// to store the packet acknowledgement
+	char data_buff[BUFSIZE];	// to store packet data
+	int len_data;								// to store packet data length
 }struct_pckt;
 
 /***** DATA Encryption Function *****/
@@ -53,7 +53,7 @@ void data_decryption(char *buffer, int data_len, char key1[], char key2[]){
 int main (int argc, char * argv[])
 {
 		 			
-	int nbytes;                            
+	int nbytes, portno, bytestot, bytestot1, n;                            
 	int serverlen;															
 	int sockfd;                              
 	char command[100];											
@@ -62,7 +62,7 @@ int main (int argc, char * argv[])
 	struct hostent *server_hp;							
 	char *cname;														
 	char *filename;													
-	FILE *fp;															
+	FILE *fptr;															
 	struct_pckt* c_pckt = malloc(sizeof(struct_pckt)); 				
 	struct_pckt* s_pckt = malloc(sizeof(struct_pckt)); 				
 	struct timeval timeout; 								
@@ -144,11 +144,11 @@ to connect to server *****/
 				data_decryption(s_pckt->data_buff, s_pckt->len_data, key1, key2);
 				if(s_pckt->pckt_index == exp_index){
 					printf("Writing to the file\n" );
-					FILE *fp;
-					fp = fopen(filename,"ab");
-					fwrite(s_pckt->data_buff, s_pckt->len_data, 1, fp);
+					FILE *fptr;
+					fptr = fopen(filename,"ab");
+					fwrite(s_pckt->data_buff, s_pckt->len_data, 1, fptr);
 					bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
-					fclose(fp);
+					fclose(fptr);
 
 					c_pckt->pckt_ack=exp_index;
 					nbytes = sendto(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&serveraddr, serverlen);
@@ -179,9 +179,9 @@ to connect to server *****/
 			timeout.tv_usec = 300000;
 			setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
-			FILE *fp;
-			fp = fopen(filename, "rb");
-			if(fp == NULL){
+			FILE *fptr;
+			fptr = fopen(filename, "rb");
+			if(fptr == NULL){
 				perror("File does nor exist or Error opening file\n");
 				char msg[] = "Error";
 				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&serveraddr, serverlen);
@@ -194,7 +194,7 @@ to connect to server *****/
 			}
 			do{
 				bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
-				read_length = fread(c_pckt->data_buff, 1, BUFSIZE , fp);
+				read_length = fread(c_pckt->data_buff, 1, BUFSIZE , fptr);
 				c_pckt->len_data = read_length;
 
 				data_encryption(c_pckt->data_buff, c_pckt->len_data, key1, key2); //encrypting data to be sent on the server
@@ -205,7 +205,7 @@ to connect to server *****/
 				nbytes = recvfrom(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&remote, &serverlen);
 				if(nbytes < 0){
 					printf("---------------------Timeout--------------------------\n");
-					fseek(fp, (-1)*read_length, SEEK_CUR);
+					fseek(fptr, (-1)*read_length, SEEK_CUR);
 					continue;
 				}
 				else{
@@ -214,7 +214,7 @@ to connect to server *****/
 						c_pckt->pckt_index++;
 					}
 					else{
-						fseek(fp, (-1)*read_length, SEEK_CUR);
+						fseek(fptr, (-1)*read_length, SEEK_CUR);
 					}
 				}
 				if(read_length != BUFSIZE){
