@@ -1,4 +1,7 @@
-
+/************************************
+*Reference for socket code from professor and  file operations and list and 
+*string splitting from online websites
+***********************************
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -23,7 +26,7 @@
 
 
 typedef struct{
-	int pckt_index;						
+	int pckt_index;						//struct for packet details
 	int pckt_ack;														
 	int packet_length;
 	uint8_t data_descp[BUFSIZE];												
@@ -64,15 +67,11 @@ int main (int argc, char * argv[] )
 	struct timeval timeout;								
 	Packet_Details* a = malloc(sizeof(Packet_Details));
 	Packet_Details* s = malloc(sizeof(Packet_Details));
-
-
 	if (argc != 2)
 	{
 		printf ("USAGE:  <port>\n");
 		exit(1);
 	}
-
-	
 	bzero(&sin,sizeof(sin));                   
 	sin.sin_family = AF_INET;                   
 	sin.sin_port = htons(atoi(argv[1]));        
@@ -87,8 +86,6 @@ int main (int argc, char * argv[] )
 	}
 
 	clientlen = sizeof(struct sockaddr_in);
-
-	
 	while(1){
 	
 		timeout.tv_sec = 0;
@@ -101,7 +98,7 @@ int main (int argc, char * argv[] )
 		optval = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&clientaddr, &clientlen);
 
 		cname = strdup(buffer);
-		strtok(cname," ");
+		strtok(cname," ");   //string splitting
 		filename = strtok(NULL, " ");
 
 		printf("Command Recieved: %s \n", cname);
@@ -157,19 +154,19 @@ int main (int argc, char * argv[] )
 
 				if(a->pckt_ack != s->pckt_index)
 				{
-					fseek(fptr, (-1)*(s->packet_length), SEEK_CUR);
+					fseek(fptr, (-1)*(s->packet_length), SEEK_CUR); //Timeout has occurred
 					
 				}
 				else if(a->pckt_ack == s->pckt_index)
 				{
-					s->pckt_index++;
+					s->pckt_index++;  //Sending next packet
 				}
 				if(s->packet_length != BUFSIZE)
 				{
 					break;
 				}
 			}
-			memset(a, 0, sizeof(Packet_Details));
+			memset(a, 0, sizeof(Packet_Details)); //Free the memory
 			memset(s, 0, sizeof(Packet_Details));
 		}
 		else if(strcmp(cname,"put") == 0)
@@ -197,7 +194,7 @@ int main (int argc, char * argv[] )
 				bzero(a->data_descp, sizeof(a->data_descp));
 				optval = recvfrom(sockfd, (Packet_Details*) a, sizeof(Packet_Details), 0, (struct sockaddr *) &clientaddr, &clientlen);
 				printf("Packet Size from the client: %d \n",optval);
-				encode(a->data_descp, a->packet_length, key);//decrypting data sent by the client
+				encode(a->data_descp, a->packet_length, key);//encoding data sent by client
 				if(a->pckt_index != packet_id)
 				{
 					s->pckt_ack=a->pckt_index;
@@ -208,9 +205,9 @@ int main (int argc, char * argv[] )
 				{
 					fwrite(a->data_descp, a->packet_length, 1, fptr);
 					bzero(a->data_descp, sizeof(a->data_descp));
-					s->pckt_ack=packet_id;
+					s->pckt_ack=packet_id;  
 					optval = sendto(sockfd, (Packet_Details*) s, sizeof(Packet_Details), 0, (struct sockaddr *) &clientaddr, clientlen);
-					printf("Packet Size being sent to client: %d and ACK from server: %d\n",optval, s->pckt_ack);
+					printf("Packet Size being sent to  the client: %d and ACK from server: %d\n",optval, s->pckt_ack);
 					packet_id++;
 				}
 				if(a->packet_length != BUFSIZE)
@@ -218,8 +215,8 @@ int main (int argc, char * argv[] )
 					break;
 				}
 			}
-			fclose(fptr);
-			memset(a, 0, sizeof(Packet_Details));
+			fclose(fptr); //close fptr
+			memset(a, 0, sizeof(Packet_Details)); //free memory
 			memset(s, 0, sizeof(Packet_Details));
 		}
 		else if(strcmp(cname,"delete") == 0)
@@ -230,7 +227,7 @@ int main (int argc, char * argv[] )
 			f = fopen(filename,"r");			
 			if(f != NULL)
 			{
-				file_del = remove(filename);
+				file_del = remove(filename); //command for deleting file
 				if(file_del != 0)
 				{
 					perror("Error");
@@ -265,6 +262,7 @@ int main (int argc, char * argv[] )
 				{
 					strcat(buf, dir_ls->d_name);
 					strcat(buf, "\n");
+					printf("%s\n", buf);
 				}
 				bytestot = sendto(sockfd, buf, sizeof(buf), 0, (struct sockaddr*)&clientaddr, clientlen);
 			}
@@ -273,8 +271,8 @@ int main (int argc, char * argv[] )
 		else if(strcmp(cname,"exit") == 0)
 		{
 			bzero(buf, sizeof(buf));
-			strcpy(buf, "Exit by server");
-			printf(" Exit buffer: %s\n", buf);
+			strcpy(buf, "Exit by the server");
+			printf(" Exit buffer is: %s\n", buf);
 			bytestot = sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&clientaddr, clientlen);
 			exit(0);
 		}
