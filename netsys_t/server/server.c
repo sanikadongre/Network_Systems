@@ -255,9 +255,10 @@ to start the server *****/
 					s_pckt->pckt_ack=c_pckt->pckt_index;
 					//Sending Acknowledgement if the expected packet not received
 					nbytes = sendto(sockfd, (struct_pckt*)s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
-				if(c_pckt->len_data != BUFSIZE)
-				{
-					break;
+					if(c_pckt->len_data != BUFSIZE)
+					{
+						break;
+					}
 				}
 			}while(1); // check for remaining data to be recieved
 			fclose(fptr);
