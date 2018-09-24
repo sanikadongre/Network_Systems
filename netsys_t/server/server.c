@@ -136,7 +136,8 @@ to start the server *****/
 		/***** Condition: To send file to the client (requested by the client)
 		Given a valid file name by the user, which is available
 		at the server *****/
-		if(!strcmp(cname, "get")){
+		if(!strcmp(cname, "get"))
+		{
 			/* Setting Timeout */
 			timeout.tv_sec = 0;
 			timeout.tv_usec = 300000;
@@ -147,13 +148,15 @@ to start the server *****/
 
 			FILE *fptr;
 			fptr = fopen(filename, "rb");
-			if(fptr == NULL){
+			if(fptr == NULL)
+			{
 				perror("File does nor exist or Error opening file \n");
 				char msg[] = "Error";
 				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&clientaddr, clientlen);
 				continue;
 			}
-			else{
+			else
+			{
 				char msg[] = "Success";
 				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&clientaddr, clientlen);
 			}
@@ -172,7 +175,8 @@ to start the server *****/
 				nbytes = recvfrom(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&clientaddr, &clientlen);
 
 				//Packet Authentication
-				if(nbytes<0){
+				if(nbytes<0)
+				{
 					printf("---------------------Timeout--------------------------\n");
 					fseek(fptr, (-1)*read_length, SEEK_CUR);
 					continue;
@@ -180,14 +184,17 @@ to start the server *****/
 				printf("Packet Size from client: %d and client ack_index: %d \n",nbytes, c_pckt->pckt_ack);
 
 				//incrementing Server packet index if the expected acknowledgement is recieved
-				if(c_pckt->pckt_ack == s_pckt->pckt_index){
+				if(c_pckt->pckt_ack == s_pckt->pckt_index)
+				{
 					s_pckt->pckt_index++;
 				}
 				//retaining Server packet index if the expected acknowledgement is not recieved
-				else{
+				else
+				{
 					fseek(fptr, (-1)*read_length, SEEK_CUR);
 				}
-				if(read_length != BUFSIZE){
+				if(read_length != BUFSIZE)
+				{
 					break;
 				}
 			}while(1);
@@ -200,7 +207,8 @@ to start the server *****/
 		/***** Condition: To recieve a file from the client (sent by the client)
 		Given a valid file name by the user, which is available
 		at the client *****/
-		else if(!strcmp(cname,"put")){
+		else if(!strcmp(cname,"put"))
+		{
 			//clear memory for packet structres
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
@@ -211,12 +219,14 @@ to start the server *****/
 			bzero(buffer, sizeof(buffer));
 			nbytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &clientaddr, &clientlen);
 
-			if(!strcmp(buffer, "Error")){
+			if(!strcmp(buffer, "Error"))
+			{
 				continue;
 			}
 			FILE *fptr;
 			fptr = fopen(filename,"ab");
-			if(fptr == NULL){
+			if(fptr == NULL)
+			{
 				perror("Error opening file \n");
 			}
 
@@ -229,7 +239,8 @@ to start the server *****/
 				data_decryption(c_pckt->data_buff, c_pckt->len_data, key1, key2);//decrypting data sent by the client
 
 				/* Packet Validation */
-				if(c_pckt->pckt_index == exp_index){
+				if(c_pckt->pckt_index == exp_index)
+				{
 					printf("Writing to the file \n" );
 					fwrite(c_pckt->data_buff, c_pckt->len_data, 1, fptr);
 					bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
@@ -239,11 +250,13 @@ to start the server *****/
 					printf("Packet Size being sent to client: %d and ACK from server: %d\n",nbytes, s_pckt->pckt_ack);
 					exp_index++;
 				}
-				else{
+				else
+				{
 					s_pckt->pckt_ack=c_pckt->pckt_index;
 					//Sending Acknowledgement if the expected packet not received
 					nbytes = sendto(sockfd, (struct_pckt*)s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
-				if(c_pckt->len_data != BUFSIZE){
+				if(c_pckt->len_data != BUFSIZE)
+				{
 					break;
 				}
 			}while(1); // check for remaining data to be recieved
@@ -253,10 +266,6 @@ to start the server *****/
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
-
-		/***** Condition: To delete a file from the server (requested by the client)
-		Given a valid file name by the user, which is available
-		at the server *****/
 		else if(!strcmp(cname,"delete"))
 		{
 			FILE *f;
@@ -282,9 +291,8 @@ to start the server *****/
 				printf("The file is not found and can't be deleted\n");
 			}
 		}
-
-		
-		else if(!strcmp(cname,"ls")){
+		else if(!strcmp(cname,"ls"))
+		{
 			DIR *direct_ls;
 			struct dirent *dir_ls;
 			direct_ls = opendir(".");
@@ -304,19 +312,8 @@ to start the server *****/
 				}
 				bytestot = sendto(sockfd, fname, sizeof(fname), 0, (struct sockaddr*)&clientaddr, clientlen);
 			}
-			}
-			else{
-				bzero(buffer, sizeof(buffer));
-				//Concatinating the file names in the buffer
-				while((struct_dir = readdir(current_dir)) != NULL){
-					strcat(buffer, struct_dir->d_name);
-					strcat(buffer, "\n");
-				}
-			/* Sending the file-names to the client*/
-			nbytes = sendto(sockfd, buffer, sizeof(buffer) , 0, (struct sockaddr *)&clientaddr, clientlen);
-			}
 		}
-		
+
 		else if(!strcmp(cname,"exit"))
 		{
 			bzero(buf, sizeof(buf));
