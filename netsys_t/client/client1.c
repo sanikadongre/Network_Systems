@@ -271,14 +271,5 @@ int main (int argc, char * argv[])
 		bzero(val, sizeof(val));	
 		bzero(buf,sizeof(buf));
 		bzero(cmd, sizeof(cmd));
-		serverlen = sizeof(serveraddr);
-		    n = sendto(sockfd, cmd, strlen(cmd), 0, (struct sockaddr*)&serveraddr, serverlen);
-		    if (n < 0) 
-		      error("ERROR in sendto");
-		    
-		    /* print the server's reply */
-		 n = recvfrom(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, &serverlen);
-		    if (n < 0) 
-		      error("ERROR in recvfrom");
 	}
 }
