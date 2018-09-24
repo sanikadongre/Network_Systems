@@ -21,16 +21,22 @@
 
 #define BUFSIZE (1024)
 
-void data_encryption(char *buffer, int data_len, char key1[], char key2[]);
-void data_decryption(char *buffer, int data_len, char key1[], char key2[]);
 
-/***** Packet Structure *****/
 typedef struct{
-	int pckt_index;										// to store the packet index
-	int pckt_ack;											// to store the packet acknowledgement
-	char data_buff[BUFSIZE];				// to store packet data
-	int len_data;											// to store packet data length
+	int pckt_index;						
+	int pckt_ack;											
+	char data_buff[BUFSIZE];				
+	int len_data;											
 }struct_pckt;
+
+void (uint8_t* temp_buf, int size_len, uint8_t key)
+{
+	for(int i=0; i<size_len; i++)
+	{
+		temp_buf[i] ^= key;
+	}
+}
+
 
 /*
  * error - wrapper for perror
@@ -40,52 +46,27 @@ void error(char *msg) {
   exit(1);
 }
 
-/***** DATA DECRYPTION FUNCTION *****/
-void data_decryption(char *buffer, int data_len, char key1[], char key2[]){
-	for(int i=0; i<data_len; i++){
-		buffer[i] ^= key2[i%58];
-	}
-	for(int j=0; j<data_len; j++){
-		buffer[j] ^= key1[j%38];
-	}
-}
-
-/***** DATA Encryption Function *****/
-void data_encryption(char *buffer, int data_len, char key1[], char key2[]){
-	for(int i=0; i<data_len; i++){
-		buffer[i] ^= key1[i%38];
-	}
-	for(int j=0; j<data_len; j++){
-		buffer[j] ^= key2[j%58];
-	}
-}
-
-/***** MAIN FUNCTION - ENTRY POINT *****/
 int main (int argc, char * argv[] )
 {
-			//to set stdout to not buffer printf -> stackoverflow.com
-	int sockfd, portno, clientlen, optval, n, bytestot =0;                           	// this will be our socket
-	struct sockaddr_in sin, clientaddr;     	//"Internet socket address structure
-	int nbytes;                        		// number of bytes to be sent or received
-	char buffer[BUFSIZE], buf[BUFSIZE], hash_buf[BUFSIZE], recv_buf[BUFSIZE];             	// buffer for storing the data to be sent/recieved
-	char *cname;													// to extract the command from user input at client
-	char *filename;												// to store the filename(in any) from user input at client
-	struct_pckt* c_pckt = malloc(sizeof(struct_pckt));// defining packet structure for client packet
-	struct_pckt* s_pckt = malloc(sizeof(struct_pckt));// defining packet structure for server packet
-	FILE *fptr;															// declaring file pointer to perform file read/write
-	int read_length;	
-	uint8_t cmd_out_exit, val[BUFSIZE] = "The server is exiting", cmd[70], fname[70], check = 1;
+			
+	int sockfd, portno, file_del, clientlen, optval, n, bytestot =0, read_length =0;                           
+	struct sockaddr_in sin, clientaddr;     	
+	int nbytes;                        		
+	char buffer[BUFSIZE], buf[BUFSIZE], hash_buf[BUFSIZE], recv_buf[BUFSIZE], msg_val[] = " ";             	
+	char *cname;													
+	char *filename;												
+	struct_pckt* c_pckt = malloc(sizeof(struct_pckt));
+	struct_pckt* s_pckt = malloc(sizeof(struct_pckt));
+	FILE *fptr;														
+	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70], fname[70], check = 1, key = 10;
   	bzero(cmd, sizeof(cmd));
   	bzero(fname, sizeof(fname));
   	bzero(val, sizeof(val));
-  	uint8_t msg_conf[] = " ";// to store the length of the read data
-	struct timeval timeout;								// defining timeout structure
-	char key1[39] = "MyMethodOfEncrptingTheDataIIntendToSend"; // Data encryption key-1
-	char key2[59] = "ThisIsMySecondKeyForMyMethodOfEncrptingTheDataIIntendToSend";// Data encryption key-2
+  	uint8_t msg_conf[] = " ";
+	struct timeval timeout;								
+	
 
 
-/***** Check for required number of command line arguments
-to start the server *****/
 	if (argc != 2)
 	{
 		printf ("USAGE:  <port>\n");
@@ -111,7 +92,7 @@ to start the server *****/
 
 	clientlen = sizeof(struct sockaddr_in);
 
-	//waits for an incoming message
+	
 	while(1){
 		/* Initializing timeout struct */
 		timeout.tv_sec = 0;
@@ -121,11 +102,8 @@ to start the server *****/
 		bzero(buffer, sizeof(buffer));
 
 		/* Recieving the command from the client */
-		nbytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&clientaddr, &clientlen);
+		optval = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&clientaddr, &clientlen);
 
-		/***** Split the command from the user to get the command and filename if any
-		 Refernce: http://www.geeksforgeeks.org/how-to-split-a-string-in-cc-python-and-java/
-		 *****/
 		cname = strdup(buffer);
 		strtok(cname," ");
 		filename = strtok(NULL, " ");
@@ -133,9 +111,7 @@ to start the server *****/
 		printf("Command Recieved: %s \n", cname);
 		printf("File name:%s\n", filename );
 
-		/***** Condition: To send file to the client (requested by the client)
-		Given a valid file name by the user, which is available
-		at the server *****/
+		
 		if(!strcmp(cname, "get"))
 		{
 			/* Setting Timeout */
@@ -148,78 +124,68 @@ to start the server *****/
 
 			FILE *fptr;
 			fptr = fopen(filename, "rb");
-			if(fptr == NULL)
+			if(fptr != NULL)
 			{
-				perror("File does nor exist or Error opening file \n");
-				char msg[] = "Error";
-				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&clientaddr, clientlen);
+				strcpy(msg_val, "Filefound");
+				printf("File is present\n");
+				optval = sendto(sockfd, msg_val, sizeof(msg_val), 0, (struct sockaddr *)&clientaddr, clientlen);
+				
+			}
+			else if(fptr == NULL)
+			{
+				
+				strcpy(msg_val, "Fileerror");
+				printf("File cant be found\n");
+				optval = sendto(sockfd, msg_val, sizeof(msg_val), 0, (struct sockaddr *)&clientaddr, clientlen);
 				continue;
 			}
-			else
-			{
-				char msg[] = "Success";
-				nbytes = sendto(sockfd, msg, sizeof(msg), 0, (struct sockaddr *)&clientaddr, clientlen);
-			}
-			//Starting the loop for continous sending of data to the server
-			do{
+			
+			while(1)
+			   {
 				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
 				read_length = fread(s_pckt->data_buff, 1, BUFSIZE , fptr);
 				s_pckt->len_data = read_length;
 				printf("Read length%d\n", read_length );
-
-				data_encryption(s_pckt->data_buff, s_pckt->len_data, key1, key2);//Encrypting data to be sent to the client
-				nbytes = sendto(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&clientaddr, clientlen);
-				printf("Packet Size send to client: %d\n",nbytes);
-
+				encode(s_pckt->data_buff, s_pckt->len_data, key);//Encrypting data to be sent to the client
+				optval = sendto(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&clientaddr, clientlen);
+				printf("Packet Size send to client: %d\n", optval);
 				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
-				nbytes = recvfrom(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&clientaddr, &clientlen);
-
-				//Packet Authentication
-				if(nbytes<0)
+				optval = recvfrom(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&clientaddr, &clientlen);
+				if(optval<0)
 				{
-					printf("---------------------Timeout--------------------------\n");
+					printf("Timeout occurs\n");
 					fseek(fptr, (-1)*read_length, SEEK_CUR);
 					continue;
 				}
-				printf("Packet Size from client: %d and client ack_index: %d \n",nbytes, c_pckt->pckt_ack);
+				printf("Packet Size from client: %d and client ack_index: %d \n",optval, c_pckt->pckt_ack);
 
-				//incrementing Server packet index if the expected acknowledgement is recieved
-				if(c_pckt->pckt_ack == s_pckt->pckt_index)
-				{
-					s_pckt->pckt_index++;
-				}
-				//retaining Server packet index if the expected acknowledgement is not recieved
-				else
+				if(c_pckt->pckt_ack != s_pckt->pckt_index)
 				{
 					fseek(fptr, (-1)*read_length, SEEK_CUR);
+					
+				}
+				else if(c_pckt->pckt_ack == s_pckt->pckt_index)
+				{
+					s_pckt->pckt_index++;
 				}
 				if(read_length != BUFSIZE)
 				{
 					break;
 				}
-			}while(1);
-
-			// Clearing the memory for the packet structures
+			}
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
-
-		/***** Condition: To recieve a file from the client (sent by the client)
-		Given a valid file name by the user, which is available
-		at the client *****/
 		else if(!strcmp(cname,"put"))
 		{
-			//clear memory for packet structres
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
 
 			int exp_index=1;	// Initializing the expected packet with 1
 			s_pckt->pckt_ack = 1;//Initializing packet structure acknowledgement
-
 			bzero(buffer, sizeof(buffer));
-			nbytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &clientaddr, &clientlen);
-
-			if(!strcmp(buffer, "Error"))
+			optval = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &clientaddr, &clientlen);
+			if(!strcmp(buffer, "Fileerror"))
 			{
 				continue;
 			}
@@ -230,40 +196,33 @@ to start the server *****/
 				perror("Error opening file \n");
 			}
 
-			/* Loop for continous receiving of valid packets */
-			do{
+			while(1)
+			{
 				bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
-				nbytes = recvfrom(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, &clientlen);
-				printf("Packet Size from the client: %d \n",nbytes);
-
-				data_decryption(c_pckt->data_buff, c_pckt->len_data, key1, key2);//decrypting data sent by the client
-
-				/* Packet Validation */
-				if(c_pckt->pckt_index == exp_index)
+				optval = recvfrom(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, &clientlen);
+				printf("Packet Size from the client: %d \n",optval);
+				encode(c_pckt->data_buff, c_pckt->len_data, key);//decrypting data sent by the client
+				if(c_pckt->pckt_index != exp_index)
 				{
-					printf("Writing to the file \n" );
+					s_pckt->pckt_ack=c_pckt->pckt_index;
+					optval = sendto(sockfd, (struct_pckt*)s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
+					
+				}
+				else if(c_pckt->pckt_index == exp_index)
+				{
 					fwrite(c_pckt->data_buff, c_pckt->len_data, 1, fptr);
 					bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
 					s_pckt->pckt_ack=exp_index;
-					//Sending Acknowledgement if the expected packet is recieved
-					nbytes = sendto(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
-					printf("Packet Size being sent to client: %d and ACK from server: %d\n",nbytes, s_pckt->pckt_ack);
+					optval = sendto(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
+					printf("Packet Size being sent to client: %d and ACK from server: %d\n",optval, s_pckt->pckt_ack);
 					exp_index++;
 				}
-				else
+				if(c_pckt->len_data != BUFSIZE)
 				{
-					s_pckt->pckt_ack=c_pckt->pckt_index;
-					//Sending Acknowledgement if the expected packet not received
-					nbytes = sendto(sockfd, (struct_pckt*)s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
-					if(c_pckt->len_data != BUFSIZE)
-					{
-						break;
-					}
+					break;
 				}
-			}while(1); // check for remaining data to be recieved
+			}
 			fclose(fptr);
-
-			// Clearing the memory for the packet structures
 			memset(c_pckt, 0, sizeof(struct_pckt));
 			memset(s_pckt, 0, sizeof(struct_pckt));
 		}
@@ -306,7 +265,7 @@ to start the server *****/
 			else
 			{
 				bzero(fname, BUFSIZE);
-				while((dir_ls == readdir(direct_ls)) != NULL)
+				while((dir_ls = readdir(direct_ls)) != NULL)
 				{
 					strcat(fname, dir_ls->d_name);
 					strcat(fname, "\n");
