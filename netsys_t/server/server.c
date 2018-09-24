@@ -24,12 +24,12 @@
 
 typedef struct{
 	int pckt_index;						
-	int pckt_ack;											
-	char data_buff[BUFSIZE];				
-	int len_data;											
-}struct_pckt;
+	int pckt_ack;														
+	int packet_length;
+	uint8_t data_descp[BUFSIZE];												
+}Packet_Details;
 
-void (uint8_t* temp_buf, int size_len, uint8_t key)
+void encode(uint8_t *temp_buf, int size_len, uint8_t key)
 {
 	for(int i=0; i<size_len; i++)
 	{
@@ -49,14 +49,12 @@ void error(char *msg) {
 int main (int argc, char * argv[] )
 {
 			
-	int sockfd, portno, file_del, clientlen, optval, n, bytestot =0, read_length =0;                           
+	int sockfd, portno, file_del, clientlen, optval, n, bytestot =0, read_bytes =0, packet_id;                           
 	struct sockaddr_in sin, clientaddr;     	
 	int nbytes;                        		
 	char buffer[BUFSIZE], buf[BUFSIZE], hash_buf[BUFSIZE], recv_buf[BUFSIZE], msg_val[] = " ";             	
 	char *cname;													
 	char *filename;												
-	struct_pckt* c_pckt = malloc(sizeof(struct_pckt));
-	struct_pckt* s_pckt = malloc(sizeof(struct_pckt));
 	FILE *fptr;														
 	uint8_t cmd_out_exit, val[BUFSIZE], cmd[70], fname[70], check = 1, key = 10;
   	bzero(cmd, sizeof(cmd));
@@ -64,7 +62,8 @@ int main (int argc, char * argv[] )
   	bzero(val, sizeof(val));
   	uint8_t msg_conf[] = " ";
 	struct timeval timeout;								
-	
+	Packet_Details* a = malloc(sizeof(Packet_Details));
+	Packet_Details* s = malloc(sizeof(Packet_Details));
 
 
 	if (argc != 2)
@@ -73,14 +72,11 @@ int main (int argc, char * argv[] )
 		exit(1);
 	}
 
-	/******************
-	  This code populates the sockaddr_in struct with
-	  the information about our socket
-	 ******************/
-	bzero(&sin,sizeof(sin));                    //zero the struct
-	sin.sin_family = AF_INET;                   //address family
-	sin.sin_port = htons(atoi(argv[1]));        //htons() sets the port # to network byte order
-	sin.sin_addr.s_addr = INADDR_ANY;           //supplies the IP address of the local machine
+	
+	bzero(&sin,sizeof(sin));                   
+	sin.sin_family = AF_INET;                   
+	sin.sin_port = htons(atoi(argv[1]));        
+	sin.sin_addr.s_addr = INADDR_ANY;          
 	if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
 	{
 		printf("unable to create socket");
@@ -94,7 +90,7 @@ int main (int argc, char * argv[] )
 
 	
 	while(1){
-		/* Initializing timeout struct */
+	
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 0;
 		setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
@@ -112,16 +108,16 @@ int main (int argc, char * argv[] )
 		printf("File name:%s\n", filename );
 
 		
-		if(!strcmp(cname, "get"))
+		if(strcmp(cname, "get") == 0)
 		{
 			/* Setting Timeout */
 			timeout.tv_sec = 0;
 			timeout.tv_usec = 300000;
 			setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
 
-			s_pckt->pckt_index = 1;	// Initializing the server packet index with 1
-			c_pckt->pckt_ack = 0;		// Initializing the packet acknowledgement with 0
-
+			s->pckt_index = 1;	// Initializing the server packet index with 1
+			a->pckt_ack = 0;		// Initializing the packet acknowledgement with 0
+			bzero(s->data_descp, sizeof(s->data_descp));
 			FILE *fptr;
 			fptr = fopen(filename, "rb");
 			if(fptr != NULL)
@@ -142,47 +138,47 @@ int main (int argc, char * argv[] )
 			
 			while(1)
 			   {
-				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
-				read_length = fread(s_pckt->data_buff, 1, BUFSIZE , fptr);
-				s_pckt->len_data = read_length;
-				printf("Read length%d\n", read_length );
-				encode(s_pckt->data_buff, s_pckt->len_data, key);//Encrypting data to be sent to the client
-				optval = sendto(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&clientaddr, clientlen);
+				
+				read_bytes = fread(s->data_descp, 1, BUFSIZE , fptr);
+				s->packet_length = read_bytes;
+				printf("Read length%d\n", read_bytes);
+				encode(s->data_descp, s->packet_length, key);//Encrypting data to be sent to the client
+				optval = sendto(sockfd, (Packet_Details*) s, sizeof(Packet_Details), 0, (struct sockaddr *)&clientaddr, clientlen);
 				printf("Packet Size send to client: %d\n", optval);
-				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
-				optval = recvfrom(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&clientaddr, &clientlen);
+				bzero(s->data_descp, sizeof(s->data_descp));
+				optval = recvfrom(sockfd, (Packet_Details*) a, sizeof(Packet_Details), 0, (struct sockaddr *)&clientaddr, &clientlen);
 				if(optval<0)
 				{
 					printf("Timeout occurs\n");
-					fseek(fptr, (-1)*read_length, SEEK_CUR);
+					fseek(fptr, (-1)*(s->packet_length), SEEK_CUR);
 					continue;
 				}
-				printf("Packet Size from client: %d and client ack_index: %d \n",optval, c_pckt->pckt_ack);
+				printf("The size of the packets and acknowledgments are: %d \n",optval, a->pckt_ack);
 
-				if(c_pckt->pckt_ack != s_pckt->pckt_index)
+				if(a->pckt_ack != s->pckt_index)
 				{
-					fseek(fptr, (-1)*read_length, SEEK_CUR);
+					fseek(fptr, (-1)*(s->packet_length), SEEK_CUR);
 					
 				}
-				else if(c_pckt->pckt_ack == s_pckt->pckt_index)
+				else if(a->pckt_ack == s->pckt_index)
 				{
-					s_pckt->pckt_index++;
+					s->pckt_index++;
 				}
-				if(read_length != BUFSIZE)
+				if(s->packet_length != BUFSIZE)
 				{
 					break;
 				}
 			}
-			memset(c_pckt, 0, sizeof(struct_pckt));
-			memset(s_pckt, 0, sizeof(struct_pckt));
+			memset(a, 0, sizeof(Packet_Details));
+			memset(s, 0, sizeof(Packet_Details));
 		}
-		else if(!strcmp(cname,"put"))
+		else if(strcmp(cname,"put") == 0)
 		{
-			memset(c_pckt, 0, sizeof(struct_pckt));
-			memset(s_pckt, 0, sizeof(struct_pckt));
+			memset(a, 0, sizeof(Packet_Details));
+			memset(s, 0, sizeof(Packet_Details));
 
-			int exp_index=1;	// Initializing the expected packet with 1
-			s_pckt->pckt_ack = 1;//Initializing packet structure acknowledgement
+			packet_id=1;	// Initializing the expected packet with 1
+			s->pckt_ack = 1;//Initializing packet structure acknowledgement
 			bzero(buffer, sizeof(buffer));
 			optval = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &clientaddr, &clientlen);
 			if(!strcmp(buffer, "Fileerror"))
@@ -198,35 +194,35 @@ int main (int argc, char * argv[] )
 
 			while(1)
 			{
-				bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
-				optval = recvfrom(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, &clientlen);
+				bzero(a->data_descp, sizeof(a->data_descp));
+				optval = recvfrom(sockfd, (Packet_Details*) a, sizeof(Packet_Details), 0, (struct sockaddr *) &clientaddr, &clientlen);
 				printf("Packet Size from the client: %d \n",optval);
-				encode(c_pckt->data_buff, c_pckt->len_data, key);//decrypting data sent by the client
-				if(c_pckt->pckt_index != exp_index)
+				encode(a->data_descp, a->packet_length, key);//decrypting data sent by the client
+				if(a->pckt_index != packet_id)
 				{
-					s_pckt->pckt_ack=c_pckt->pckt_index;
-					optval = sendto(sockfd, (struct_pckt*)s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
+					s->pckt_ack=a->pckt_index;
+					optval = sendto(sockfd, (Packet_Details*)s, sizeof(Packet_Details), 0, (struct sockaddr *) &clientaddr, clientlen);
 					
 				}
-				else if(c_pckt->pckt_index == exp_index)
+				else if(a->pckt_index == packet_id)
 				{
-					fwrite(c_pckt->data_buff, c_pckt->len_data, 1, fptr);
-					bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
-					s_pckt->pckt_ack=exp_index;
-					optval = sendto(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &clientaddr, clientlen);
-					printf("Packet Size being sent to client: %d and ACK from server: %d\n",optval, s_pckt->pckt_ack);
-					exp_index++;
+					fwrite(a->data_descp, a->packet_length, 1, fptr);
+					bzero(a->data_descp, sizeof(a->data_descp));
+					s->pckt_ack=packet_id;
+					optval = sendto(sockfd, (Packet_Details*) s, sizeof(Packet_Details), 0, (struct sockaddr *) &clientaddr, clientlen);
+					printf("Packet Size being sent to client: %d and ACK from server: %d\n",optval, s->pckt_ack);
+					packet_id++;
 				}
-				if(c_pckt->len_data != BUFSIZE)
+				if(a->packet_length != BUFSIZE)
 				{
 					break;
 				}
 			}
 			fclose(fptr);
-			memset(c_pckt, 0, sizeof(struct_pckt));
-			memset(s_pckt, 0, sizeof(struct_pckt));
+			memset(a, 0, sizeof(Packet_Details));
+			memset(s, 0, sizeof(Packet_Details));
 		}
-		else if(!strcmp(cname,"delete"))
+		else if(strcmp(cname,"delete") == 0)
 		{
 			FILE *f;
 			bytestot = recvfrom(sockfd, filename, (BUFSIZE), 0, (struct sockaddr*)&clientaddr, &(clientlen));
@@ -251,7 +247,7 @@ int main (int argc, char * argv[] )
 				printf("The file is not found and can't be deleted\n");
 			}
 		}
-		else if(!strcmp(cname,"ls"))
+		else if(strcmp(cname,"ls") == 0)
 		{
 			DIR *direct_ls;
 			struct dirent *dir_ls;
@@ -264,32 +260,23 @@ int main (int argc, char * argv[] )
 			}
 			else
 			{
-				bzero(fname, BUFSIZE);
+				bzero(buf, BUFSIZE);
 				while((dir_ls = readdir(direct_ls)) != NULL)
 				{
-					strcat(fname, dir_ls->d_name);
-					strcat(fname, "\n");
+					strcat(buf, dir_ls->d_name);
+					strcat(buf, "\n");
 				}
-				bytestot = sendto(sockfd, fname, sizeof(fname), 0, (struct sockaddr*)&clientaddr, clientlen);
+				bytestot = sendto(sockfd, buf, sizeof(buf), 0, (struct sockaddr*)&clientaddr, clientlen);
 			}
 		}
 
-		else if(!strcmp(cname,"exit"))
+		else if(strcmp(cname,"exit") == 0)
 		{
 			bzero(buf, sizeof(buf));
-			strcat(filename, "Exit");
+			strcpy(buf, "Exit by server");
 			printf(" Exit buffer: %s\n", buf);
 			bytestot = sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&clientaddr, clientlen);
 			exit(0);
-		}
-		else if(strcmp("md5", cname) == 0)
-		{
-			strcpy(hash_buf, "md5sum");
-			printf("To get the hash value of the file: %s\n", filename);
-			strncat(hash_buf,filename,strlen(filename));
-			printf("**************************\n");
-			system(hash_buf);
-			printf("***************************\n");
 		}
 		else
 		{

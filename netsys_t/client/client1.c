@@ -35,11 +35,11 @@ void encode(uint8_t *temp_buf, int size_len, uint8_t key)
 
 
 typedef struct{
-	int pckt_index; 						
-	int pckt_ack;								
-	char data_buff[BUFSIZE];	
-	int len_data;								
-}struct_pckt;
+	int pckt_index;						
+	int pckt_ack;														
+	int packet_length;
+	uint8_t data_descp[BUFSIZE];												
+}Packet_Details;
 
 int main (int argc, char * argv[])
 {
@@ -51,13 +51,14 @@ int main (int argc, char * argv[])
       	struct hostent *server_hp;							
       	uint8_t *name_cmd;														
       	uint8_t *fname;													
-       	FILE *fptr;															
-       	struct_pckt* c_pckt = malloc(sizeof(struct_pckt)); 				
-       	struct_pckt* s_pckt = malloc(sizeof(struct_pckt)); 				
+       	FILE *fptr;																			
         struct timeval timeout; 								
         bzero(cmd, sizeof(cmd));
         bzero(fname1, sizeof(fname1));
         bzero(val, sizeof(val));
+	Packet_Details* a = malloc(sizeof(Packet_Details));
+	Packet_Details* s = malloc(sizeof(Packet_Details));
+
 	
 
 	if (argc < 3)
@@ -105,8 +106,8 @@ int main (int argc, char * argv[])
 		printf("Filename: %s\n", fname);
 		if(!strcmp(name_cmd, "get"))
 		   {
-			printf("Get File: %s from the server.\n", fname);
-			int exp_index=1; 	
+			printf("Get the file: %s from the server.\n", fname);
+			int packet_id=1; 	
 
 			nbytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote, &serverlen);
 			if(!strcmp(buffer, "Error")){
@@ -115,52 +116,52 @@ int main (int argc, char * argv[])
 		     }
 			while(1)
 			{
-				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
-				nbytes = recvfrom(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *) &remote, &serverlen);
+				bzero(s->data_descp, sizeof(s->data_descp));
+				nbytes = recvfrom(sockfd, (Packet_Details*) s, sizeof(Packet_Details), 0, (struct sockaddr *) &remote, &serverlen);
 
 				printf("Packet Size from the server: %d \n",nbytes);
 
-				encode(s_pckt->data_buff, s_pckt->len_data, key);
-				if(s_pckt->pckt_index != exp_index){
-					c_pckt->pckt_ack=s_pckt->pckt_index;
-					nbytes = sendto(sockfd, (struct_pckt*)c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&serveraddr,serverlen);
-					printf("Packet Size being sent to server: %d and ACK sent: %d\n",nbytes, c_pckt->pckt_ack);
+				encode(s->data_descp, s->packet_length, key);
+				if(s->pckt_index != packet_id){
+					a->pckt_ack=s->pckt_index;
+					nbytes = sendto(sockfd, (Packet_Details*)a, sizeof(Packet_Details), 0, (struct sockaddr *)&serveraddr,serverlen);
+					printf("Packet Size being sent to server: %d and ACK sent: %d\n",nbytes, a->pckt_ack);
 					
 				}
-				else if(s_pckt->pckt_index == exp_index){
+				else if(s->pckt_index == packet_id){
 					printf("Writing to the file\n" );
 					FILE *fptr;
 					fptr = fopen(fname,"ab");
-					fwrite(s_pckt->data_buff, s_pckt->len_data, 1, fptr);
-					bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
+					fwrite(s->data_descp, s->packet_length, 1, fptr);
+					bzero(a->data_descp, sizeof(a->data_descp));
 					fclose(fptr);
 
-					c_pckt->pckt_ack=exp_index;
-					nbytes = sendto(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&serveraddr, serverlen);
-					printf("Packet Size being sent to server: %d and ACK sent: %d\n",nbytes, c_pckt->pckt_ack);
-					exp_index++;
+					a->pckt_ack=packet_id;
+					nbytes = sendto(sockfd, (Packet_Details*) a, sizeof(Packet_Details), 0, (struct sockaddr *)&serveraddr, serverlen);
+					printf("Packet Size being sent to server: %d and ACK sent: %d\n",nbytes, a->pckt_ack);
+					packet_id++;
 	
 				}
-				if(s_pckt->len_data != BUFSIZE){
+				if(s->packet_length != BUFSIZE){
 					break;
 				}
 			} 
 			
-			memset(c_pckt, 0, sizeof(struct_pckt));
-			memset(s_pckt, 0, sizeof(struct_pckt));
+			memset(a, 0, sizeof(Packet_Details));
+			memset(s, 0, sizeof(Packet_Details));
 		}
 
 		else if(strcmp("put", name_cmd) == 0)
 		{
-			printf("Put File: \"%s\" on the server.\n", fname);
-			memset(c_pckt, 0, sizeof(struct_pckt));
-			memset(s_pckt, 0, sizeof(struct_pckt));
-			c_pckt->pckt_index = 1;
-			s_pckt->pckt_ack = 0;
+			printf("Put the File: \"%s\" on the server.\n", fname);
+			memset(a, 0, sizeof(Packet_Details));
+			memset(s, 0, sizeof(Packet_Details));
+			a->pckt_index = 1;
+			s->pckt_ack = 0;
 			timeout.tv_sec = 0;
 			timeout.tv_usec = 300000;
 			setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-
+			bzero(a->data_descp, sizeof(a->data_descp));
 			FILE *fptr;
 			fptr = fopen(fname, "rb");
 			if(fptr != NULL)
@@ -181,38 +182,38 @@ int main (int argc, char * argv[])
 			
 			while(1)
 			{
-				bzero(c_pckt->data_buff, sizeof(c_pckt->data_buff));
-				read_length = fread(c_pckt->data_buff, 1, BUFSIZE , fptr);
-				c_pckt->len_data = read_length;
+				
+				read_length = fread(a->data_descp, 1, BUFSIZE , fptr);
+				a->packet_length = read_length;
 
-				encode(c_pckt->data_buff, c_pckt->len_data, key); //encrypting data to be sent on the server
-				nbytes = sendto(sockfd, (struct_pckt*) c_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&serveraddr, serverlen);
+				encode(a->data_descp, a->packet_length, key); //encrypting data to be sent on the server
+				nbytes = sendto(sockfd, (Packet_Details*) a, sizeof(Packet_Details), 0, (struct sockaddr *)&serveraddr, serverlen);
 				printf("Packet Size sent to the server: %d\n",nbytes);
 
-				bzero(s_pckt->data_buff, sizeof(s_pckt->data_buff));
-				nbytes = recvfrom(sockfd, (struct_pckt*) s_pckt, sizeof(struct_pckt), 0, (struct sockaddr *)&remote, &serverlen);
+				bzero(s->data_descp, sizeof(s->data_descp));
+				nbytes = recvfrom(sockfd, (Packet_Details*) s, sizeof(Packet_Details), 0, (struct sockaddr *)&remote, &serverlen);
 				if(nbytes < 0){
-					printf("---------------------Timeout--------------------------\n");
+					printf("Timeout has occurred\n");
 					fseek(fptr, (-1)*read_length, SEEK_CUR);
 					continue;
 				}
 				else
 				{
-					printf("Packet Size from server: %d and ack_index from server: %d \n", nbytes, s_pckt->pckt_ack);
-					if(s_pckt->pckt_ack == c_pckt->pckt_index){
-						c_pckt->pckt_index++;
+					printf("Packet Size from server: %d and ack_index from server: %d \n", nbytes, s->pckt_ack);
+					if(s->pckt_ack == a->pckt_index){
+						a->pckt_index++;
 				}
 				else{
 						fseek(fptr, (-1)*read_length, SEEK_CUR);
 					
 				}
 				}
-				if(read_length != BUFSIZE){
+				if(a->packet_length != BUFSIZE){
 					break;
 				}
 			}
-			memset(c_pckt, 0, sizeof(struct_pckt));
-			memset(s_pckt, 0, sizeof(struct_pckt));
+			memset(a, 0, sizeof(Packet_Details));
+			memset(s, 0, sizeof(Packet_Details));
 		}
 		else if(strcmp("ls", name_cmd) == 0)
 		{
@@ -233,10 +234,10 @@ int main (int argc, char * argv[])
 		else if(strcmp("exit", name_cmd) == 0)
 		{
 			printf("Exiting the server\n");
-			bzero(fname, sizeof(fname));
-			bytestot = recvfrom(sockfd, fname, strlen(fname), 0, (struct sockaddr*)&serveraddr, &(serverlen));
-			printf("%s\n", fname);
-			if(strcmp(fname, "Exit") ==0)
+			bzero(buf, sizeof(buf));
+			bytestot = recvfrom(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, &(serverlen));
+			printf("%s\n", buf);
+			if(strcmp(buf, "Exit") ==0)
 			{
 				printf("The server has exited successfully\n");
 			}
