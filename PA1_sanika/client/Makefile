@@ -15,3 +15,5 @@ clean:
 
 client1:	client1.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lm
+perform:
+	./client1	128.138.201.66	5567
