@@ -15,3 +15,10 @@ clean:
 
 server:	server.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o -lm
+perform:
+	./server	5567
+add:
+	scp	Makefile	server.c	server	sado9543@elra-01.cs.colorado.edu:~/
+upload:
+	ssh	sado9543@elra-01.cs.colorado.edu:~/
+
