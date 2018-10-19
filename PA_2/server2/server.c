@@ -26,8 +26,8 @@
 #define KEEPALIVE 1
 #define OKRESPONSE "%s 200 Ok\n\rContent-Type: %s; charset=UTF-8\n\rContent-Length: %d\n\r\n"
 #define OKRESPONSEPOST "%s 200 Ok\n\rContent-Type: %s; charset=UTF-8\n\rContent-Length: %d\n\r\n<html><body><pre><h1>POSTDATA </h1></pre>"
-//void *client_handler(void*);
-//int parse_file(struct_req*);
+void *client_handler(void*);
+int parse_file(struct_req*);
 
 //Declaring Struct for keep-alive
 struct timeval tv;
