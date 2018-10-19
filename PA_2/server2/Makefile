@@ -1,15 +1,15 @@
 CC= gcc
 
-CFLAGS=	-O0	-g	-lpthread
+CFLAGS=	-O0	-g	
  
 CFILES= server.c
 
 COBJS= ${CFILES:.c=.o}
 
-build:	server
+build:	server.elf
 
 clean:
 	-rm -f server 
 
-server:	server.o	
-	$(CC)	$(LDFLAGS)	$(CFLAGS)	-o	server.c	server.o
+server.elf:		
+	$(CC)	$(LDFLAGS)	$(CFLAGS)	-lpthread	-pthread	-o	server.elf	server.c
