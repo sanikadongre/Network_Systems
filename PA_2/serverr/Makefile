@@ -9,7 +9,7 @@ COBJS= ${CFILES:.c=.o}
 build:	server.elf
 
 clean:
-	-rm -f server	server.elf
+	-rm -f server	server.elf 
 
 server.elf:		
-	gcc	-lpthread	-pthread	-o	server.elf	server.c
+	gcc	-pthread	-o	server.elf	server.c

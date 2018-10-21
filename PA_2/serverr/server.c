@@ -6,38 +6,36 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/wait.h>
+#include <stdint.h>
 
-#define PortNo 8088
-#define MAXBUFFSIZE 100
-int socket_server,accept_var[100];
-int i = 0;
-char error_header[] =
+#define port 8650
+#define BUFSIZE 100
+
+uint8_t header[]= "www", incorrect_req[] =
 "HTTP/1.1 500 Internal Server Error\r\n"
 "Content-Type: text/html; charset = UTF-8\r\n\r\n"
 "<!DOCTYPE html>\r\n"
 "<body><center><h1>ERROR 500: Internal Server Error</h1><br>\r\n";
 
-void get_request(int accept_var, char request_url[], char version[], char connection[])
+void get_request(int client_sock, char request_url[], char version[], char connection[])
 {
-	char url[100] = {};
 	char data_buffer[1024*1024*4] = {};
 	char data_content[1024] = {};
 	char *content_type;
 	char content[50] = {};
-
-	strcpy(url,"/home/sanika/Network_Systems/PA2/www");
-	strcat(url, request_url);
-	FILE *fd = fopen(url, "r");
+	strcat(header, request_url);
+	printf(" The request url is: %s\n", header);
+	FILE *fd = fopen(header, "r");
 	if (fd == NULL)
 	{
 		perror("fopen failed");
-		int write_var = send(accept_var,error_header,strlen(error_header),0);
+		int write_var = send(client_sock, incorrect_req,strlen(incorrect_req),0);
 	  if (write_var < 0)
 	  {
 	 	  perror("ERROR writing to socket");
 	  }
-		shutdown(accept_var,SHUT_RDWR);
-    close(accept_var);
+		shutdown(client_sock,SHUT_RDWR);
+    close(client_sock);
 		return;
 	}
 	// Get file size
@@ -73,14 +71,14 @@ void get_request(int accept_var, char request_url[], char version[], char connec
 	printf("content %s\n", content);
 	sprintf(data_content,"HTTP/1.1 200 OK\r\nContent-Type: %s\r\nConnection: %s\r\nContent-Length: %d\r\n\r\n",content, connection, file_size);
 
- 	int write_var = write(accept_var,data_content,strlen(data_content));
+ 	int write_var = write(client_sock,data_content,strlen(data_content));
  	if (write_var < 0)
 	{
 	 	perror("ERROR writing to socket");
 	}
 
 	printf("%s\n", data_content);
-	 write_var = write(accept_var,data_buffer,file_size);
+	 write_var = write(client_sock,data_buffer,file_size);
 	 if (write_var < 0)
 	 {
 		 perror("ERROR writing to socket");
@@ -94,20 +92,20 @@ void get_request(int accept_var, char request_url[], char version[], char connec
 		 printf("Write_var = 0\n" );
 	 }
 	 fclose(fd);
-	 shutdown(accept_var,SHUT_RDWR);
-	 close(accept_var);
+	 shutdown(client_sock,SHUT_RDWR);
+	 close(client_sock);
 	 printf("\nComplete\n");
 }
 
 /*
 POST FUNCTION
 */
-void post_request(int accept_var, char request_url[], char version[], char connection[], char received_buffer[])
+void post_request(int client_sock, char request_url[], char version[], char connection[], char new_arr[])
 {
 	printf("**************Received*****************\n");
-	printf("%s\n", received_buffer);
+	printf("%s\n", new_arr);
 	printf("**************Received*****************\n");
-	int write_var = write(accept_var,received_buffer,strlen(received_buffer));
+	int write_var = write(client_sock,new_arr,strlen(new_arr));
  	if (write_var < 0)
 	{
 	 	perror("ERROR writing to socket");
@@ -118,60 +116,61 @@ void post_request(int accept_var, char request_url[], char version[], char conne
 int main(int argc, char * argv[])
 {
 
-  char buffer[256];
-	char received_buffer[1024];
-  struct sockaddr_in server_addr, client_addr;
-  pid_t child_thread;
-
-	socket_server = socket(AF_INET,SOCK_STREAM,0);
-	if(!(socket_server))
+  	int val = 0, sockfd, client_sock[1024], serverlen = 0, child_thread, clientlen = 0, read_size = 0, write_size = 0;	
+        uint8_t buffer[256], new_arr[1024], old_arr[1024];
+  	struct sockaddr_in server, client;
+  	
+	//Socket creation
+	sockfd = socket(AF_INET,SOCK_STREAM,0);
+	if((sockfd) == 0)
 	{
-		perror("ERROR opening socket");
+		perror("Socket opening error");
 	}
-	else printf("Successfully created server socket\n");
+	puts("socket opened successfully");
 
-	server_addr.sin_family = AF_INET;
-  server_addr.sin_addr.s_addr = INADDR_ANY;
-  server_addr.sin_port = htons(atoi(argv[1]));
-
-	if (bind(socket_server, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0)
+	server.sin_family = AF_INET;
+  	server.sin_addr.s_addr = INADDR_ANY;
+  	server.sin_port = htons(port);
+	serverlen = sizeof(server);
+	clientlen = sizeof(client);
+	//Socket binding
+	if (bind(sockfd, (struct sockaddr *) &server, serverlen) < 0)
 	{
-		perror("ERROR on binding");
+		perror("Socket binding error");
 	}
-	else printf("Binding successful\n");
+	puts("bind is successfull");
 
-
-	//listen
-	if(listen(socket_server,5) < 0)
+	//Socket listening
+	if(listen(sockfd,5) < 0)
 	{
-		perror("ERROR listening");
+		perror("listen error");
 	}
-	else printf("Listening success\n");
-while(1){
-int addr_length =  sizeof(client_addr);
-	//accept
-	accept_var[i] = accept(socket_server, (struct sockaddr *) &client_addr, &addr_length);
-  if (accept_var[i]<0)
-  {
-	  perror("ERROR on accept");
-		close(accept_var[i]);
-  }
-
-	char buff[1024] = {0};
-
-  int read_var = read(accept_var[i],buff,sizeof(buff));
-	if (read_var < 0)
+	puts("listening error");
+	while(1)
 	{
-		perror("ERROR reading from socket");
-	}
+		//accepting connection
+		client_sock[val] = accept(sockfd, (struct sockaddr *) &client, &clientlen);
+ 		 if (client_sock[val]<0)
+  		{
+	 		perror("Connection accept error");
+			close(client_sock[val]);
+  		}
+		puts("client connection accepted");
+	
 
-	char new_buffer[1024] = {};
-	int j = 0;
-	for(int i = 0; i<read_var; i++)
-	{
-		if(buff[i]!='\0')
+        	read_size = read(client_sock[val],old_arr,sizeof(old_arr));
+		if (read_size < 0)
 		{
-			new_buffer[j] = buff[i];
+			perror("error reading from socket");
+		}
+		puts("socket can be read successfully");
+		char new_buffer[1024] = {};
+		int j = 0;
+	for(int i = 0; i<read_size; i++)
+	{
+		if(old_arr[i]!='\0')
+		{
+			new_buffer[j] = old_arr[i];
 			j++;
 		}
 	}
@@ -190,12 +189,14 @@ int addr_length =  sizeof(client_addr);
 	   token_count++;
 
 	   if (token_count == 1)
-				strcpy(request_method, token);
-		 else if (token_count == 2)
-			  strcpy(request_url, token);
-		 else if (token_count == 3)
+			strcpy(request_method, token);
+	   else if (token_count == 2)
+		{
+			 strcpy(request_url, token);
+		}
+	   else if (token_count == 3)
 				strcpy(request_version, token);
-		 else if (strcmp(token, "Connection:") == 0)
+	   else if (strcmp(token, "Connection:") == 0)
 		 {
 			 token = strtok(NULL, " \n");
 		   strcpy(connection, token);
@@ -207,7 +208,7 @@ int addr_length =  sizeof(client_addr);
 			 {
 				 token = strtok(NULL, " \n");
 				 token = strtok(NULL, " \n");
-				 strcpy(received_buffer, token);
+				 strcpy(new_arr, token);
 
 				 while(token !=  "\0")
 				 {
@@ -216,11 +217,11 @@ int addr_length =  sizeof(client_addr);
 						{
 							break;
 						}
-						strcat(received_buffer, " ");
-					 	strcat(received_buffer, token);
+						strcat(new_arr, " ");
+					 	strcat(new_arr, token);
 
 				 }
-				 printf("data---> %s\n", received_buffer);
+				 printf("data %s\n", new_arr);
 
 			 }
 
@@ -228,38 +229,34 @@ int addr_length =  sizeof(client_addr);
 
 	   token = strtok(NULL, " \n");
 	 }
-	printf("request_method %s\n", request_method);
-	printf("request_url %s\n", request_url);
-	printf("request_version %s\n", request_version);
-	printf("connection %s\n", connection);
   child_thread = fork();
 
 	if (child_thread == 0)
 	{
 		if (strcmp(request_method,"GET") == 0)
 		{
-			get_request(accept_var[i],request_url,request_version,connection);
+			get_request(client_sock[val],request_url,request_version,connection);
 		}
 		else if (strcmp(request_method, "POST") == 0)
 		{
-			post_request(accept_var[i],request_url,request_version,connection, received_buffer);
+			post_request(client_sock[val],request_url,request_version,connection, new_arr);
 		}
     else
 		{
-			int write_var = send(accept_var[i],error_header,strlen(error_header),0);
-			if (write_var < 0)
+		        write_size = send(client_sock[val], incorrect_req,strlen(incorrect_req),0);
+			if (write_size < 0)
 			{
 				perror("ERROR writing to socket");
 			}
-			shutdown(accept_var[i],SHUT_RDWR);
-			close(accept_var[i]);
+			shutdown(client_sock[val],SHUT_RDWR);
+			close(client_sock[val]);
 		}
 		exit(1);
 	}
-  i++;
-	i = i%99;
+  val++;
+	val = val%99;
 }
-  close(socket_server);
+  close(sockfd);
 
 	return 0;
 
