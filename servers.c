@@ -1,7 +1,4 @@
-//Author: Yasir Aslam Shah
-//ECEN5273
-//Fall2018
-//Programming Assignment 2
+
 
 //header defnition
 #include <sys/types.h>
