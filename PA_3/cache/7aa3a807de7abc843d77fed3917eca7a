@@ -1,0 +1,69 @@
+1542746140
+HTTP/1.1 200 OK
+Date: Tue, 20 Nov 2018 18:55:57 GMT
+Server: Apache
+Last-Modified: Fri, 06 Jan 2017 10:30:31 GMT
+Vary: Accept-Encoding
+Cache-Control: max-age=1209600
+Expires: Tue, 04 Dec 2018 18:55:57 GMT
+Content-Type: text/css
+X-Varnish: 842432702 836174327
+Age: 5983
+Via: 1.1 varnish-v4
+ETag: W/"184-5456a81e3c8b6-gzip"
+grace: normal(limited)
+Connection: close
+Accept-Ranges: bytes
+
+
+#region-site-map div.block-menu-footer-t-c-menu ul.menu {
+  display: block;
+  margin: 0 250px;
+  list-style: none;
+}
+
+#region-site-map div.block-menu-footer-t-c-menu ul.menu li {
+  display: inline;
+  border-right: 1px solid #AAA;
+  padding-right: 8px;
+  list-style: none;
+  background-image: none;
+}
+
+#region-site-map div.block-menu-footer-t-c-menu ul.menu li.last {
+  border-right: 0;
+}1542760860
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 00:12:44 GMT
+Server: Apache
+Last-Modified: Fri, 06 Jan 2017 10:30:31 GMT
+Vary: Accept-Encoding
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 00:12:44 GMT
+Content-Type: text/css
+X-Varnish: 865569886 873234679
+Age: 1696
+Via: 1.1 varnish-v4
+ETag: W/"184-5456a81e3c8b6-gzip"
+grace: none
+Connection: close
+Accept-Ranges: bytes
+
+
+#region-site-map div.block-menu-footer-t-c-menu ul.menu {
+  display: block;
+  margin: 0 250px;
+  list-style: none;
+}
+
+#region-site-map div.block-menu-footer-t-c-menu ul.menu li {
+  display: inline;
+  border-right: 1px solid #AAA;
+  padding-right: 8px;
+  list-style: none;
+  background-image: none;
+}
+
+#region-site-map div.block-menu-footer-t-c-menu ul.menu li.last {
+  border-right: 0;
+}

@@ -1,0 +1,17 @@
+1542754521
+HTTP/1.1 301 Moved Permanently
+Date: Tue, 20 Nov 2018 22:55:21 GMT
+Content-Type: text/html
+Content-Length: 178
+Connection: keep-alive
+Location: https://cdn.rawgit.com/mahnunchik/markerclustererplus/master/images/m1.png
+Server: NetDNA-cache/2.2
+Strict-Transport-Security: max-age=31536000; preload
+
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body bgcolor="white">
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>

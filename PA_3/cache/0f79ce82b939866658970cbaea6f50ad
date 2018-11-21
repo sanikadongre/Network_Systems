@@ -1,0 +1,40 @@
+1542743557
+HTTP/1.1 301 Moved Permanently
+Date: Tue, 20 Nov 2018 19:52:37 GMT
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Powered-By: PHP/5.6.30-0+deb8u1
+X-Drupal-Cache: MISS
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate
+X-Content-Type-Options: nosniff
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+Location: http://acoela.myspecies.info/en/sites/acoela.myspecies.info/files/styles/slideshow_thumbnail/public/13-115%20Simplicomorpha%20gigantorhabditis__2013-05-20.jpg?itok=rWcRgqdL
+X-Varnish: 839647712
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: keep-alive
+
+HTTP/1.1 400 Bad Request
+Date: Tue, 20 Nov 2018 19:52:37 GMT
+Server: Apache
+Content-Length: 294
+Content-Type: text/html; charset=iso-8859-1
+X-Varnish: 839647714
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: keep-alive
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>400 Bad Request</title>
+</head><body>
+<h1>Bad Request</h1>
+<p>Your browser sent a request that this server could not understand.<br />
+</p>
+<hr>
+<address>Apache Server at sp-app-2.nhm.ac.uk Port 80</address>
+</body></html>

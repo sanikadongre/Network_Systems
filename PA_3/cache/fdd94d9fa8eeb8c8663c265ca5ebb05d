@@ -1,0 +1,22 @@
+1542754511
+HTTP/1.1 302 Found
+Date: Tue, 20 Nov 2018 22:55:11 GMT
+Server: Apache
+Content-Length: 279
+Content-Type: text/html; charset=iso-8859-1
+Location: http://scratchpads.eu/
+X-Varnish: 857080989
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: keep-alive
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>302 Found</title>
+</head><body>
+<h1>Found</h1>
+<p>The document has moved <a href="http://scratchpads.eu/">here</a>.</p>
+<hr>
+<address>Apache Server at actiinae.myspecies.info Port 80</address>
+</body></html>

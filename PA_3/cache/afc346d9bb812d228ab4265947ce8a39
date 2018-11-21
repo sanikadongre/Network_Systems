@@ -1,0 +1,38 @@
+1542746143
+HTTP/1.1 500 Internal Server Error
+Date: Tue, 20 Nov 2018 20:35:43 GMT
+Server: Apache
+X-Powered-By: PHP/5.6.30-0+deb8u1
+X-Drupal-Cache: MISS
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate
+X-Content-Type-Options: nosniff
+Content-Language: en
+X-Frame-Options: SAMEORIGIN
+Content-Length: 0
+Content-Type: text/html; charset=utf-8
+X-Varnish: 842203319
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: close
+
+1542760863
+HTTP/1.1 500 Internal Server Error
+Date: Wed, 21 Nov 2018 00:41:03 GMT
+Server: Apache
+X-Powered-By: PHP/5.6.30-0+deb8u1
+X-Drupal-Cache: MISS
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate
+X-Content-Type-Options: nosniff
+Content-Language: en
+X-Frame-Options: SAMEORIGIN
+Content-Length: 0
+Content-Type: text/html; charset=utf-8
+X-Varnish: 872678894
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: close
+

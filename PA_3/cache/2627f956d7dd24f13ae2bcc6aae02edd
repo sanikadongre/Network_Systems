@@ -1,0 +1,104 @@
+1542746140
+HTTP/1.1 200 OK
+Date: Tue, 20 Nov 2018 18:55:57 GMT
+Server: Apache
+Last-Modified: Fri, 06 Jan 2017 10:30:31 GMT
+Vary: Accept-Encoding
+Cache-Control: max-age=1209600
+Expires: Tue, 04 Dec 2018 18:55:57 GMT
+Content-Type: text/css
+X-Varnish: 841157160 834177070
+Age: 5983
+Via: 1.1 varnish-v4
+ETag: W/"5dc-5456a81e3c8b6-gzip"
+grace: normal(limited)
+Connection: close
+Accept-Ranges: bytes
+
+body.context-home div div.view-nodequeue-1 div.views-row-1 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-1 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-dark.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}
+
+body.context-home div div.view-nodequeue-1 div.views-row-4 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-4 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-light.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}
+
+body.context-home div div.view-nodequeue-1 div.views-row-3 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-3 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-normal.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}
+
+body.context-home div div.view-nodequeue-1 div.views-row-2 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-2 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-medium.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}
+1542760860
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 00:12:43 GMT
+Server: Apache
+Last-Modified: Fri, 06 Jan 2017 10:30:31 GMT
+Vary: Accept-Encoding
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 00:12:43 GMT
+Content-Type: text/css
+X-Varnish: 872875696 873365642
+Age: 1696
+Via: 1.1 varnish-v4
+ETag: W/"5dc-5456a81e3c8b6-gzip"
+grace: none
+Connection: close
+Accept-Ranges: bytes
+
+body.context-home div div.view-nodequeue-1 div.views-row-1 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-1 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-dark.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}
+
+body.context-home div div.view-nodequeue-1 div.views-row-4 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-4 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-light.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}
+
+body.context-home div div.view-nodequeue-1 div.views-row-3 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-3 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-normal.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}
+
+body.context-home div div.view-nodequeue-1 div.views-row-2 div.views-field-create-spad a:link,
+body.context-home div div.view-nodequeue-1 div.views-row-2 div.views-field-create-spad a:visited {
+  background: #FFF url(../../images/ie/accordion-button-medium.png) no-repeat 0 0;
+  width: 181px; /* 187 - 6 */
+  height: 23px; /* 26 - 3 */
+  border: 0;
+  padding: 3px 0 0 6px;
+}

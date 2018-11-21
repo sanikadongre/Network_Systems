@@ -1,0 +1,673 @@
+1542746145
+HTTP/1.1 200 OK
+Date: Tue, 20 Nov 2018 20:35:45 GMT
+Server: Apache
+X-Powered-By: PHP/5.6.30-0+deb8u1
+X-Drupal-Cache: MISS
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+Cache-Control: public, max-age=10800
+X-Content-Type-Options: nosniff
+Content-Language: en
+X-Frame-Options: SAMEORIGIN
+Link: </node/12>; rel="shortlink",</explore>; rel="canonical"
+X-Generator: Drupal 7 (http://drupal.org)
+Last-Modified: Tue, 20 Nov 2018 20:35:45 GMT
+Vary: Cookie,Accept-Encoding
+Content-Type: text/html; charset=utf-8
+X-Varnish: 843546816
+Age: 0
+Via: 1.1 varnish-v4
+ETag: W/"1542746145-1"
+grace: none
+Connection: close
+Accept-Ranges: bytes
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+  "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" version="XHTML+RDFa 1.0" dir="ltr"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:sioc="http://rdfs.org/sioc/ns#"
+  xmlns:sioct="http://rdfs.org/sioc/types#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<head profile="http://www.w3.org/1999/xhtml/vocab">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="http://scratchpads.eu/sites/scratchpads.eu/files/scratchy_favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="shortlink" href="/node/12" />
+<link rel="canonical" href="/explore" />
+<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
+  <title>Summary Statistics | Scratchpads</title>
+  <link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_xE-rWrJf-fncB6ztZfd2huxqgxu4WO-qwma6Xer30m4.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_0rdNKyAx9df4tRKovKjnVDsGvZwVuYAKO-m17AAJ1Dk.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_zWfPetBrjxwjs6Iur4IGyOU5Li5P2UPXpPjft7fFsiw.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_MfyAZ1anHmiOykUx9gzLv983xEN0x0g8tZ-5l67xM_8.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_7Zm-__T-_BMsdxTKMPHiKgvZwzhQ7yb09IElsrSWiG0.css" media="all" />
+
+<!--[if lte IE 8]>
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/all/themes/scratchpads_eu/css/ie/lte-8.css?pihl65" media="all" />
+<![endif]-->
+
+<!--[if lte IE 7]>
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/all/themes/scratchpads_eu/css/ie/lte-7.css?pihl65" media="all" />
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_BL3mHfWYiljhQ6gicOY18bJRHdPHtOiPcefzcmmXVHI.css" media="all" />
+  <script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_Xjzh1hVfcgVAixhmmB6Go8TUMPOiprA-2vkC-oWXARQ.js"></script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_XW0MCwTDV8EfQQbLCvQ-IoMIcnj3bOFwFYr94EIrghg.js"></script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_8lZzUvqb_vQVdai-iKSKOiiqp-qpCMywiwCTd_FrpeE.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-37527444-1", {"cookieDomain":"auto"});ga("send", "pageview");
+//--><!]]>
+</script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_uGWe1aPuvEqYCsGQPKFsniFXJo4s0qKtIjJ5wB-6Ge8.js"></script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_uwrfBOJCFVq42muTMjrq2bD-RUh8NNq_fZRTb6dsNb4.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","ajaxPageState":{"theme":"scratchpads_eu","theme_token":"5nBvj9SMu0W6sK3lda9oS-y-G1OredADRz70Vh4m5tc","js":{"modules\/statistics\/statistics.js":1,"misc\/jquery.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"misc\/ui\/jquery.ui.core.min.js":1,"misc\/jquery.cookie.js":1,"misc\/jquery.form.js":1,"misc\/ajax.js":1,"sites\/all\/modules\/contrib\/modal_forms\/js\/modal_forms_contact.js":1,"misc\/progress.js":1,"sites\/all\/modules\/contrib\/ctools\/js\/modal.js":1,"sites\/all\/modules\/contrib\/modal_forms\/js\/modal_forms_popup.js":1,"sites\/all\/modules\/contrib\/google_analytics\/googleanalytics.js":1,"0":1,"sites\/all\/themes\/scratchpads_eu\/js\/tweaks.js":1,"sites\/all\/themes\/scratchpads_eu\/js\/sidebar_image_fixed.js":1,"sites\/all\/themes\/scratchpads_eu\/js\/accordion.js":1,"sites\/all\/themes\/scratchpads_eu\/js\/team.js":1,"sites\/all\/themes\/omega\/omega\/js\/jquery.formalize.js":1,"sites\/all\/themes\/omega\/omega\/js\/omega-mediaqueries.js":1,"sites\/all\/themes\/omega\/omega\/js\/omega-equalheights.js":1},"css":{"modules\/system\/system.base.css":1,"modules\/system\/system.menus.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"misc\/ui\/jquery.ui.core.css":1,"misc\/ui\/jquery.ui.theme.css":1,"modules\/comment\/comment.css":1,"sites\/all\/modules\/contrib\/date\/date_api\/date.css":1,"sites\/all\/modules\/contrib\/date\/date_popup\/themes\/datepicker.1.7.css":1,"modules\/field\/theme\/field.css":1,"modules\/node\/node.css":1,"modules\/search\/search.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/contrib\/views\/css\/views.css":1,"sites\/all\/modules\/contrib\/ctools\/css\/ctools.css":1,"sites\/all\/modules\/contrib\/ctools\/css\/modal.css":1,"sites\/all\/modules\/contrib\/modal_forms\/css\/modal_forms_popup.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-reset.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-mobile.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-alpha.css":1,"sites\/all\/themes\/omega\/omega\/css\/formalize.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-text.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-branding.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-menu.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-forms.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-visuals.css":1,"sites\/all\/themes\/scratchpads_eu\/css\/ie\/lte-8.css":1,"sites\/all\/themes\/scratchpads_eu\/css\/ie\/lte-7.css":1,"sites\/all\/themes\/scratchpads_eu\/css\/global.css":1,"normal::sites\/all\/themes\/scratchpads_eu\/css\/scratchpads-eu-alpha-default.css":1,"normal::sites\/all\/themes\/scratchpads_eu\/css\/scratchpads-eu-alpha-default-normal.css.less":1,"sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/normal\/alpha-default-normal-24.css":1}},"CToolsModal":{"loadingText":"Loading...","closeText":"Close Window","closeImage":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/ctools\/images\/icon-close-window.png\u0022 alt=\u0022Close window\u0022 title=\u0022Close window\u0022 \/\u003E","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/ctools\/images\/throbber.gif\u0022 alt=\u0022Loading\u0022 title=\u0022Loading...\u0022 \/\u003E"},"modal-popup-small":{"modalSize":{"type":"fixed","width":300,"height":300},"modalOptions":{"opacity":0.85,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/modal_forms\/images\/loading_animation.gif\u0022 alt=\u0022Loading...\u0022 title=\u0022Loading\u0022 \/\u003E","closeText":"Close"},"modal-popup-medium":{"modalSize":{"type":"fixed","width":550,"height":450},"modalOptions":{"opacity":0.85,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/modal_forms\/images\/loading_animation.gif\u0022 alt=\u0022Loading...\u0022 title=\u0022Loading\u0022 \/\u003E","closeText":"Close"},"modal-popup-large":{"modalSize":{"type":"scale","width":0.8,"height":0.8},"modalOptions":{"opacity":0.85,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/modal_forms\/images\/loading_animation.gif\u0022 alt=\u0022Loading...\u0022 title=\u0022Loading\u0022 \/\u003E","closeText":"Close"},"googleanalytics":{"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip"},"spadmodal":{"modalSize":{"type":"fixed","width":720,"height":700},"modalOptions":{"opacity":0.5,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","closeText":"Close"},"urlIsAjaxTrusted":{"\/explore":true},"statistics":{"data":{"nid":"12"},"url":"\/modules\/statistics\/statistics.php"},"omega":{"layouts":{"primary":"normal","order":["normal"],"queries":{"normal":"all and (min-width: 980px) and (min-device-width: 980px), all and (max-device-width: 1024px) and (min-width: 1024px) and (orientation:landscape)"}}}});
+//--><!]]>
+</script>
+</head>
+<body class="html not-front not-logged-in no-sidebars page-node page-node- page-node-12 node-type-page context-explore">
+  <div id="skip-link">
+    <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+  </div>
+    <div class="page clearfix" id="page">
+      <div id="section-header" class="section section-header">
+  <div id="zone-header-wrapper" class="zone-wrapper zone-header-wrapper clearfix">  
+  <div id="zone-header" class="zone zone-header clearfix container-24">
+    <div class="grid-12 region region-logo" id="region-logo">
+  <div class="region-inner region-logo-inner">
+    <div class="block block-block block-1 block-block-1 odd block-without-title" id="block-block-1">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div><a href="/">&nbsp;</a></div>    </div>
+  </div>
+</div>
+  </div>
+</div><div class="grid-12 region region-search" id="region-search">
+  <div class="region-inner region-search-inner">
+    <div class="block block-spads-tweaks block-1 block-spads-tweaks-1 odd block-without-title" id="block-spads-tweaks-1">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <a href="/contact" class="ctools-modal-spadmodal">contact us</a>    </div>
+  </div>
+</div>
+<div class="block block-spads-tweaks block-0 block-spads-tweaks-0 even block-without-title" id="block-spads-tweaks-0">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <form action="/explore" method="post" id="-spads-tweaks-search-form" accept-charset="UTF-8"><div><div class="form-item form-type-textfield form-item-search-text">
+  <label for="edit-search-text"> <span class="form-required" title="This field is required.">*</span></label>
+ <input type="text" id="edit-search-text" name="search-text" value="" size="30" maxlength="128" class="form-text required" />
+</div>
+<input type="submit" id="edit-search-submit" name="op" value="" class="form-submit" /><div class="form-item form-type-radios form-item-search-type">
+  <div id="edit-search-type" class="form-radios"><div class="form-item form-type-radio form-item-search-type">
+ <input type="radio" id="edit-search-type-this-site" name="search-type" value="this-site" checked="checked" class="form-radio" />  <label class="option" for="edit-search-type-this-site">Search this site </label>
+
+</div>
+<div class="form-item form-type-radio form-item-search-type">
+ <input type="radio" id="edit-search-type-scratchpads" name="search-type" value="scratchpads" class="form-radio" />  <label class="option" for="edit-search-type-scratchpads">Search across Scratchpads </label>
+
+</div>
+</div>
+</div>
+<input type="hidden" name="form_build_id" value="form-pdc6DtWW46gR7TXbw1tl35JnV3VZ8eq-8V1-vc2iluY" />
+<input type="hidden" name="form_id" value="_spads_tweaks_search_form" />
+</div></form>    </div>
+  </div>
+</div>
+  </div>
+</div><div class="grid-24 region region-menu" id="region-menu">
+  <div class="region-inner region-menu-inner">
+        <div class="block block-menu-block block-2 block-menu-block-2 odd block-without-title" id="block-menu-block-2">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="menu-block-wrapper menu-block-2 menu-name-main-menu parent-mlid-0 menu-level-1">
+  <ul class="menu"><li class="first leaf has-children menu-mlid-487"><a href="/" id="menu-item-home">Home</a></li>
+<li class="leaf has-children active-trail active menu-mlid-399"><a href="/explore" id="menu-item-explore" class="active-trail active">Explore</a></li>
+<li class="leaf has-children menu-mlid-624"><a href="/support" id="menu-item-support">Support</a></li>
+<li class="leaf has-children menu-mlid-406"><a href="/develop/hosting" id="menu-item-develop">Develop</a></li>
+<li class="last leaf has-children menu-mlid-407"><a href="/about" id="menu-item-about">About us</a></li>
+</ul></div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+  </div>
+</div></div>    
+      <div id="section-content" class="section section-content">
+  <div id="zone-content-wrapper" class="zone-wrapper zone-content-wrapper clearfix">  
+  <div id="zone-content" class="zone zone-content clearfix equal-height-container container-24">    
+        
+        <div class="grid-6 region region-sidebar-first equal-height-element" id="region-sidebar-first">
+  <div class='region-inner-wrapper'>
+    <div class="region-inner region-sidebar-first-inner">
+      <div class="block block-menu-block block-1 block-menu-block-1 odd block-without-title" id="block-menu-block-1">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="menu-block-wrapper menu-block-1 menu-name-main-menu parent-mlid-0 menu-level-2">
+  <ul class="menu"><li class="first leaf active-trail active menu-mlid-503"><a href="/explore" class="active-trail active">Summary Statistics</a></li>
+<li class="leaf menu-mlid-2170"><a href="/stats" title="Statistics on Sites, Content and users">Scratchpads 2 statistics</a></li>
+<li class="last leaf menu-mlid-504"><a href="/explore/sites-list">Sites list</a></li>
+</ul></div>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</div><div class="grid-18 region region-content equal-height-element" id="region-content">
+  <div class="region-inner region-content-inner">
+    <a id="main-content"></a>
+                <h1 class="title" id="page-title">Summary Statistics</h1>
+                        <div class="block block-system block-main block-system-main odd block-without-title" id="block-system-main">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div about="/explore" typeof="foaf:Document" class="node node-page node-published node-not-promoted node-not-sticky author-scratchpad-team odd clearfix" id="node-page-12">
+        <span property="dc:title" content="Summary Statistics" class="rdf-meta element-hidden"></span><span property="sioc:num_replies" content="0" datatype="xsd:integer" class="rdf-meta element-hidden"></span>  
+  <div class="content clearfix">
+      </div>
+  
+  <div class="clearfix">
+          <div class="links node-links clearfix"></div>
+    
+      </div>
+</div>    </div>
+  </div>
+</div>
+<div class="block block-spads-sites block-1 block-spads-sites-1 even" id="block-spads-sites-1">
+  <div class="block-inner clearfix">
+              <h2 class="block-title">General statistics</h2>
+            
+    <div class="content clearfix">
+      <table><tr><th>Number of Scratchpads</th><td>27</td></tr><tr><th>Total number of page views</th><td>340 220</td></tr><tr><th>Total number of pages</th><td>115 369</td></tr><tr><th>Total number of users</th><td>367</td></tr></table>    </div>
+  </div>
+</div>
+<div class="block block-views block-site-list-block-3 block-views-site-list-block-3 odd" id="block-views-site-list-block-3">
+  <div class="block-inner clearfix">
+              <h2 class="block-title">Recently active Scratchpads</h2>
+            
+    <div class="content clearfix">
+      <div class="view view-site-list view-id-site_list view-display-id-block_3 view-dom-id-72fc4d5dbb338ea430ac66f1c4c2fb61">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/aizoaceae.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://aizoaceae.myspecies.info">Aizoaceae</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>This webpage will contain information on the family Aizoaceae, its phylogeny, its biogeography, and its species</p>
+</div>  </div>  </div>
+  <div class="views-row views-row-2 views-row-even">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/greekants.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://greekants.myspecies.info">Ants of Greece</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>This is a site about the myrmecofauna of Greece. So far 290 species and subspecies have been described in Greece making it the most species-rich country of Europe. The site is maintained by the Myrmecological Study Group at the Department of Biology and the Zoological Museum (ZMUA) of the University of Athens.</p>
+</div>  </div>  </div>
+  <div class="views-row views-row-3 views-row-odd">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/diplazium.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://diplazium.myspecies.info">Diplazium in Malesia</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>This website is an attempt to present the basic data about the Diplazium species reported from the Malesian area.<br />
+Initially, it was compiled mainly on basis of literature data. I am now incorporating the results of ongoing revisionary work, mainly on basis of the collections in L. <br />
+If you are looking for information about Malesian Diplaziums, I hope you will find this website useful.<br />
+If you have any contributions to make, you are welcome to apply for a registration as contributor to this website.<br />
+Click on "login"  in the upper right corner of the main screen, register as a new user and fill in the fields. Depending on what you enter in the field " How do you want to contribute?" I will register you as a user of the website with the authorization that you need to contribute your data.<br />
+If you do not want to join the project, I will be happy to receive your contributions by e-mail and I will then try to upload them as well as I can.<br />
+Peter Hovenkamp</p>
+</div>  </div>  </div>
+  <div class="views-row views-row-4 views-row-even views-row-last">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/bermudalichens.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://bermudalichens.myspecies.info">Bermuda Lichens</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>Lichens - stable, mutualistic associations of fungi and algae - are well-represented in tropical areas. Bermuda is home to many Caribbean lichen species, and thus provides a useful gateway for lichenological exploration of the neighboring Greater and Lesser Antilles.<br />
+The primary objective of this site is to document and explore the diversity of Bermudian lichens, as well as the fungi which parasitize them (lichenicolous fungi). As our investigation of the Bermudian lichen flora continues, taxonomic and nomenclatural questions arise which affect a wider audience. This site provides a forum for discussion of these questions. You are invited to register and contribute to the taxonomy of Caribbean and neotropical lichens species. Discover the power of lichen cybertaxonomy!</p>
+</div>  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+  </div>
+</div>
+      </div>
+</div>  </div>
+</div></div>    
+  
+      <div id="footer-separator" class="container-24"><div></div></div>
+<div id="section-footer" class="section section-footer">
+  <div id="zone-footer-wrapper" class="zone-wrapper zone-footer-wrapper clearfix">  
+  <div id="zone-footer" class="zone zone-footer clearfix container-24">
+    <div class="grid-24 region region-logo-list" id="region-logo-list">
+  <div class="region-inner region-logo-list-inner">
+    <div class="block block-block block-4 block-block-4 odd block-without-title" id="block-block-4">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <p><a class="" href="http://www.nerc.ac.uk/"><img id="ner" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-ner.png" /></a><a class="" href="http://e-monocot.org/"><img id="emonocot" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-emonocot.png" /></a><a class="" href="http://vbrant.eu"><img id="vibrant" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-vibrant.png" /></a><a class="" href="http://cordis.europa.eu/fp7/ict/e-infrastructure/"><img id="einfra" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-einfra.png" /></a><a class="last" href="http://www.nhm.ac.uk"><img id="nhm" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-nhm.png" /></a></p>
+    </div>
+  </div>
+</div>
+  </div>
+</div><div class="grid-24 region region-site-map" id="region-site-map">
+  <div class="region-inner region-site-map-inner">
+    <div class="block block-menu-block block-3 block-menu-block-3 odd block-without-title" id="block-menu-block-3">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="menu-block-wrapper menu-block-3 menu-name-main-menu parent-mlid-0 menu-level-1">
+  <ul class='menu'>
+    <li class='site-map-col site-map-col1'><ul>
+      <li class="first expanded menu-mlid-487"><a href="/" id="menu-item-home">Home</a><ul class="menu"><li class="first last leaf menu-mlid-616"><a href="/">Contact us</a></li>
+</ul></li>
+      <li class="expanded active-trail active menu-mlid-399"><a href="/explore" id="menu-item-explore" class="active-trail active">Explore</a><ul class="menu"><li class="first leaf active-trail active menu-mlid-503"><a href="/explore" class="active-trail active">Summary Statistics</a></li>
+<li class="leaf menu-mlid-2170"><a href="/stats" title="Statistics on Sites, Content and users">Scratchpads 2 statistics</a></li>
+<li class="last leaf menu-mlid-504"><a href="/explore/sites-list">Sites list</a></li>
+</ul></li>
+    </ul></li>
+    <li class='site-map-col site-map-col2'><ul>
+            <li class="expanded menu-mlid-406"><a href="/develop/hosting" id="menu-item-develop">Develop</a><ul class="menu"><li class="first leaf menu-mlid-519"><a href="/develop">Extending Scratchpads</a></li>
+<li class="leaf has-children menu-mlid-522"><a href="/develop/hosting">Hosting</a></li>
+<li class="leaf menu-mlid-2279"><a href="http://qa.scratchpads.eu/" title="Scratchpads Automated Testing Site" class="external_link" target="_blank">Testing</a></li>
+<li class="leaf menu-mlid-751"><a href="/develop/repository">Git repository</a></li>
+<li class="last leaf menu-mlid-750"><a href="http://redmine.scratchpads.eu/projects/scratchpads2/repository/revisions" class="external_link">Git commits</a></li>
+</ul></li>
+    </ul></li>
+    <li class='site-map-col site-map-col3'><ul>
+      <li class="expanded menu-mlid-624"><a href="/support" id="menu-item-support">Support</a><ul class="menu"><li class="first leaf menu-mlid-625"><a href="/support">Introduction</a></li>
+<li class="leaf has-children menu-mlid-1482"><a href="/support/training">Training</a></li>
+<li class="leaf menu-mlid-536"><a href="/about/faq">FAQ</a></li>
+<li class="leaf menu-mlid-628"><a href="http://help.scratchpads.eu/" class="external_link">Help Wiki</a></li>
+<li class="leaf menu-mlid-627"><a href="http://support.scratchpads.eu/projects/scratchpads2/issues" class="external_link">Issues queue</a></li>
+<li class="leaf menu-mlid-749"><a href="/support/sandbox">Sandbox</a></li>
+<li class="leaf menu-mlid-693"><a href="/support/training/apply-for-site">Apply for a training site</a></li>
+<li class="leaf menu-mlid-709"><a href="/support/grants">Grant proposals</a></li>
+<li class="last leaf has-children menu-mlid-514"><a href="/support/ambassadors">Ambassadors</a></li>
+</ul></li>
+    </ul></li>
+    <li class='site-map-col site-map-col4'><ul>  
+      <li class="last expanded menu-mlid-407"><a href="/about" id="menu-item-about">About us</a><ul class="menu"><li class="first leaf has-children menu-mlid-696"><a href="/about">Why choose Scratchpads?</a></li>
+<li class="leaf menu-mlid-524"><a href="/about/concept">Concept</a></li>
+<li class="leaf menu-mlid-538"><a href="/about/policies">Policies</a></li>
+<li class="leaf menu-mlid-537"><a href="/about/partners">Partner projects</a></li>
+<li class="leaf menu-mlid-539"><a href="/about/sponsors">Sponsors</a></li>
+<li class="leaf menu-mlid-540"><a href="/about/resources">Resources</a></li>
+<li class="leaf has-children menu-mlid-523"><a href="/about/team">Team</a></li>
+<li class="last leaf menu-mlid-708"><a href="/about/cite">How to cite</a></li>
+</ul></li>
+    </li>
+  </ul>
+</div>
+    </div>
+  </div>
+</div>
+<div class="block block-menu block-menu-footer-t-c-menu block-menu-menu-footer-t-c-menu even block-without-title" id="block-menu-menu-footer-t-c-menu">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <ul class="menu"><li class="first leaf"><a href="/" class="contact-link">Website feedback</a></li>
+<li class="leaf"><a href="/terms-and-conditions">Terms &amp; Conditions</a></li>
+<li class="leaf"><a href="/privacy-policy">Privacy Policy</a></li>
+<li class="last leaf"><a href="/cookies">Cookies</a></li>
+</ul>    </div>
+  </div>
+</div>
+  </div>
+</div>  </div>
+</div></div>  </div>  <script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_VU7P4CTgUZdF2SyFko5LLAg9ZK0OSVjXVaAFnTLgVt0.js"></script>
+</body>
+</html>1542760864
+HTTP/1.1 200 OK
+Date: Tue, 20 Nov 2018 23:08:05 GMT
+Server: Apache
+Cache-Control: public, max-age=10800
+X-Powered-By: PHP/5.6.30-0+deb8u1
+X-Drupal-Cache: MISS
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+X-Content-Type-Options: nosniff
+Content-Language: en
+X-Frame-Options: SAMEORIGIN
+Link: </node/12>; rel="shortlink",</explore>; rel="canonical"
+X-Generator: Drupal 7 (http://drupal.org)
+Last-Modified: Tue, 20 Nov 2018 20:35:45 GMT
+Vary: Cookie,Accept-Encoding
+Content-Type: text/html; charset=utf-8
+X-Varnish: 871171407 860455410
+Age: 5579
+Via: 1.1 varnish-v4
+ETag: W/"1542746145-1"
+grace: normal(limited)
+Connection: close
+Accept-Ranges: bytes
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+  "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" version="XHTML+RDFa 1.0" dir="ltr"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:sioc="http://rdfs.org/sioc/ns#"
+  xmlns:sioct="http://rdfs.org/sioc/types#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<head profile="http://www.w3.org/1999/xhtml/vocab">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="http://scratchpads.eu/sites/scratchpads.eu/files/scratchy_favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="shortlink" href="/node/12" />
+<link rel="canonical" href="/explore" />
+<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
+  <title>Summary Statistics | Scratchpads</title>
+  <link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_xE-rWrJf-fncB6ztZfd2huxqgxu4WO-qwma6Xer30m4.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_0rdNKyAx9df4tRKovKjnVDsGvZwVuYAKO-m17AAJ1Dk.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_zWfPetBrjxwjs6Iur4IGyOU5Li5P2UPXpPjft7fFsiw.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_MfyAZ1anHmiOykUx9gzLv983xEN0x0g8tZ-5l67xM_8.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_7Zm-__T-_BMsdxTKMPHiKgvZwzhQ7yb09IElsrSWiG0.css" media="all" />
+
+<!--[if lte IE 8]>
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/all/themes/scratchpads_eu/css/ie/lte-8.css?pihl65" media="all" />
+<![endif]-->
+
+<!--[if lte IE 7]>
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/all/themes/scratchpads_eu/css/ie/lte-7.css?pihl65" media="all" />
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU.css" media="all" />
+<link type="text/css" rel="stylesheet" href="http://scratchpads.eu/sites/scratchpads.eu/files/css/css_BL3mHfWYiljhQ6gicOY18bJRHdPHtOiPcefzcmmXVHI.css" media="all" />
+  <script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_Xjzh1hVfcgVAixhmmB6Go8TUMPOiprA-2vkC-oWXARQ.js"></script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_XW0MCwTDV8EfQQbLCvQ-IoMIcnj3bOFwFYr94EIrghg.js"></script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_8lZzUvqb_vQVdai-iKSKOiiqp-qpCMywiwCTd_FrpeE.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","//www.google-analytics.com/analytics.js","ga");ga("create", "UA-37527444-1", {"cookieDomain":"auto"});ga("send", "pageview");
+//--><!]]>
+</script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_uGWe1aPuvEqYCsGQPKFsniFXJo4s0qKtIjJ5wB-6Ge8.js"></script>
+<script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_uwrfBOJCFVq42muTMjrq2bD-RUh8NNq_fZRTb6dsNb4.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","ajaxPageState":{"theme":"scratchpads_eu","theme_token":"5nBvj9SMu0W6sK3lda9oS-y-G1OredADRz70Vh4m5tc","js":{"modules\/statistics\/statistics.js":1,"misc\/jquery.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"misc\/ui\/jquery.ui.core.min.js":1,"misc\/jquery.cookie.js":1,"misc\/jquery.form.js":1,"misc\/ajax.js":1,"sites\/all\/modules\/contrib\/modal_forms\/js\/modal_forms_contact.js":1,"misc\/progress.js":1,"sites\/all\/modules\/contrib\/ctools\/js\/modal.js":1,"sites\/all\/modules\/contrib\/modal_forms\/js\/modal_forms_popup.js":1,"sites\/all\/modules\/contrib\/google_analytics\/googleanalytics.js":1,"0":1,"sites\/all\/themes\/scratchpads_eu\/js\/tweaks.js":1,"sites\/all\/themes\/scratchpads_eu\/js\/sidebar_image_fixed.js":1,"sites\/all\/themes\/scratchpads_eu\/js\/accordion.js":1,"sites\/all\/themes\/scratchpads_eu\/js\/team.js":1,"sites\/all\/themes\/omega\/omega\/js\/jquery.formalize.js":1,"sites\/all\/themes\/omega\/omega\/js\/omega-mediaqueries.js":1,"sites\/all\/themes\/omega\/omega\/js\/omega-equalheights.js":1},"css":{"modules\/system\/system.base.css":1,"modules\/system\/system.menus.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"misc\/ui\/jquery.ui.core.css":1,"misc\/ui\/jquery.ui.theme.css":1,"modules\/comment\/comment.css":1,"sites\/all\/modules\/contrib\/date\/date_api\/date.css":1,"sites\/all\/modules\/contrib\/date\/date_popup\/themes\/datepicker.1.7.css":1,"modules\/field\/theme\/field.css":1,"modules\/node\/node.css":1,"modules\/search\/search.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/contrib\/views\/css\/views.css":1,"sites\/all\/modules\/contrib\/ctools\/css\/ctools.css":1,"sites\/all\/modules\/contrib\/ctools\/css\/modal.css":1,"sites\/all\/modules\/contrib\/modal_forms\/css\/modal_forms_popup.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-reset.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-mobile.css":1,"sites\/all\/themes\/omega\/alpha\/css\/alpha-alpha.css":1,"sites\/all\/themes\/omega\/omega\/css\/formalize.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-text.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-branding.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-menu.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-forms.css":1,"sites\/all\/themes\/omega\/omega\/css\/omega-visuals.css":1,"sites\/all\/themes\/scratchpads_eu\/css\/ie\/lte-8.css":1,"sites\/all\/themes\/scratchpads_eu\/css\/ie\/lte-7.css":1,"sites\/all\/themes\/scratchpads_eu\/css\/global.css":1,"normal::sites\/all\/themes\/scratchpads_eu\/css\/scratchpads-eu-alpha-default.css":1,"normal::sites\/all\/themes\/scratchpads_eu\/css\/scratchpads-eu-alpha-default-normal.css.less":1,"sites\/all\/themes\/omega\/alpha\/css\/grid\/alpha_default\/normal\/alpha-default-normal-24.css":1}},"CToolsModal":{"loadingText":"Loading...","closeText":"Close Window","closeImage":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/ctools\/images\/icon-close-window.png\u0022 alt=\u0022Close window\u0022 title=\u0022Close window\u0022 \/\u003E","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/ctools\/images\/throbber.gif\u0022 alt=\u0022Loading\u0022 title=\u0022Loading...\u0022 \/\u003E"},"modal-popup-small":{"modalSize":{"type":"fixed","width":300,"height":300},"modalOptions":{"opacity":0.85,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/modal_forms\/images\/loading_animation.gif\u0022 alt=\u0022Loading...\u0022 title=\u0022Loading\u0022 \/\u003E","closeText":"Close"},"modal-popup-medium":{"modalSize":{"type":"fixed","width":550,"height":450},"modalOptions":{"opacity":0.85,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/modal_forms\/images\/loading_animation.gif\u0022 alt=\u0022Loading...\u0022 title=\u0022Loading\u0022 \/\u003E","closeText":"Close"},"modal-popup-large":{"modalSize":{"type":"scale","width":0.8,"height":0.8},"modalOptions":{"opacity":0.85,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","throbber":"\u003Cimg typeof=\u0022foaf:Image\u0022 src=\u0022http:\/\/scratchpads.eu\/sites\/all\/modules\/contrib\/modal_forms\/images\/loading_animation.gif\u0022 alt=\u0022Loading...\u0022 title=\u0022Loading\u0022 \/\u003E","closeText":"Close"},"googleanalytics":{"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip"},"spadmodal":{"modalSize":{"type":"fixed","width":720,"height":700},"modalOptions":{"opacity":0.5,"background":"#000"},"animation":"fadeIn","modalTheme":"ModalFormsPopup","closeText":"Close"},"urlIsAjaxTrusted":{"\/explore":true},"statistics":{"data":{"nid":"12"},"url":"\/modules\/statistics\/statistics.php"},"omega":{"layouts":{"primary":"normal","order":["normal"],"queries":{"normal":"all and (min-width: 980px) and (min-device-width: 980px), all and (max-device-width: 1024px) and (min-width: 1024px) and (orientation:landscape)"}}}});
+//--><!]]>
+</script>
+</head>
+<body class="html not-front not-logged-in no-sidebars page-node page-node- page-node-12 node-type-page context-explore">
+  <div id="skip-link">
+    <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+  </div>
+    <div class="page clearfix" id="page">
+      <div id="section-header" class="section section-header">
+  <div id="zone-header-wrapper" class="zone-wrapper zone-header-wrapper clearfix">  
+  <div id="zone-header" class="zone zone-header clearfix container-24">
+    <div class="grid-12 region region-logo" id="region-logo">
+  <div class="region-inner region-logo-inner">
+    <div class="block block-block block-1 block-block-1 odd block-without-title" id="block-block-1">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div><a href="/">&nbsp;</a></div>    </div>
+  </div>
+</div>
+  </div>
+</div><div class="grid-12 region region-search" id="region-search">
+  <div class="region-inner region-search-inner">
+    <div class="block block-spads-tweaks block-1 block-spads-tweaks-1 odd block-without-title" id="block-spads-tweaks-1">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <a href="/contact" class="ctools-modal-spadmodal">contact us</a>    </div>
+  </div>
+</div>
+<div class="block block-spads-tweaks block-0 block-spads-tweaks-0 even block-without-title" id="block-spads-tweaks-0">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <form action="/explore" method="post" id="-spads-tweaks-search-form" accept-charset="UTF-8"><div><div class="form-item form-type-textfield form-item-search-text">
+  <label for="edit-search-text"> <span class="form-required" title="This field is required.">*</span></label>
+ <input type="text" id="edit-search-text" name="search-text" value="" size="30" maxlength="128" class="form-text required" />
+</div>
+<input type="submit" id="edit-search-submit" name="op" value="" class="form-submit" /><div class="form-item form-type-radios form-item-search-type">
+  <div id="edit-search-type" class="form-radios"><div class="form-item form-type-radio form-item-search-type">
+ <input type="radio" id="edit-search-type-this-site" name="search-type" value="this-site" checked="checked" class="form-radio" />  <label class="option" for="edit-search-type-this-site">Search this site </label>
+
+</div>
+<div class="form-item form-type-radio form-item-search-type">
+ <input type="radio" id="edit-search-type-scratchpads" name="search-type" value="scratchpads" class="form-radio" />  <label class="option" for="edit-search-type-scratchpads">Search across Scratchpads </label>
+
+</div>
+</div>
+</div>
+<input type="hidden" name="form_build_id" value="form-pdc6DtWW46gR7TXbw1tl35JnV3VZ8eq-8V1-vc2iluY" />
+<input type="hidden" name="form_id" value="_spads_tweaks_search_form" />
+</div></form>    </div>
+  </div>
+</div>
+  </div>
+</div><div class="grid-24 region region-menu" id="region-menu">
+  <div class="region-inner region-menu-inner">
+        <div class="block block-menu-block block-2 block-menu-block-2 odd block-without-title" id="block-menu-block-2">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="menu-block-wrapper menu-block-2 menu-name-main-menu parent-mlid-0 menu-level-1">
+  <ul class="menu"><li class="first leaf has-children menu-mlid-487"><a href="/" id="menu-item-home">Home</a></li>
+<li class="leaf has-children active-trail active menu-mlid-399"><a href="/explore" id="menu-item-explore" class="active-trail active">Explore</a></li>
+<li class="leaf has-children menu-mlid-624"><a href="/support" id="menu-item-support">Support</a></li>
+<li class="leaf has-children menu-mlid-406"><a href="/develop/hosting" id="menu-item-develop">Develop</a></li>
+<li class="last leaf has-children menu-mlid-407"><a href="/about" id="menu-item-about">About us</a></li>
+</ul></div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+  </div>
+</div></div>    
+      <div id="section-content" class="section section-content">
+  <div id="zone-content-wrapper" class="zone-wrapper zone-content-wrapper clearfix">  
+  <div id="zone-content" class="zone zone-content clearfix equal-height-container container-24">    
+        
+        <div class="grid-6 region region-sidebar-first equal-height-element" id="region-sidebar-first">
+  <div class='region-inner-wrapper'>
+    <div class="region-inner region-sidebar-first-inner">
+      <div class="block block-menu-block block-1 block-menu-block-1 odd block-without-title" id="block-menu-block-1">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="menu-block-wrapper menu-block-1 menu-name-main-menu parent-mlid-0 menu-level-2">
+  <ul class="menu"><li class="first leaf active-trail active menu-mlid-503"><a href="/explore" class="active-trail active">Summary Statistics</a></li>
+<li class="leaf menu-mlid-2170"><a href="/stats" title="Statistics on Sites, Content and users">Scratchpads 2 statistics</a></li>
+<li class="last leaf menu-mlid-504"><a href="/explore/sites-list">Sites list</a></li>
+</ul></div>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</div><div class="grid-18 region region-content equal-height-element" id="region-content">
+  <div class="region-inner region-content-inner">
+    <a id="main-content"></a>
+                <h1 class="title" id="page-title">Summary Statistics</h1>
+                        <div class="block block-system block-main block-system-main odd block-without-title" id="block-system-main">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div about="/explore" typeof="foaf:Document" class="node node-page node-published node-not-promoted node-not-sticky author-scratchpad-team odd clearfix" id="node-page-12">
+        <span property="dc:title" content="Summary Statistics" class="rdf-meta element-hidden"></span><span property="sioc:num_replies" content="0" datatype="xsd:integer" class="rdf-meta element-hidden"></span>  
+  <div class="content clearfix">
+      </div>
+  
+  <div class="clearfix">
+          <div class="links node-links clearfix"></div>
+    
+      </div>
+</div>    </div>
+  </div>
+</div>
+<div class="block block-spads-sites block-1 block-spads-sites-1 even" id="block-spads-sites-1">
+  <div class="block-inner clearfix">
+              <h2 class="block-title">General statistics</h2>
+            
+    <div class="content clearfix">
+      <table><tr><th>Number of Scratchpads</th><td>27</td></tr><tr><th>Total number of page views</th><td>340 220</td></tr><tr><th>Total number of pages</th><td>115 369</td></tr><tr><th>Total number of users</th><td>367</td></tr></table>    </div>
+  </div>
+</div>
+<div class="block block-views block-site-list-block-3 block-views-site-list-block-3 odd" id="block-views-site-list-block-3">
+  <div class="block-inner clearfix">
+              <h2 class="block-title">Recently active Scratchpads</h2>
+            
+    <div class="content clearfix">
+      <div class="view view-site-list view-id-site_list view-display-id-block_3 view-dom-id-72fc4d5dbb338ea430ac66f1c4c2fb61">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/aizoaceae.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://aizoaceae.myspecies.info">Aizoaceae</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>This webpage will contain information on the family Aizoaceae, its phylogeny, its biogeography, and its species</p>
+</div>  </div>  </div>
+  <div class="views-row views-row-2 views-row-even">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/greekants.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://greekants.myspecies.info">Ants of Greece</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>This is a site about the myrmecofauna of Greece. So far 290 species and subspecies have been described in Greece making it the most species-rich country of Europe. The site is maintained by the Myrmecological Study Group at the Department of Biology and the Zoological Museum (ZMUA) of the University of Athens.</p>
+</div>  </div>  </div>
+  <div class="views-row views-row-3 views-row-odd">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/diplazium.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://diplazium.myspecies.info">Diplazium in Malesia</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>This website is an attempt to present the basic data about the Diplazium species reported from the Malesian area.<br />
+Initially, it was compiled mainly on basis of literature data. I am now incorporating the results of ongoing revisionary work, mainly on basis of the collections in L. <br />
+If you are looking for information about Malesian Diplaziums, I hope you will find this website useful.<br />
+If you have any contributions to make, you are welcome to apply for a registration as contributor to this website.<br />
+Click on "login"  in the upper right corner of the main screen, register as a new user and fill in the fields. Depending on what you enter in the field " How do you want to contribute?" I will register you as a user of the website with the authorization that you need to contribute your data.<br />
+If you do not want to join the project, I will be happy to receive your contributions by e-mail and I will then try to upload them as well as I can.<br />
+Peter Hovenkamp</p>
+</div>  </div>  </div>
+  <div class="views-row views-row-4 views-row-even views-row-last">
+      
+  <div class="views-field views-field-field-screen-shot-normal-">        <div class="field-content"><img class='sites-list-plain' src='http://screenshots.scratchpads.eu/bermudalichens.myspecies.info.small.jpg' /></div>  </div>  
+  <div class="views-field views-field-field-screen-shot-annotated-">        <div class="field-content"></div>  </div>  
+  <div class="views-field views-field-title">        <span class="field-content"><a href="http://bermudalichens.myspecies.info">Bermuda Lichens</a></span>  </div>  
+  <div class="views-field views-field-field-mission">        <div class="field-content"><p>Lichens - stable, mutualistic associations of fungi and algae - are well-represented in tropical areas. Bermuda is home to many Caribbean lichen species, and thus provides a useful gateway for lichenological exploration of the neighboring Greater and Lesser Antilles.<br />
+The primary objective of this site is to document and explore the diversity of Bermudian lichens, as well as the fungi which parasitize them (lichenicolous fungi). As our investigation of the Bermudian lichen flora continues, taxonomic and nomenclatural questions arise which affect a wider audience. This site provides a forum for discussion of these questions. You are invited to register and contribute to the taxonomy of Caribbean and neotropical lichens species. Discover the power of lichen cybertaxonomy!</p>
+</div>  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+  </div>
+</div>
+      </div>
+</div>  </div>
+</div></div>    
+  
+      <div id="footer-separator" class="container-24"><div></div></div>
+<div id="section-footer" class="section section-footer">
+  <div id="zone-footer-wrapper" class="zone-wrapper zone-footer-wrapper clearfix">  
+  <div id="zone-footer" class="zone zone-footer clearfix container-24">
+    <div class="grid-24 region region-logo-list" id="region-logo-list">
+  <div class="region-inner region-logo-list-inner">
+    <div class="block block-block block-4 block-block-4 odd block-without-title" id="block-block-4">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <p><a class="" href="http://www.nerc.ac.uk/"><img id="ner" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-ner.png" /></a><a class="" href="http://e-monocot.org/"><img id="emonocot" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-emonocot.png" /></a><a class="" href="http://vbrant.eu"><img id="vibrant" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-vibrant.png" /></a><a class="" href="http://cordis.europa.eu/fp7/ict/e-infrastructure/"><img id="einfra" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-einfra.png" /></a><a class="last" href="http://www.nhm.ac.uk"><img id="nhm" src="/sites/all/themes/scratchpads_eu/images/sponsor-logo-nhm.png" /></a></p>
+    </div>
+  </div>
+</div>
+  </div>
+</div><div class="grid-24 region region-site-map" id="region-site-map">
+  <div class="region-inner region-site-map-inner">
+    <div class="block block-menu-block block-3 block-menu-block-3 odd block-without-title" id="block-menu-block-3">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <div class="menu-block-wrapper menu-block-3 menu-name-main-menu parent-mlid-0 menu-level-1">
+  <ul class='menu'>
+    <li class='site-map-col site-map-col1'><ul>
+      <li class="first expanded menu-mlid-487"><a href="/" id="menu-item-home">Home</a><ul class="menu"><li class="first last leaf menu-mlid-616"><a href="/">Contact us</a></li>
+</ul></li>
+      <li class="expanded active-trail active menu-mlid-399"><a href="/explore" id="menu-item-explore" class="active-trail active">Explore</a><ul class="menu"><li class="first leaf active-trail active menu-mlid-503"><a href="/explore" class="active-trail active">Summary Statistics</a></li>
+<li class="leaf menu-mlid-2170"><a href="/stats" title="Statistics on Sites, Content and users">Scratchpads 2 statistics</a></li>
+<li class="last leaf menu-mlid-504"><a href="/explore/sites-list">Sites list</a></li>
+</ul></li>
+    </ul></li>
+    <li class='site-map-col site-map-col2'><ul>
+            <li class="expanded menu-mlid-406"><a href="/develop/hosting" id="menu-item-develop">Develop</a><ul class="menu"><li class="first leaf menu-mlid-519"><a href="/develop">Extending Scratchpads</a></li>
+<li class="leaf has-children menu-mlid-522"><a href="/develop/hosting">Hosting</a></li>
+<li class="leaf menu-mlid-2279"><a href="http://qa.scratchpads.eu/" title="Scratchpads Automated Testing Site" class="external_link" target="_blank">Testing</a></li>
+<li class="leaf menu-mlid-751"><a href="/develop/repository">Git repository</a></li>
+<li class="last leaf menu-mlid-750"><a href="http://redmine.scratchpads.eu/projects/scratchpads2/repository/revisions" class="external_link">Git commits</a></li>
+</ul></li>
+    </ul></li>
+    <li class='site-map-col site-map-col3'><ul>
+      <li class="expanded menu-mlid-624"><a href="/support" id="menu-item-support">Support</a><ul class="menu"><li class="first leaf menu-mlid-625"><a href="/support">Introduction</a></li>
+<li class="leaf has-children menu-mlid-1482"><a href="/support/training">Training</a></li>
+<li class="leaf menu-mlid-536"><a href="/about/faq">FAQ</a></li>
+<li class="leaf menu-mlid-628"><a href="http://help.scratchpads.eu/" class="external_link">Help Wiki</a></li>
+<li class="leaf menu-mlid-627"><a href="http://support.scratchpads.eu/projects/scratchpads2/issues" class="external_link">Issues queue</a></li>
+<li class="leaf menu-mlid-749"><a href="/support/sandbox">Sandbox</a></li>
+<li class="leaf menu-mlid-693"><a href="/support/training/apply-for-site">Apply for a training site</a></li>
+<li class="leaf menu-mlid-709"><a href="/support/grants">Grant proposals</a></li>
+<li class="last leaf has-children menu-mlid-514"><a href="/support/ambassadors">Ambassadors</a></li>
+</ul></li>
+    </ul></li>
+    <li class='site-map-col site-map-col4'><ul>  
+      <li class="last expanded menu-mlid-407"><a href="/about" id="menu-item-about">About us</a><ul class="menu"><li class="first leaf has-children menu-mlid-696"><a href="/about">Why choose Scratchpads?</a></li>
+<li class="leaf menu-mlid-524"><a href="/about/concept">Concept</a></li>
+<li class="leaf menu-mlid-538"><a href="/about/policies">Policies</a></li>
+<li class="leaf menu-mlid-537"><a href="/about/partners">Partner projects</a></li>
+<li class="leaf menu-mlid-539"><a href="/about/sponsors">Sponsors</a></li>
+<li class="leaf menu-mlid-540"><a href="/about/resources">Resources</a></li>
+<li class="leaf has-children menu-mlid-523"><a href="/about/team">Team</a></li>
+<li class="last leaf menu-mlid-708"><a href="/about/cite">How to cite</a></li>
+</ul></li>
+    </li>
+  </ul>
+</div>
+    </div>
+  </div>
+</div>
+<div class="block block-menu block-menu-footer-t-c-menu block-menu-menu-footer-t-c-menu even block-without-title" id="block-menu-menu-footer-t-c-menu">
+  <div class="block-inner clearfix">
+                
+    <div class="content clearfix">
+      <ul class="menu"><li class="first leaf"><a href="/" class="contact-link">Website feedback</a></li>
+<li class="leaf"><a href="/terms-and-conditions">Terms &amp; Conditions</a></li>
+<li class="leaf"><a href="/privacy-policy">Privacy Policy</a></li>
+<li class="last leaf"><a href="/cookies">Cookies</a></li>
+</ul>    </div>
+  </div>
+</div>
+  </div>
+</div>  </div>
+</div></div>  </div>  <script type="text/javascript" src="http://scratchpads.eu/sites/scratchpads.eu/files/js/js_VU7P4CTgUZdF2SyFko5LLAg9ZK0OSVjXVaAFnTLgVt0.js"></script>
+</body>
+</html>

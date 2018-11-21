@@ -1,0 +1,19 @@
+1542743543
+HTTP/1.1 301 Moved Permanently
+Date: Tue, 20 Nov 2018 19:52:24 GMT
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Powered-By: PHP/5.6.30-0+deb8u1
+X-Drupal-Cache: MISS
+Expires: Sun, 19 Nov 1978 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate
+X-Content-Type-Options: nosniff
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+Location: http://acoela.myspecies.info/en
+X-Varnish: 839647679
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: keep-alive
+

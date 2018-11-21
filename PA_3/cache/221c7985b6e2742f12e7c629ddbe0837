@@ -1,0 +1,22 @@
+1542746124
+HTTP/1.1 302 Found
+Date: Tue, 20 Nov 2018 20:35:24 GMT
+Server: Apache
+Content-Length: 281
+Content-Type: text/html; charset=iso-8859-1
+Location: http://scratchpads.eu/
+X-Varnish: 837129397
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: keep-alive
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>302 Found</title>
+</head><body>
+<h1>Found</h1>
+<p>The document has moved <a href="http://scratchpads.eu/">here</a>.</p>
+<hr>
+<address>Apache Server at eriocaulan.myspecies.info Port 80</address>
+</body></html>

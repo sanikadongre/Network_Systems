@@ -1,0 +1,44 @@
+1542746141
+HTTP/1.1 400 Bad Request
+Date: Tue, 20 Nov 2018 18:55:59 GMT
+Server: Apache
+Content-Length: 294
+Content-Type: text/html; charset=iso-8859-1
+X-Varnish: 842891364 835092966
+Age: 5983
+Via: 1.1 varnish-v4
+grace: normal(limited)
+Connection: close
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>400 Bad Request</title>
+</head><body>
+<h1>Bad Request</h1>
+<p>Your browser sent a request that this server could not understand.<br />
+</p>
+<hr>
+<address>Apache Server at sp-app-1.nhm.ac.uk Port 80</address>
+</body></html>
+1542760861
+HTTP/1.1 400 Bad Request
+Date: Wed, 21 Nov 2018 00:41:02 GMT
+Server: Apache
+Content-Length: 294
+Content-Type: text/html; charset=iso-8859-1
+X-Varnish: 873956586
+Age: 0
+Via: 1.1 varnish-v4
+grace: none
+Connection: close
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>400 Bad Request</title>
+</head><body>
+<h1>Bad Request</h1>
+<p>Your browser sent a request that this server could not understand.<br />
+</p>
+<hr>
+<address>Apache Server at sp-app-2.nhm.ac.uk Port 80</address>
+</body></html>
