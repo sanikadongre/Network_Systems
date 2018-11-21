@@ -1,0 +1,26 @@
+1542775150
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:08 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:53:55 GMT
+ETag: "27c-55ef4b7f6f6c0"
+Accept-Ranges: bytes
+Content-Length: 636
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:08 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: application/javascript
+
+(function($){
+  Drupal.behaviors.noclickety = {attach: function(context){
+    $('.noclickety').removeAttr('disabled').removeClass('noclickety');
+    $('input').once().change(function(){
+      $('.noclickety').removeAttr('disabled').removeClass('noclickety');
+    });
+    $('form').once().submit(function(e){
+      //$(this).append('<input type="hidden" name="' + $(e.originalEvent.explicitOriginalTarget).attr('name') + '" value="' + $(e.originalEvent.explicitOriginalTarget).val() + '" />');
+      //$('input[type="submit"][disabled!="disabled"]', $(this)).attr('disabled', 'disabled').addClass('noclickety');
+    });
+  }};
+})(jQuery);

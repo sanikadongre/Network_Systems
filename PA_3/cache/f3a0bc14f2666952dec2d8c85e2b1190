@@ -1,0 +1,83 @@
+1542775152
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:13 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:54:19 GMT
+ETag: "509-55ef4b9652cc0"
+Accept-Ranges: bytes
+Content-Length: 1289
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:13 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+#remote-issue-tab{
+ font-family:arial,sans-serif;
+ font-size:12px;
+ font-weight:400;
+ font-style:normal;
+ letter-spacing:normal;
+ word-spacing:0;
+ text-align:left;	
+}
+#remote-issue-tab h3{
+ margin:0;
+}
+#remote-issue-tab .new-items{
+ margin-bottom:10px !important;
+}
+#remote-issue-tab .new-items a{
+	color:white !important;
+}
+#remote-issue-tab .items h2{
+ color:white;
+ background-color:#555555;
+ font-size:15px;
+ font-weight:bold;
+ margin:0;
+ line-height:20px;
+}
+#remote-issue-tab .items ul{
+ margin:0.5em 0 1em;
+ padding:0;
+}
+#remote-issue-tab .items>ul>li{
+ font-size:11px;
+ background:none !important;
+ padding:0.2em !important;
+ border-top: 1px dotted #CCCCCC;
+ list-style-type:none;
+ padding:0.2em !important;
+ margin: 0.15em 0 0.15em 0.5em !important;
+}
+#remote-issue-tab .items ul li.first{
+ border-top:none;
+}
+#remote-issue-tab .items ul li h3 a{
+  font-size:13px;
+}
+#remote-issue-tab .items ul li div.remote_issue_item{
+ padding:0;
+ margin:0;
+ display:none;
+}
+#remote-issue-tab .footer{
+ background-color:#FFFFAA;
+ padding:0px 0 1px 0;
+}
+#remote-issue-tab .footer p{
+ padding:3px;
+}
+#remote-issue-tab .footer h2{
+font-size:15px;
+font-weight:bold;
+}
+#remote-issue-tab .footer h3{
+font-size:13px;
+font-weight:400;
+}
+#remote-issue-tab .footer h3 a{
+font-size:13px;
+font-weight:400;
+}

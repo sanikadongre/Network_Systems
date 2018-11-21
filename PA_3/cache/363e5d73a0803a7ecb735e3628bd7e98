@@ -1,0 +1,21 @@
+1542775159
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:17 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:52:31 GMT
+ETag: "9b-55ef4b2f539c0"
+Accept-Ranges: bytes
+Content-Length: 155
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:17 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+#views-slideshow-form-wrapper .form-item.dependent-options {
+  padding-left: 5px;
+}
+
+#views-slideshow-form-wrapper .vs-dependent {
+  padding-left: 30px;
+}

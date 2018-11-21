@@ -1,0 +1,69 @@
+1542775151
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:12 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:47:38 GMT
+ETag: "462-55ef4a17e6680"
+Accept-Ranges: bytes
+Content-Length: 1122
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:12 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+
+/**
+ * @file
+ * Basic styling for the Overlay module.
+ */
+
+html.overlay-open,
+html.overlay-open body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#overlay-container,
+.overlay-modal-background,
+.overlay-element {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 500;
+}
+
+.overlay-modal-background {
+  /* Using a transparent png renders faster than using opacity */
+  background: transparent url(images/background.png) repeat;
+}
+
+.overlay-element {
+  background: transparent;
+  left: -200%;
+  z-index: 501;
+}
+.overlay-element.overlay-active {
+  left: 0;
+}
+
+html.overlay-open .displace-top,
+html.overlay-open .displace-bottom {
+  z-index: 600;
+}
+
+/**
+ * Within the overlay parent, the message about disabling the overlay is for
+ * screen-reader users only. It is always kept invisible with the
+ * element-invisible class, and removed from the tab order. Overlay-child.css
+ * contains styling for the same message appearing within the overlay, and
+ * intended for sighted users.
+ */
+#overlay-disable-message {
+  display: none;
+}
+html.overlay-open #overlay-disable-message {
+  display: block;
+}

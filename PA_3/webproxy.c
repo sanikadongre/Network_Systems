@@ -6,12 +6,24 @@
 *****************************/
 #include "webproxy.h"
 
+/*******************************
+*Shutdown condition loop
+*@param: int (socket info)
+**********************************/
+
 void shutdown_condition(int proxysock)
 {
 	shutdown(proxysock, SHUT_RDWR);
 	close(proxysock);
 }
-
+/***************************************
+*Error condition loop
+*@params: int (socket info) and char 
+*array for error type. It is used to raise
+* 400 error for invalid url, method and 
+* request and 404 if the server is not found
+* and 403 for blocked sites.
+****************************************/
 void error_condition(int proxysock, uint8_t error_buff[])
 {
 	int bytes_tot;
@@ -20,6 +32,12 @@ void error_condition(int proxysock, uint8_t error_buff[])
 	shutdown_condition(proxysock);
 
 }
+/*******************************************
+*Md5 calculate loop
+*To calculate the hash value of requested url
+*It uses the <openssl/md5.h> library
+*The hash value for the string is returned
+*********************************************/
 uint8_t* md5_calculate(uint8_t *req_url)
 {
 	  uint8_t hash_hex[16];
@@ -36,6 +54,12 @@ uint8_t* md5_calculate(uint8_t *req_url)
 
 	  return (char *)md5string;
 }
+/******************************************************
+*Flag condition loop
+*It checks the value of the flag
+*Used for toggling flags and returning back to the 
+*function from where it was requested
+********************************************************/
 
 int flag_condition(int flag, FILE *fptr)
 {
@@ -47,7 +71,12 @@ int flag_condition(int flag, FILE *fptr)
 	 fclose(fptr);
 	 return 0;
 }
-	
+/**************************************************************
+*fetch loop
+*function used to get the line from the file (data_forbidden) that 
+*stores the ip
+*address and name of the site
+****************************************************************/	
 int fetch(char *extract_line, size_t length, FILE *fptr, uint8_t *ip)
 {
 	int flag = 0, value;
@@ -62,7 +91,11 @@ int fetch(char *extract_line, size_t length, FILE *fptr, uint8_t *ip)
 	 value = flag_condition(flag, fptr);
 
 }
-
+/*************************************************************
+*Forbid data loop 
+*It checks if the website is blocked (if it is present in the
+* data_forbidden file.
+**************************************************************/
 int forbid_data(uint8_t *name, uint8_t *addr_ip_forbid)
 {
 	  size_t length;
@@ -87,13 +120,17 @@ int forbid_data(uint8_t *name, uint8_t *addr_ip_forbid)
 	    	 }
 	  }
 }
-
+/********************************************************************
+*Cache file data loop
+*This function is used for checking if the cached file is present 
+*If the cached file is present data is retrieved from cached file
+**********************************************************************/
 int cache_file_data(uint8_t *req_url, unsigned long int cache_timeout)
 {	
 	  uint8_t file_name[MAXBUFSIZE];
 	  size_t length;	
 	  FILE *fptr;
-	  char *md5_url = md5_calculate(req_url);
+	  char *md5_url = md5_calculate(req_url); //to calculate the md5 hash value for the requested url
 	  char* extract_line=NULL;
 	  unsigned long int time_file=0;
 	  time_t get_curr;
@@ -101,7 +138,7 @@ int cache_file_data(uint8_t *req_url, unsigned long int cache_timeout)
 	  if(md5_url != 0)
 	  {
 	  	bzero(file_name, sizeof(file_name));
-	  	sprintf(file_name, "./cache/%s", md5_url);
+	  	sprintf(file_name, "./cache/%s", md5_url); 
 	  	printf("The file name in cache_folder: %s\n", file_name);
 	  	if((fptr = fopen(file_name, "r")) == NULL)
 	  	{
@@ -130,7 +167,12 @@ int cache_file_data(uint8_t *req_url, unsigned long int cache_timeout)
 	  }
 	  
 }
-
+/*****************************************************
+*Cache data loop
+* It checks the cache folder to check for names of
+* the host and the IP address from the data_file in
+*the cache folder. 
+*****************************************************/
 int cache_data(uint8_t *name, uint8_t *addr_ip)
 {
 	  
@@ -157,12 +199,13 @@ int cache_data(uint8_t *name, uint8_t *addr_ip)
 				break;
 	      		}
 	    	}
-	    	value = flag_condition(flag, fptr);
+	    	value = flag_condition(flag, fptr); //function call to flag condition loop
 	  }
 }
-
-
-
+/********************************************************
+*Prefetch data loop. It is used for prefetching the links
+* that are embedded within a link and store them on a cache
+*********************************************************/
 int prefetch_data(uint8_t* addr_ip_prefetch, uint8_t* name_file, uint8_t* name, uint8_t* num)
 {
 	  
@@ -235,7 +278,7 @@ int prefetch_data(uint8_t* addr_ip_prefetch, uint8_t* name_file, uint8_t* name, 
 		  				exit(1);
 					}
 					get_curr2 = time(NULL);
-					fprintf(fdptr, "%lu\n", get_curr2);   
+					fprintf(fdptr, "%lu\n", get_curr2);   //updating time to file
 					while((bytes_tot = recv(pre_sock, buffer, sizeof(buffer), 0)))
 					{ 
 		  				printf("Prefetch Link Received Bytes: %d\n", bytes_tot);
@@ -270,13 +313,13 @@ int main(int argc, char* argv[])
         proxy_size = sizeof(webproxy_addr);
 	if (argc < 3)
 	{
-		printf ("\nUsage: <portNo> <timeout>\n");
+		printf ("\nUsage: <portNo> <timeout>\n"); //to run the file port no and timeout must also be indicated
 		exit(1);
 	}
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if ((sock) == 0)
 	{
-		perror("Socket can't be created");
+		perror("Socket can't be created"); //socket creation error
 	}
 	puts("Socket created");
 	bzero(&webproxy_addr, proxy_size);
@@ -285,7 +328,7 @@ int main(int argc, char* argv[])
 	webproxy_addr.sin_addr.s_addr = INADDR_ANY;
 	if(bind(sock, (struct sockaddr *)&webproxy_addr, proxy_size) < 0)
 	{
-		perror("Socket binding error");
+		perror("Socket binding error"); //socket binding error
 	}
 	puts("Socket bind successfully - Proxy server starts");
 	if(listen(sock, 8) < 0)
@@ -299,7 +342,7 @@ int main(int argc, char* argv[])
 	   
 		if((proxysock = accept(sock, (struct sockaddr *)&client_addr, &clientlen)) < 0)
 	    	{
-	     		perror("Connection accept failed");
+	     		perror("Connection accept failed"); 
 	      		return 1;
 	    	}
 		puts("connection accepted");
@@ -319,24 +362,24 @@ int main(int argc, char* argv[])
 				md5_url = md5_calculate(url_req); 
 			    	if(strncmp(method_req, "GET\0", 4) != 0)
 				{
-					error_condition(proxysock, error_method);
+					error_condition(proxysock, error_method); //invalid method error
 					continue;
 			    	}
 			    	else if((strstr(url_req, "https") != NULL) || (strstr(url_req, "http") == NULL))
 				{
-			      		error_condition(proxysock, error_url);
+			      		error_condition(proxysock, error_url); //invalid url error
 			      		continue;
 			    	}
 				else if((strncmp(version_req, "HTTP/1.0", 8) != 0) && (strncmp(version_req, "HTTP/1.1", 8) != 0))
 				{
-			      		error_condition(proxysock, error_version);
+			      		error_condition(proxysock, error_version); //invalid version error
 			      		continue;
 			    	}
 			    	else
 				{
 			      		sscanf(url_req, "%*[^/]%*c%*c%[^/]", host_name);
 			     		printf("Hostname: %s\n", host_name );
-					forbidden_flag = forbid_data(host_name, addr_ip_forbid);
+					forbidden_flag = forbid_data(host_name, addr_ip_forbid); 
 					if(forbidden_flag == 1)
 					{
 						error_condition(proxysock, error_blocked);
@@ -345,11 +388,11 @@ int main(int argc, char* argv[])
 					cache_flag = cache_file_data(url_req, timeout);
 					if(cache_flag == 1)
 					{
-						printf("\n %d Page is found in cache\n", proxysock);
+						printf("\n %d Page is found in cache\n", proxysock); //pgae is found in the cache
 						bzero(file_name, sizeof(file_name));
 						sprintf(file_name, "./cache/%s", md5_url);
 						fptr = fopen(file_name, "r");
-						getline(&extract_line, &length, fptr);
+						getline(&extract_line, &length, fptr); //get the line where file pointer points to
 						bzero(buffer, sizeof(buffer));
 						while((bytes_tot = fread(buffer, 1, sizeof(buffer), fptr)))
 						{
@@ -377,7 +420,7 @@ int main(int argc, char* argv[])
 				  			host_flag = cache_data(host_name, addr_ip);
 							if(host_flag==1)
 							{
-				    				printf("\n Host is in cache\n");
+				    				printf("\n Host is in cache\n"); //host is found in cache in data_file
 								bzero(file_name, sizeof(file_name));
 				    				sprintf(file_name, "./cache/data_file");
 								bzero(&addr_server,sizeof(addr_server));              
@@ -410,7 +453,7 @@ int main(int argc, char* argv[])
 				    				}
 				  			}
 						  }
-						  if ((proxy_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+						  if ((proxy_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) //socket for data fetch
 						  {
 				  				perror("Socket creation error");
 				  				continue;
@@ -430,8 +473,8 @@ int main(int argc, char* argv[])
 				  		  	printf("Cache file creation error\n");
 				  			exit(1);
 						  }
-						  get_curr = time(NULL); 
-						  fprintf(fptr, "%lu\n", get_curr); 
+						  get_curr = time(NULL);  //to get the current time
+						  fprintf(fptr, "%lu\n", get_curr);  // saving the file with time updates
 						  bzero(buffer, sizeof(buffer));
 						  while((bytes_tot = recv(proxy_sock, buffer, sizeof(buffer), 0)))
 						  {
@@ -446,10 +489,10 @@ int main(int argc, char* argv[])
 						  fclose(fptr);
 						  if(flag==1)
 						  {
-				  			fork_child_2 = fork();
+				  			fork_child_2 = fork(); //fork to create child thread from where the code executes if a prefetch link is being obtained
 							if(fork_child_2 == 0)
 							{
-				    				pre = prefetch_data(inet_ntoa(addr_server.sin_addr), file_name, host_name, num);
+				    				pre = prefetch_data(inet_ntoa(addr_server.sin_addr), file_name, host_name, num); //function call to prefetch links operation
 				   			        exit(0);
 				 		         }
 						  }

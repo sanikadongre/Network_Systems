@@ -1,0 +1,39 @@
+1542775157
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:15 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:47:57 GMT
+ETag: "90-55ef4a2a05140"
+Accept-Ranges: bytes
+Content-Length: 144
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:15 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+
+.node-unpublished {
+  background-color: #fff4f4;
+}
+.preview .node {
+  background-color: #ffffea;
+}
+td.revision-current {
+  background: #ffc;
+}
+HTTP/1.1 400 Bad Request
+Date: Wed, 21 Nov 2018 04:39:15 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Content-Length: 226
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>400 Bad Request</title>
+</head><body>
+<h1>Bad Request</h1>
+<p>Your browser sent a request that this server could not understand.<br />
+</p>
+</body></html>

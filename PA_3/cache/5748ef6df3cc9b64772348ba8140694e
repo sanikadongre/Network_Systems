@@ -1,0 +1,35 @@
+1542775150
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:11 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:50:42 GMT
+ETag: "310-55ef4ac760480"
+Accept-Ranges: bytes
+Content-Length: 784
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:11 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: application/javascript
+
+/**
+* Provide the HTML to create the modal dialog.
+*/
+Drupal.theme.prototype.ModalFormsPopup = function () {
+  var html = ''
+
+  html += '<div id="ctools-modal" class="popups-box">';
+  html += '  <div class="ctools-modal-content modal-forms-modal-content">';
+  html += '    <div class="popups-container">';
+  html += '      <div class="modal-header popups-title clearfix">';
+  html += '        <h3 id="modal-title" class="modal-title"></h3>';
+  html += '        <span class="popups-close close">' + Drupal.CTools.Modal.currentSettings.closeText + '</span>';
+  html += '      </div>';
+  html += '      <div class="modal-scroll"><div id="modal-content" class="modal-content popups-body"></div></div>';
+  html += '    </div>';
+  html += '  </div>';
+  html += '</div>';
+
+  return html;
+
+}

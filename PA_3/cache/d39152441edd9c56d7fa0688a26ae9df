@@ -1,0 +1,83 @@
+1542775158
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:16 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:48:02 GMT
+ETag: "420-55ef4a2ec9c80"
+Accept-Ranges: bytes
+Content-Length: 1056
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:16 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+/**
+ * @file
+ * Styling for the Forum module.
+ */
+
+#forum .description {
+  font-size: 0.9em;
+  margin: 0.5em;
+}
+#forum td.created,
+#forum td.posts,
+#forum td.topics,
+#forum td.last-reply,
+#forum td.replies,
+#forum td.pager {
+  white-space: nowrap;
+}
+
+#forum td.forum .icon {
+  background-image: url(../../misc/forum-icons.png);
+  background-repeat: no-repeat;
+  float: left; /* LTR */
+  height: 24px;
+  margin: 0 9px 0 0; /* LTR */
+  width: 24px;
+}
+#forum td.forum .forum-status-new {
+  background-position: -24px 0;
+}
+
+#forum div.indent {
+  margin-left: 20px; /* LTR */
+}
+#forum .icon div {
+  background-image: url(../../misc/forum-icons.png);
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+}
+#forum .icon .topic-status-new {
+  background-position: -24px 0;
+}
+#forum .icon .topic-status-hot {
+  background-position: -48px 0;
+}
+#forum .icon .topic-status-hot-new {
+  background-position: -72px 0;
+}
+#forum .icon .topic-status-sticky {
+  background-position: -96px 0;
+}
+#forum .icon .topic-status-closed {
+  background-position: -120px 0;
+}
+HTTP/1.1 400 Bad Request
+Date: Wed, 21 Nov 2018 04:39:16 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Content-Length: 226
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>400 Bad Request</title>
+</head><body>
+<h1>Bad Request</h1>
+<p>Your browser sent a request that this server could not understand.<br />
+</p>
+</body></html>

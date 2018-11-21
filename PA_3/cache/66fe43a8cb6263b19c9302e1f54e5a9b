@@ -1,0 +1,55 @@
+1542775151
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:12 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:46:39 GMT
+ETag: "30b-55ef49dfa21c0"
+Accept-Ranges: bytes
+Content-Length: 779
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:12 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+/**
+ * Styles for theme in the Aggregator module.
+ */
+
+#aggregator .feed-source .feed-title {
+  margin-top: 0;
+}
+#aggregator .feed-source .feed-image img {
+  margin-bottom: 0.75em;
+}
+#aggregator .feed-source .feed-icon {
+  float: right; /* LTR */
+  display: block;
+}
+#aggregator .feed-item {
+  margin-bottom: 1.5em;
+}
+#aggregator .feed-item-title {
+  margin-bottom: 0;
+  font-size: 1.3em;
+}
+#aggregator .feed-item-meta,
+#aggregator .feed-item-body {
+  margin-bottom: 0.5em;
+}
+#aggregator .feed-item-categories {
+  font-size: 0.9em;
+}
+#aggregator td {
+  vertical-align: bottom;
+}
+#aggregator td.categorize-item {
+  white-space: nowrap;
+}
+#aggregator .categorize-item .news-item .body {
+  margin-top: 0;
+}
+#aggregator .categorize-item h3 {
+  margin-bottom: 1em;
+  margin-top: 0;
+}

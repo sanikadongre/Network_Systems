@@ -1,0 +1,39 @@
+1542775159
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:17 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:50:48 GMT
+ETag: "1fd-55ef4acd19200"
+Accept-Ranges: bytes
+Content-Length: 509
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:17 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+.ctools-locked {
+  color: red;
+  border: 1px solid red;
+  padding: 1em;
+}
+
+.ctools-owns-lock {
+  background: #FFFFDD none repeat scroll 0 0;
+  border: 1px solid #F0C020;
+  padding: 1em;
+}
+
+a.ctools-ajaxing,
+input.ctools-ajaxing,
+button.ctools-ajaxing,
+select.ctools-ajaxing {
+  padding-right: 18px !important;
+  background: url(../images/status-active.gif) right center no-repeat;
+}
+
+div.ctools-ajaxing {
+  float: left;
+  width: 18px;
+  background: url(../images/status-active.gif) center center no-repeat;
+}

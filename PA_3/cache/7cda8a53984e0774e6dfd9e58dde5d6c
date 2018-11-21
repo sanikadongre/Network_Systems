@@ -1,0 +1,75 @@
+1542775159
+HTTP/1.1 200 OK
+Date: Wed, 21 Nov 2018 04:39:18 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Last-Modified: Mon, 27 Nov 2017 10:48:17 GMT
+ETag: "410-55ef4a3d17e40"
+Accept-Ranges: bytes
+Content-Length: 1040
+Cache-Control: max-age=1209600
+Expires: Wed, 05 Dec 2018 04:39:18 GMT
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/css
+
+
+#edit-openid-identifier {
+  background-image: url("login-bg.png");
+  background-position: left 50%; /* LTR */
+  background-repeat: no-repeat;
+  padding-left: 20px; /* LTR */
+}
+div.form-item-openid-identifier {
+  display: block;
+}
+html.js #user-login-form div.form-item-openid-identifier,
+html.js #user-login div.form-item-openid-identifier {
+  display: none;
+}
+#user-login-form ul {
+  margin-top: 0;
+}
+#user-login ul {
+  margin: 0 0 5px;
+}
+#user-login ul li {
+  margin: 0;
+}
+#user-login-form .openid-links {
+  padding-bottom: 0;
+}
+#user-login .openid-links {
+  padding-left: 0; /* LTR */
+}
+#user-login-form .openid-links li,
+#user-login .openid-links li {
+  display: none;
+  list-style: none;
+}
+html.js #user-login-form li.openid-link,
+html.js #user-login li.openid-link {
+  display: block;
+  margin-left: 0; /* LTR */
+}
+#user-login-form li.openid-link a,
+#user-login li.openid-link a {
+  background-image: url("login-bg.png");
+  background-position: left top; /* LTR */
+  background-repeat: no-repeat;
+  padding: 0 0 0 1.5em; /* LTR */
+}
+HTTP/1.1 400 Bad Request
+Date: Wed, 21 Nov 2018 04:39:18 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.6.31
+Content-Length: 226
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>400 Bad Request</title>
+</head><body>
+<h1>Bad Request</h1>
+<p>Your browser sent a request that this server could not understand.<br />
+</p>
+</body></html>
