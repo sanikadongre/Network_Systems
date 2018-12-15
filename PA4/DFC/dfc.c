@@ -43,16 +43,16 @@ void data_decryption(char *buffer, int data_len, char key1[])
 }
 typedef struct
 {
-	char dfs[4][64];
-	int port_num[4][64];
-	char dfs_ip[4][64];
-	char username[4][64];
-	char password[4][64];
+        int access_port[4][64];
+	uint8_t dfs[4][64];
+        uint8_t name_user[4][64];
+	uint8_t config_dfs[4][64];
+	uint8_t password[4][64];
 }parsing_data;
 
 typedef struct
 {
-	char username[64];
+	char name_user[64];
 	char password[64];
 	char command[32];
 	char filename[32];
@@ -76,41 +76,41 @@ int parse_file(parsing_data *parse, char* conf)
       			//printf("%s\n", line );
       			if((c = strstr(line, "DFS1")))
 			{
-        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[0], (*parse).dfs_ip[0], (*parse).port_num[0]);
+        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[0], (*parse).config_dfs[0], (*parse).access_port[0]);
         			printf("************\n");
-        			printf("%d\n", *(*parse).port_num[0]);
+        			printf("%d\n", *(*parse).access_port[0]);
         			printf("%s\n", (*parse).dfs[0]);
-        			printf("%s\n", (*parse).dfs_ip[0]);
+        			printf("%s\n", (*parse).config_dfs[0]);
 			}
 			else if((c = strstr(line, "DFS2")))
 			{
-        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[1], (*parse).dfs_ip[1], (*parse).port_num[1]);
+        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[1], (*parse).config_dfs[1], (*parse).access_port[1]);
         			printf("************\n");
-        			printf("%d\n", *(*parse).port_num[1]);
+        			printf("%d\n", *(*parse).access_port[1]);
         			printf("%s\n", (*parse).dfs[1]);
-        			printf("%s\n", (*parse).dfs_ip[1]);
+        			printf("%s\n", (*parse).config_dfs[1]);
       			}
 			else if((c = strstr(line, "DFS3")))
 			{
-        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[2], (*parse).dfs_ip[2], (*parse).port_num[2]);
+        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[2], (*parse).config_dfs[2], (*parse).access_port[2]);
         			printf("************\n");
-        			printf("%d\n", *(*parse).port_num[2]);
+        			printf("%d\n", *(*parse).access_port[2]);
         			printf("%s\n", (*parse).dfs[2]);
-        			printf("%s\n", (*parse).dfs_ip[2]);
+        			printf("%s\n", (*parse).config_dfs[2]);
 			}
 			else if((c = strstr(line, "DFS4")))
 			{
-        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[3], (*parse).dfs_ip[3], (*parse).port_num[3]);
+        			sscanf(c, "%s %[^:]%*c%d", (*parse).dfs[3], (*parse).config_dfs[3], (*parse).access_port[3]);
         			printf("************\n");
-        			printf("%d\n", *(*parse).port_num[3]);
+        			printf("%d\n", *(*parse).access_port[3]);
         			printf("%s\n", (*parse).dfs[3]);
-        			printf("%s\n", (*parse).dfs_ip[3]);
+        			printf("%s\n", (*parse).config_dfs[3]);
       			}
-			else if((c = strstr(line, "Username: ")))
+			else if((c = strstr(line, "name_user: ")))
 			{
-        			sscanf(line, "%*s %s", (*parse).username[0]);
+        			sscanf(line, "%*s %s", (*parse).name_user[0]);
         			printf("************\n");
-        			printf("Username is: %s\n", (*parse).username[0]);
+        			printf("Username is: %s\n", (*parse).name_user[0]);
      		 	}
 			else if((c = strstr(line, "Password: ")))
 			{
@@ -214,32 +214,32 @@ int main(int argc, char * argv[])
     		strcpy(subfolder, "NONE");
     		sscanf(command, "%s %s %s", cname, filename, subfolder);
     		printf("%s %s %s\n", cname, filename, subfolder );
-		strcpy(auth->username, *parse.username);
+		strcpy(auth->name_user, *parse.name_user);
  		strcpy(auth->password, *parse.password);
     		strcpy(auth->command, cname);
 		int key_length = strlen(*parse.password);
     		char key1[key_length];
     		strcpy(key1, *parse.password);
-		printf("Username:%sPassword:%sCommand:%s\n", auth->username, auth->password, auth->command);
+		printf("Username:%sPassword:%sCommand:%s\n", auth->name_user, auth->password, auth->command);
 		for(int i=0; i<4; i++)
 		{
       			struct timeval timeout = {1,0};
       			if((sockfd[i] = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 			{
-        			printf("Error in creating a socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+        			printf("Error in creating a socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
       			}
       			memset(&server_addr, 0, sizeof(server_addr));
       			server_addr.sin_family = AF_INET;
-      			server_addr.sin_port = htons(*parse.port_num[i]);
-      			server_addr.sin_addr.s_addr = inet_addr(parse.dfs_ip[i]);
+      			server_addr.sin_port = htons(*parse.access_port[i]);
+      			server_addr.sin_addr.s_addr = inet_addr(parse.config_dfs[i]);
       			printf("\n\nSockfd %d: %d\n", i, sockfd[i]);
-      			printf("%d\n", *(parse).port_num[i]);
+      			printf("%d\n", *(parse).access_port[i]);
       			printf("%s\n", (parse).dfs[i]);
-      			printf("%s\n", (parse).dfs_ip[i]);
+      			printf("%s\n", (parse).config_dfs[i]);
       			if(connect(sockfd[i],(struct sockaddr *) &server_addr, sizeof(server_addr)) < 0)
       			{
         			perror("Error: \n");
-				printf("Error in Connecting to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+				printf("Error in Connecting to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
 				continue;
       			}
     			timeout.tv_sec = 0;
@@ -251,7 +251,7 @@ int main(int argc, char * argv[])
 			if((nbytes = send(sockfd[i], auth, sizeof(*auth), 0)) < 0)
 			{
        				printf("%d\n", nbytes);
-        			printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+        			printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
       			}
       			if(!strcmp(cname, "put"))
 			{
@@ -305,7 +305,7 @@ int main(int argc, char * argv[])
 						{
               						char filepath[128];
               						bzero(filepath, sizeof(filepath));
-             						sprintf(filepath, "Part:1 %s %lu %s", filename, len_part, *parse.username);
+             						sprintf(filepath, "Part:1 %s %lu %s", filename, len_part, *parse.name_user);
               						if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							{
 								perror("Error: \n");
@@ -315,7 +315,7 @@ int main(int argc, char * argv[])
 						 {
               						char filepath[128];
               						bzero(filepath, sizeof(filepath));
-              						sprintf(filepath, "Part:1 %s %lu %s/%s", filename, len_part, *parse.username, subfolder);
+              						sprintf(filepath, "Part:1 %s %lu %s/%s", filename, len_part, *parse.name_user, subfolder);
              						if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							{
                 						perror("Error: \n");
@@ -332,7 +332,7 @@ int main(int argc, char * argv[])
               						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 							{
                 						printf("Sending to DFS1: %d bytes\n", nbytes);
-                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
               						}
               						bzero(buffer, MAXBUFSIZE);
               						recv(sockfd[i], buffer, sizeof(buffer), 0);
@@ -345,7 +345,7 @@ int main(int argc, char * argv[])
                 						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 								{
                   							printf("Sending to DFS1: %d bytes\n", nbytes);
-                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
                 						}
                 						bzero(buffer, MAXBUFSIZE);
                 						recv(sockfd[i], buffer, sizeof(buffer), 0);
@@ -359,7 +359,7 @@ int main(int argc, char * argv[])
 						{
              						char filepath[128];
               						bzero(filepath, sizeof(filepath));
-              						sprintf(filepath, "Part:2 %s %lu %s", filename, len_part, *parse.username);
+              						sprintf(filepath, "Part:2 %s %lu %s", filename, len_part, *parse.name_user);
               						if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							{
                 					 	perror("Error: \n");
@@ -369,7 +369,7 @@ int main(int argc, char * argv[])
 						{
              						 char filepath[128];
              						 bzero(filepath, sizeof(filepath));
-              						 sprintf(filepath, "Part:2 %s %lu %s/%s", filename, len_part, *parse.username, subfolder);
+              						 sprintf(filepath, "Part:2 %s %lu %s/%s", filename, len_part, *parse.name_user, subfolder);
               						 if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							 {
                 					 	perror("Error: \n");
@@ -385,7 +385,7 @@ int main(int argc, char * argv[])
               						data_encryption(buffer, read_length, key1);
               						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 							{
-                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
               						}
               						temp++;
               						bzero(buffer, MAXBUFSIZE);
@@ -397,7 +397,7 @@ int main(int argc, char * argv[])
                 						data_encryption(buffer, read_length, key1);
                 						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 								{
-                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
                 						}
                 						bzero(buffer, MAXBUFSIZE);
                 						recv(sockfd[i], buffer, sizeof(buffer), 0);
@@ -411,7 +411,7 @@ int main(int argc, char * argv[])
 						{
               						char filepath[128];
               						bzero(filepath, sizeof(filepath));
-             					        sprintf(filepath, "Part:3 %s %lu %s", filename, len_part, *parse.username);
+             					        sprintf(filepath, "Part:3 %s %lu %s", filename, len_part, *parse.name_user);
               						if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							{
                 						perror("Error: \n");
@@ -421,7 +421,7 @@ int main(int argc, char * argv[])
 						{
               						char filepath[128];
               						bzero(filepath, sizeof(filepath));
-             						sprintf(filepath, "Part:3 %s %lu %s/%s", filename, len_part, *parse.username, subfolder);
+             						sprintf(filepath, "Part:3 %s %lu %s/%s", filename, len_part, *parse.name_user, subfolder);
               						if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							{
                 						perror("Error: \n");
@@ -438,7 +438,7 @@ int main(int argc, char * argv[])
               						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 							{
                 						printf("Sending to DFS2: %d bytes\n", nbytes);printf("Sending to DFS3: %d bytes\n", nbytes);
-                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
 							}
 							temp++;
 							bzero(buffer, MAXBUFSIZE);
@@ -451,7 +451,7 @@ int main(int argc, char * argv[])
                 						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 								{
                   							printf("Sending to DFS3: %d bytes\n", nbytes);
-                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
                 						}
                 						bzero(buffer, MAXBUFSIZE);
                 						recv(sockfd[i], buffer, sizeof(buffer), 0);
@@ -465,7 +465,7 @@ int main(int argc, char * argv[])
 						{
               						char filepath[128];
               						bzero(filepath, sizeof(filepath));
-              						sprintf(filepath, "Part:4 %s %lu %s", filename, len_part, *parse.username);
+              						sprintf(filepath, "Part:4 %s %lu %s", filename, len_part, *parse.name_user);
               						if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							{
                 						perror("Error: \n");
@@ -475,7 +475,7 @@ int main(int argc, char * argv[])
 						{
               						char filepath[128];
               						bzero(filepath, sizeof(filepath));
-              						sprintf(filepath, "Part:4 %s %lu %s/%s", filename, len_part, *parse.username, subfolder);
+              						sprintf(filepath, "Part:4 %s %lu %s/%s", filename, len_part, *parse.name_user, subfolder);
               						if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 							{
                 						perror("Error: \n");
@@ -492,7 +492,7 @@ int main(int argc, char * argv[])
               						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 							{
                 						printf("Sending to DFS4: %d bytes\n", nbytes);
-                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                						printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
               						}
 							printf("Sending to DFS4: %d bytes\n", nbytes);
 							temp++;
@@ -506,7 +506,7 @@ int main(int argc, char * argv[])
                 						if((nbytes = send(sockfd[i], buffer, read_length, 0)) < 0)
 								{
                   							printf("Sending to DFS4: %d bytes\n", nbytes);
-                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+                  							printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
                 						}
                 						bzero(buffer, MAXBUFSIZE);
                 						recv(sockfd[i], buffer, sizeof(buffer), 0);
@@ -544,7 +544,7 @@ int main(int argc, char * argv[])
 					{
             					char filepath[128];
             					bzero(filepath, sizeof(filepath));
-            					sprintf(filepath, "%s", *parse.username);
+            					sprintf(filepath, "%s", *parse.name_user);
             					if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 						{
 							 perror("Error: \n");
@@ -560,7 +560,7 @@ int main(int argc, char * argv[])
 					{
             					char filepath[128];
            					bzero(filepath, sizeof(filepath));
-            					sprintf(filepath, "%s/%s", *parse.username, filename);
+            					sprintf(filepath, "%s/%s", *parse.name_user, filename);
             					if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 						{
               						perror("Error: \n");
@@ -613,7 +613,7 @@ int main(int argc, char * argv[])
 					{
             					char filepath[128];
            					bzero(filepath, sizeof(filepath));
-            					sprintf(filepath, "%s %s", filename, *parse.username);
+            					sprintf(filepath, "%s %s", filename, *parse.name_user);
             					if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 						{
               						perror("Error: \n");
@@ -623,7 +623,7 @@ int main(int argc, char * argv[])
 					{
            					char filepath[128];
             					bzero(filepath, sizeof(filepath));
-            					sprintf(filepath, "%s %s/%s", filename, *parse.username, subfolder);
+            					sprintf(filepath, "%s %s/%s", filename, *parse.name_user, subfolder);
             					if((nbytes = send(sockfd[i], filepath, strlen(filepath), 0)) < 0)
 						{
               						perror("Error: \n");
@@ -899,7 +899,7 @@ int main(int argc, char * argv[])
 					if((nbytes = send(sockfd[i], filename, strlen(filename), 0)) < 0)
 					{
            					printf("Sending to DFS%d: %d bytes\n", i+1, nbytes);
-            					printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.port_num[i]);
+            					printf("Error in sending to socket for the Server:%s at Port: %d\n", parse.dfs[i], *parse.access_port[i]);
           				}
 
         			}
