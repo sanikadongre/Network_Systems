@@ -1,0 +1,7 @@
+1544058207
+HTTP/1.1 200 OK
+Location: https://cuwireless.int.colorado.edu/fs/customwebauth/login.html?switch_url=https://cuwireless.int.colorado.edu/login.html&ap_mac=1c:e6:c7:5a:c3:80&client_mac=a0:af:bd:1b:db:b8&wlan=UCB%20Guest&redirect=detectportal.firefox.com/success.txt
+Content-Type: text/html
+Content-Length: 491
+
+<HTML><HEAD><TITLE> Web Authentication Redirect</TITLE><META http-equiv="Cache-control" content="no-cache"><META http-equiv="Pragma" content="no-cache"><META http-equiv="Expires" content="-1"><META http-equiv="refresh" content="1; URL=https://cuwireless.int.colorado.edu/fs/customwebauth/login.html?switch_url=https://cuwireless.int.colorado.edu/login.html&ap_mac=1c:e6:c7:5a:c3:80&client_mac=a0:af:bd:1b:db:b8&wlan=UCB%20Guest&redirect=detectportal.firefox.com/success.txt"></HEAD></HTML>
