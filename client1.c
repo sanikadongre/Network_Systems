@@ -1,6 +1,4 @@
-/***************************
-*Reference professors code and few websites for file related commands, listing files, string split
-*************************/
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -62,7 +60,7 @@ int main (int argc, char * argv[])
 	Packet_Details* s = malloc(sizeof(Packet_Details));
 	if (argc < 3)
 	{
-		printf("USAGE:  <server_ip> <server_port>\n");
+		printf("USAGE:  <host_ip> <server_port>\n");
 		exit(1);
 	}
 
@@ -96,7 +94,7 @@ int main (int argc, char * argv[])
 		bzero(buffer, sizeof(buffer)); 
 
 		
-		printf("Enter the command to be performed and type it: get [filename], put[filename], delete[filename], ls, exit\n");
+		printf("Enter the command to be performed and type it: get [filename], put[filename], delete[filename], exit\n");
 		gets(cmd);	
 		nbytes = sendto(sockfd, cmd, sizeof(cmd) , 0, (struct sockaddr *)&serveraddr, serverlen);
 		name_cmd = strdup(cmd); //Splitting string
@@ -148,7 +146,6 @@ int main (int argc, char * argv[])
 			memset(a, 0, sizeof(Packet_Details)); //Free memory
 			memset(s, 0, sizeof(Packet_Details));
 		}
-
 		else if(strcmp("put", name_cmd) == 0)
 		{
 			printf("Put the File: \"%s\" on the server.\n", fname);
@@ -213,15 +210,6 @@ int main (int argc, char * argv[])
 			memset(a, 0, sizeof(Packet_Details)); //free the memory
 			memset(s, 0, sizeof(Packet_Details));
 		}
-		else if(strcmp("ls", name_cmd) == 0)
-		{
-
-			printf("\nTo list all the files in the directory%s\n", val);
-			bzero(val, sizeof(val));
-			bytestot = recvfrom(sockfd, val, strlen(val), 0, (struct sockaddr*)&serveraddr, &(serverlen));
-			printf("\nThe dircetories and files are \n");
-			printf("%s\n", val);
-		}
 		else if(strcmp("delete", name_cmd) == 0)
 		{
 			
@@ -235,13 +223,13 @@ int main (int argc, char * argv[])
 			bzero(buf, sizeof(buf));
 			bytestot = recvfrom(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&serveraddr, &(serverlen));
 			printf("%s\n", buf);
-			if(strcmp(buf, "Exit") ==0)
+			if(strcmp(buf, "exit") ==0)
 			{
 				printf("The server has exited successfully\n");
 			}
 			else
 			{
-				printf("There is error in exiting the server\n");
+				printf("Exiting the server\n");
 			}
 		}
 		else
