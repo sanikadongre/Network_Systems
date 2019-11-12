@@ -7,7 +7,9 @@ CFILES= client.c
 SRCS= ${CFILES}
 OBJS= ${CFILES:.c=.o}
 
-build:	client.elf client1.elf
+build:	client.elf
+
+BBB:	client1.elf
 
 clean:
 	-rm -f *.o *.d
